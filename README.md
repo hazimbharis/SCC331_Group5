@@ -9,6 +9,6 @@ Team tasks:\
 Tasks:\
 Hazim -  MySQL Database\
 Saeed - Microbit User Location code\
-Harry - \
-Tega -\
+Harry - Door tracker and alarm\ 
+Tega - Sensors and frontend\
 Joseph -
