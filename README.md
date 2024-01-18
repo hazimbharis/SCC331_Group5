@@ -2,7 +2,7 @@
 # Team Name: Super Coders
 Smart Prison
 
-**Scrum masters**
+**Scrum masters**\
 Sprint 1 - Hazim\
 Sprint 2 - Saeed\
 Sprint 3 - Tega\
