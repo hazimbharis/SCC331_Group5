@@ -1,0 +1,24 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.0'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.monitor'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.11'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
