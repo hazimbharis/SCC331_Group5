@@ -3,9 +3,9 @@
 Smart Prison
 
 **Scrum masters**
-Sprint 1 - Hazim
-Sprint 2 - Saeed
-Sprint 3 - Tega
+Sprint 1 - Hazim\
+Sprint 2 - Saeed\
+Sprint 3 - Tega\
 
 Team tasks:\
 4.6  consideration of ethical issues related to domain\
