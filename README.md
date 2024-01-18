@@ -2,6 +2,11 @@
 # Team Name: Super Coders
 Smart Prison
 
+**Scrum masters**
+Sprint 1 - Hazim
+Sprint 2 - Saeed
+Sprint 3 - Tega
+
 Team tasks:\
 4.6  consideration of ethical issues related to domain\
 4.7\
@@ -10,6 +15,6 @@ Team tasks:\
 Tasks:\
 Hazim -  MySQL Database\
 Saeed - Microbit User Location code\
-Harry - Door tracker and alarm\ 
+Harry - Door tracker and alarm\
 Tega - Sensors and frontend\
 Joseph -
