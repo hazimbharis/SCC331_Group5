@@ -16,5 +16,5 @@ Tasks:\
 Hazim -  MySQL Database\
 Saeed - Microbit User Location code\
 Harry - Door tracker and alarm (4.4)\
-Tega - Sensors and frontend\
-Joseph -
+Tega - Sensors\
+Joseph - Web frontend
