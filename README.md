@@ -13,7 +13,7 @@ Team tasks:\
 4.8
 
 Tasks:\
-Hazim -  MySQL Database\
+Hazim -  MySQL Database & Base Microbit\
 Saeed - Microbit User Location code\
 Harry - Door tracker and alarm (4.4)\
 Tega - Sensors\
