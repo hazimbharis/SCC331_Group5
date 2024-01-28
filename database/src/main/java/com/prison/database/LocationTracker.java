@@ -1,4 +1,4 @@
-package com.monitor.server;
+package com.prison.database;
 
 public class LocationTracker {
     private int id;
