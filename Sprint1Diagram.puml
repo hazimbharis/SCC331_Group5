@@ -1,0 +1,30 @@
+@startuml
+
+Component Base{
+    Component Database
+    Component BaseStation
+}
+
+Component Doors{
+    Component Door
+    Component Alarm
+}
+
+Component PersonTracker{
+    Component Tracker
+    Component Zone
+}
+
+Component EnvironmentSensor
+
+Component FrontEnd
+
+FrontEnd -(0)- Database
+Tracker -(0)- Zone
+BaseStation -(0)- Doors
+BaseStation -(0)- EnvironmentSensor
+BaseStation -(0)- PersonTracker
+Database -(0- BaseStation
+Alarm -(0- Door
+
+@enduml
