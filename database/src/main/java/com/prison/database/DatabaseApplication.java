@@ -49,7 +49,17 @@ public class DatabaseApplication {
 		} catch (Exception e) {
 			System.out.println("no microbit detected");
 		}
+	}
 
+	private static void initialize() throws SQLException {
+		String reset = "DROP TABLE IF EXISTS Microbits.Realtime ";
+		PreparedStatement stmt2 = connection.prepareStatement(reset);
+		stmt2.executeUpdate();
+		for(int i=0;i<tableNames.length;i++){
+			String make = "CREATE TABLE IF NOT EXISTS "+tableNames[i]+"("+tableQuery[i]+")";
+			PreparedStatement stmt = connection.prepareStatement(make);
+			stmt.executeUpdate();
+		}
 	}
 
 	//http://localhost:8080/addPrisoner?id=1&zone=1
@@ -162,15 +172,4 @@ public class DatabaseApplication {
 	}
 
 	// end of old code
-
-	private static void initialize() throws SQLException {
-		String reset = "DROP TABLE IF EXISTS Microbits.Realtime ";
-		PreparedStatement stmt2 = connection.prepareStatement(reset);
-		stmt2.executeUpdate();
-		for(int i=0;i<tableNames.length;i++){
-			String make = "CREATE TABLE IF NOT EXISTS "+tableNames[i]+"("+tableQuery[i]+")";
-			PreparedStatement stmt = connection.prepareStatement(make);
-			stmt.executeUpdate();
-		}
-	}
 }
