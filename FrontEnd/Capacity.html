@@ -17,14 +17,13 @@
             <a>Option 3</a>
         </nav>
     </header>
-    <!-- Create a canvas element to render the chart -->
+    <!-- Creates a canvas element to render the chart -->
     <div class ="table-div">
         <canvas id="myChart"></canvas>
     </div>
-
-    <!-- JavaScript to create and configure the chart -->
+    <!-- Creates a chart using the chart.js library -->
     <script>
-        // Sample data for the chart
+        // Sample data for the chart until mysql database has been configured and connected
         const data = {
             labels: ['Prison Area 1', 'Prison Area 2', 'Prison Area 3', 'Prison Area 4', 'Prison Area 5'],
             datasets: [{
@@ -32,14 +31,14 @@
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
-                data: [65, 59, 1000, 81, 56]
+                data: [34, 543, 1000, 656, 56]
             }]
         };
 
-        // Get the canvas element and render the chart
+        //Renders the chart
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
-            type: 'bar', // Specify the chart type (bar chart in this case)
+            type: 'bar', // Specify the chart type - Bar chart
             data: data,
             options: {
                 scales: {
