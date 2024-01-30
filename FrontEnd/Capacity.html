@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chart.js Example</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="Stylesheets/index.css">
+</head>
+<body style = "background-color: rgb(100, 89, 124);">
+    <header>
+        <nav>
+
+            <a href="Capacity.html">Capacity</a>
+            <a href="Temperature.html">Temperature</a>
+            <a>Option 3</a>
+        </nav>
+    </header>
+    <!-- Create a canvas element to render the chart -->
+    <div class ="table-div">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <!-- JavaScript to create and configure the chart -->
+    <script>
+        // Sample data for the chart
+        const data = {
+            labels: ['Prison Area 1', 'Prison Area 2', 'Prison Area 3', 'Prison Area 4', 'Prison Area 5'],
+            datasets: [{
+                label: 'Capacity',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                data: [65, 59, 1000, 81, 56]
+            }]
+        };
+
+        // Get the canvas element and render the chart
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar', // Specify the chart type (bar chart in this case)
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
