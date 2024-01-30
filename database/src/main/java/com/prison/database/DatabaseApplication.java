@@ -4,11 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
 import java.sql.*;
 
 @SpringBootApplication
+@RestController
 public class DatabaseApplication {
 	// Login variables
 	private static final String PASSWORD = "MyNewPass";
@@ -17,10 +19,11 @@ public class DatabaseApplication {
 	private static Connection connection;
 
 	// Database variables
-	private static final String[] tableNames = {"movement","lockstatus"};
+	private static final String[] tableNames = {"movement","lockstatus","environment"};
 	private static final String[] tableQuery ={
 			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL",
-			"doorID INT PRIMARY KEY, locked BOOL NOT NULL, closed BOOL NOT NULL, alarm BOOL NOT NULL"
+			"doorID INT PRIMARY KEY, locked BOOL NOT NULL, closed BOOL NOT NULL, alarm BOOL NOT NULL",
+			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL"
 	};
 
 	// Microbit variables
@@ -62,11 +65,11 @@ public class DatabaseApplication {
 		}
 	}
 
-	//http://localhost:8080/addPrisoner?id=1&zone=1
+	//http://localhost:8080/addPrisoner?id=AAAAAAA&zone=1
 	@GetMapping("/addPrisoner")
-	private void addp(@RequestParam(value = "id")String id, @RequestParam(value = "zone") int zone) throws SQLException {
+	private void addPrisoner(@RequestParam(value = "id")String id, @RequestParam(value = "zone") int zone) throws SQLException {
 
-		/***
+		/*
 		 * parameters: prisoner id (varchar), zone id (int: 1-4)
 		 *
 		 * when insert, check if ID exists
@@ -76,7 +79,7 @@ public class DatabaseApplication {
 		 */
 
 		// if 0, adds new prisoner entry
-		// if 1, changes value of prisoner entry
+		// if 1, changes value of existing prisoner entry
 		int check = 0;
 		String insertDataSQL;
 		ResultSet result;
@@ -84,22 +87,146 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.movement WHERE movement.prisonerID = '"+id+"'";
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-
-		}
-
-		if (result.getInt(0) == 0) {
-			insertDataSQL="INSERT INTO movement (id,zone) VALUES (?,?)";
-			try (PreparedStatement statement = connection.prepareStatement(insertDataSQL)) {
-				statement.setString(1, String.valueOf(id));
-				statement.setString(2, String.valueOf(zone));
-				statement.executeUpdate();
+			System.out.println(result);
+			while (result.next()) {
+				check = result.getInt(1);
+				System.out.println(check);
 			}
-		} else if (result.getInt(0) == 1) {
-			insertDataSQL="UPDATE movement SET zoneID = " + zone + "WHERE prisonerID = '" + id + "'";
-			try (PreparedStatement statement = connection.prepareStatement(insertDataSQL)) {
-				statement.executeUpdate();
+
+			if (check == 0) {
+				insertDataSQL="INSERT INTO movement (prisonerID,zoneID) VALUES (?,?)";
+				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
+					statement1.setString(1, String.valueOf(id));
+					statement1.setString(2, String.valueOf(zone));
+					statement1.executeUpdate();
+				}
+			} else if (check == 1) {
+				insertDataSQL="UPDATE movement SET zoneID = " + zone + " WHERE prisonerID = '" + id + "'";
+				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
+					statement2.executeUpdate();
+				}
 			}
 		}
+	}
+
+	@GetMapping("/addDoor")
+	private void addDoor(@RequestParam(value = "door") int door,
+								  @RequestParam(value= "locked")boolean locked,
+								  @RequestParam(value= "closed")boolean closed,
+								  @RequestParam(value= "alarm")boolean alarm) throws SQLException {
+		int check = 0;
+		String insertDataSQL;
+		ResultSet result;
+
+		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.lockstatus WHERE lockstatus.doorID = " + door;
+		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
+			result = statement.executeQuery();
+			System.out.println(result);
+			while (result.next()) {
+				check = result.getInt(1);
+				System.out.println(check);
+			}
+
+			if (check == 0) {
+				insertDataSQL="INSERT INTO lockstatus (doorID,locked,closed,alarm) VALUES (?,?,?,?)";
+				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
+					statement1.setString(1, String.valueOf(door));
+					statement1.setString(2, String.valueOf(locked));
+					statement1.setString(3, String.valueOf(closed));
+					statement1.setString(4, String.valueOf(alarm));
+					statement1.executeUpdate();
+				}
+			} else if (check == 1) {
+				insertDataSQL= "UPDATE movement SET locked = " + locked +", closed =" + closed +", alarm =" + alarm + " WHERE doorID = " + door ;
+				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
+					statement2.executeUpdate();
+				}
+			}
+		}
+	}
+
+	@GetMapping("/addEnvironment")
+	private void addEnvironment(@RequestParam(value = "zone") int zone,
+						   @RequestParam(value= "temp")int temp,
+						   @RequestParam(value= "noise")int noise,
+						   @RequestParam(value= "light")int light) throws SQLException {
+		int check = 0;
+		String insertDataSQL;
+		ResultSet result;
+
+		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.environment WHERE environment.zoneID = " + zone;
+		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
+			result = statement.executeQuery();
+			System.out.println(result);
+			while (result.next()) {
+				check = result.getInt(1);
+				System.out.println(check);
+			}
+
+			if (check == 0) {
+				insertDataSQL="INSERT INTO environment (zoneID,temp,noise,light) VALUES (?,?,?,?)";
+				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
+					statement1.setString(1, String.valueOf(zone));
+					statement1.setString(2, String.valueOf(temp));
+					statement1.setString(3, String.valueOf(noise));
+					statement1.setString(4, String.valueOf(light));
+					statement1.executeUpdate();
+				}
+			} else if (check == 1) {
+				insertDataSQL= "UPDATE movement SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
+				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
+					statement2.executeUpdate();
+				}
+			}
+		}
+	}
+
+	//http://localhost:8080/getPrisoners?zone=1
+	@GetMapping("/getPrisoners")
+	private String getPrisoners(@RequestParam(value = "zone")int zone) throws  SQLException {
+		String make = "SELECT * FROM Microbits.movement WHERE zoneID = " +zone;
+		PreparedStatement stmt = connection.prepareStatement(make);
+		ResultSet result = stmt.executeQuery();
+		String output = "";
+		while (result.next()){
+			String id = "PrisonerID:"+result.getString("prisonerID");
+			output = output.concat(String.join(",",id)+"!");
+		}
+		return output;
+	}
+
+	//http://localhost:8080/getDoors
+	@GetMapping("/getDoors")
+	private String getDoors() throws  SQLException {
+		String make = "SELECT * FROM Microbits.lockstatus";
+		PreparedStatement stmt = connection.prepareStatement(make);
+		ResultSet result = stmt.executeQuery();
+		String output = "";
+		while (result.next()){
+			String door = "doorID:"+result.getString("doorID");
+			String locked = "locked:"+result.getString("locked");
+			String closed = "closed:"+result.getString("closed");
+			String alarm = "alarm:"+result.getString("alarm");
+			output = output.concat(String.join(",",door,locked,closed,alarm)+"!");
+		}
+		return output;
+	}
+
+	//http://localhost:8080/getEnvironment?zone=1
+	@GetMapping("/getEnvironment")
+	private String getEnvironment(@RequestParam(value = "zone")int zone) throws  SQLException {
+		String make = "SELECT * FROM Microbits.environment WHERE zoneID = " +zone;
+		PreparedStatement stmt = connection.prepareStatement(make);
+		ResultSet result = stmt.executeQuery();
+		String output = "";
+		while (result.next()){
+			String id = "zoneID:"+result.getString("doorID");
+			String temp = "temp:"+result.getString("temp");
+			String noise = "noise:"+result.getString("noise");
+			String light = "light:"+result.getString("light");
+			output = output.concat(String.join(",",id,temp,noise,light)+"!");
+		}
+		return output;
 	}
 
 	//start of oldcode

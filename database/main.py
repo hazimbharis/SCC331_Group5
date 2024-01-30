@@ -31,6 +31,7 @@ def calc(val):
     newVal = (intVal / 255) *10
     return int(newVal)
 
+#ignore other functions other than main
 def main():
     uart.init(115200, 8, None, 1)
     
@@ -38,11 +39,7 @@ def main():
     radio.on()
     display.show("C")
     
-    while(1):   
-        sleep(1)
-        
-        print("testmessage")
-
+    while(1):
         if uart.any():
             msgBytes = uart.read()
             msgStr = str(msgBytes, 'UTF-8')
@@ -51,13 +48,16 @@ def main():
         message = radio.receive()
         if message is not None:
             serialMessage = message.split(",")
-            if int(serialMessage[0]) == 0:
+            if int(serialMessage[0]) == 0: #prisoner data: prisoner id and zone id
                 for x in range(len(OBJECTS)):
                     if serialMessage[1] == OBJECTS[x]: print(OBJECTS[x])
-                if len(message) > 9: print("0:,Z:"+serialMessage[1]+",L:"+str(calc(serialMessage[2]))+",N:"+str(calc(serialMessage[3]))+",T:"+serialMessage[4])
-            if int(serialMessage[0]) == 2: 
-                print("2:,ID"+serialMessage[1]+",Z:"+serialMessage[2])
-                updateZones(int(serialMessage[1]), int(serialMessage[2]))
+                if len(message) > 9: print("0:,PID:"+serialMessage[1]+",ZID:"+str(calc(serialMessage[2])))
+            if int(serialMessage[0]) == 1: #enviroment data: zone id, temp, noise and light
+                print("1:,ZID:"+serialMessage[1]+",TEMP:"+serialMessage[2]+str(calc(serialMessage[2]))+",NOISE:"+str(calc(serialMessage[3]))+",LIGHT:"+serialMessage[4])
+                #updateZones(int(serialMessage[1]), int(serialMessage[2]))
+            if int(serialMessage[0]) == 2: #door data: door id, locked, closed, alarmed
+                print("2:,DID"+serialMessage[1]+",LOCK:"+serialMessage[2]+",CLOSE:"+serialMessage[3]+",ALARM:"+serialMessage[4])
+                #updateZones(int(serialMessage[1]), int(serialMessage[2]))
                 
         for x in range(3):
             checkZones(x)

@@ -3,7 +3,7 @@ import radio
 
 # Receives: Each signal from person
 # Sends: Local values, zone number for person
-
+# Identifier: Was related to the different signals from different function microbits :- Cup and Object microbits
 IDENTIFIER = "0,"
 ZONE = 1
 MONITORED_OBJECT = "Chair"
