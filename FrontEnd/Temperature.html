@@ -7,48 +7,127 @@
     <!-- Include Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" type="text/css" href="Stylesheets/index.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+    src="https://kit.fontawesome.com/e0b1d3493e.js"
+    crossorigin="anonymous"
+  ></script>
+    <link rel="stylesheet" href="/SmartLab 2.0/SmartPrison.css" />
 </head>
-<body style = "background-color: rgb(100, 89, 124);">
+<body style="background-color: #e3d8d8;">
     <header>
+        <!--
         <nav>
 
             <a href="Capacity.html">Capacity</a>
             <a href="Temperature.html">Temperature</a>
             <a>Option 3</a>
-        </nav>
+        </nav>            
+        -->
+        <h1>Prisoner Location Chart</h1>
     </header>
     <!-- Creates a canvas element to render the chart -->
     <div class ="table-div">
         <canvas id="myChart"></canvas>
     </div>
+    <div style="position: absolute; left: 50px; bottom: 50px">
+        <a class="link" href="/SmartLab 2.0/SmartPrison.html">
+          <i
+            style="color: #686576 !important"
+            class="fa-solid fa-left-long fa-4x"
+          ></i>
+        </a>
+      </div>
 
     <!-- Creates a chart using the chart.js library -->
     <script>
-        // Sample data for the chart until mysql database has been configured and connected
-        const data = {
-            labels: ['Prison Area 1', 'Prison Area 2', 'Prison Area 3', 'Prison Area 4', 'Prison Area 5'],
-            datasets: [{
-                label: 'Temperature',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                data: [25, 22, 30, 16, 21]
-            }]
-        };
+        /*
+            function fetchPopulationData() {
+            $.get('/api/population', data => {
+                const labels = ['Gym', 'Canteen', 'Library', 'Living Room'];
+                const values = [
+                    0,
+                    0,
+                    5,
+                    0
+                ];
+        
+                const newData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Population',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    data: values
+                }]
+                };
+        
+                myChart.data = newData;
+                myChart.update();
+            });
+            }        
+        */
+// Function to generate random data for the chart
+function generateRandomData() {
+  const randomData = [];
+  for (let i = 0; i < 4; i++) {
+    randomData.push(Math.floor(Math.random() * 10)); // Generate random numbers between 0 and 100
+  }
+  return randomData;
+}
 
-        //Renders the chart
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar', // Specify the chart type - Bar chart
-            data: data,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+// Function to update the chart with new random data
+function updateChart() {
+  const newData = generateRandomData();
+
+  myChart.data.datasets[0].data = newData;
+  myChart.options.scales.y.max = 10;
+  
+  myChart.update();
+}
+
+// Create initial data
+const initialData = generateRandomData();
+
+// Create and configure the chart
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+  type: 'bar', // Specify the chart type (bar chart in this case)
+  data: {
+    labels: ['Area 1', 'Area 2', 'Area 3', 'Area 4'],
+    datasets: [{
+      label: 'Population',
+      data: initialData,
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+
+// Update the chart every 5 seconds
+setInterval(updateChart, 1000);
+
+      
+
+
+
+
     </script>
+    <script src="/SmartLab 2.0/SmartPrison.js"></script>
 </body>
 </html>
