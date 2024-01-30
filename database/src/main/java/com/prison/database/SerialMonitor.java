@@ -48,7 +48,7 @@ public class SerialMonitor {
 
 
         // Get the appropriate port and open
-        microbit = SerialPort.getCommPort("COM3");
+        microbit = SerialPort.getCommPort("COM6");
         microbit.openPort();
         // Set the baud rate
         if (microbit.isOpen()) {
@@ -92,50 +92,55 @@ public class SerialMonitor {
                 }
                 String[] types = data.split(",");
                 if (types.length < 6) {
-                    System.out.println(types[0]);
-                    int channel = Integer.parseInt(types[0].split(":")[0].trim());
+                    System.out.println("channel type: " + types[0]);
+                    String channel = types[0].split(":")[0].trim();
+                    System.out.println(channel);
                     int[] values = new int[6];
-                    if (channel == 0) { // environment response data
-                        values[0] = Integer.parseInt(types[1].split(":")[1].trim()); // zone ID
-                        values[1] = Integer.parseInt(types[2].split(":")[1].trim()); // temp
-                        values[2] = Integer.parseInt(types[3].split(":")[1].trim()); // noise
-                        values[3] = Integer.parseInt(types[4].split(":")[1].trim()); // light
-                        if (values[0] == 1) { //zone 1
-                            setZD(1, values[3], values[2], values[1], hour.getHour());
-                            setRT(1, values[3], values[2], values[1], z1counter);
-                        }
-                        if (values[0] == 2) { //zone 2
-                            setZD(2, values[3], values[2], values[1], hour.getHour());
-                            setRT(2, values[3], values[2], values[1], z2counter);
-                        }
-                        if (values[0] == 3) { //zone 3
-                            setPing(3);
-                            setZD(3, values[3], values[2], values[1], hour.getHour());
-                            setRT(3, values[3], values[2], values[1], z3counter);
-                        }
-                        checkRT();
-                    } else if (channel == 1) {
+                    //if (true) {
+                    if (channel.equals("001")) { // environment response data
+                        System.out.println("happened");
+                        String prisonerID = types[1]; // prisoner ID}
+                        System.out.println(prisonerID);
+                        int zoneID = Integer.parseInt(types[2]); // zone ID
+                        System.out.println(zoneID);
+                        setPrisoner(prisonerID, zoneID);
+                        System.out.println("fucntion finished");
+
+
+//                        boolean check = false;
+//                        if (check == false) {
+//                            //trackers.add(new LocationTracker(id, idINzone));
+//                        }
+
+//                        values[0] = Integer.parseInt(types[1].split(":")[1].trim()); // zone ID
+//                        values[1] = Integer.parseInt(types[2].split(":")[1].trim()); // temp
+//                        values[2] = Integer.parseInt(types[3].split(":")[1].trim()); // noise
+//                        values[3] = Integer.parseInt(types[4].split(":")[1].trim()); // light
+//                        if (values[0] == 1) { //zone 1
+//                            setZD(1, values[3], values[2], values[1], hour.getHour());
+//                            setRT(1, values[3], values[2], values[1], z1counter);
+//                        }
+//                        if (values[0] == 2) { //zone 2
+//                            setZD(2, values[3], values[2], values[1], hour.getHour());
+//                            setRT(2, values[3], values[2], values[1], z2counter);
+//                        }
+//                        if (values[0] == 3) { //zone 3
+//                            setZD(3, values[3], values[2], values[1], hour.getHour());
+//                            setRT(3, values[3], values[2], values[1], z3counter);
+//                        }
+//                        if (values[0] == 4) { //zone 4
+//                            setZD(3, values[3], values[2], values[1], hour.getHour());
+//                            setRT(3, values[3], values[2], values[1], z3counter);
+//                        }
+//                        checkRT();
+                    } else if (channel.equals("002")) { // door response data
                         values[0] = Integer.parseInt(types[1].split(":")[1].trim()); //door ID
                         values[1] = Integer.parseInt(types[2].split(":")[1].trim()); //locked status
                         values[2] = Integer.parseInt(types[3].split(":")[1].trim()); //closed status
                         values[3] = Integer.parseInt(types[4].split(":")[1].trim()); //alarmed status
 
-                    } else if (channel == 2) { // prisoner response data
-                        int id = Integer.parseInt(types[1].split(":")[1].trim()); // prisoner ID
-                        int idINzone = Integer.parseInt(types[2].split(":")[1].trim()); // zone ID
-                        boolean check = false;
-//                            for (int x = 0; x < trackers.size(); x++) {
-//                                if(trackers.get(x).getId() == id) {
-//                                    check=true;
-//                                    if (trackers.get(x).getZone() != idINzone) {
-//                                        trackers.get(x).updateZone(idINzone);
-//                                        break;
-//                                    }
-//                                }
-//                            }
-                        if (check == false) {
-                            //trackers.add(new LocationTracker(id, idINzone));
-                        }
+                    } else if (channel.equals("003")) { // prisoner response data
+
                     }
                 }
             }
@@ -147,21 +152,21 @@ public class SerialMonitor {
 
     //old functions will change later
 
-    public void setPing(int zone) {
-        try {
-            URL getURL = new URL(url + "/setPing?zone=" + zone);
-            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
-            connection.setRequestMethod("GET");
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            if (DEBUG) {
-                System.out.println(getURL);
-                System.out.println(responseCode);
-            }
-            connection.disconnect();
-        } catch (Exception e) {
-        }
-    }
+//    public void setPing(int zone) {
+//        try {
+//            URL getURL = new URL(url + "/setPing?zone=" + zone);
+//            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+//            connection.setRequestMethod("GET");
+//            connection.connect();
+//            int responseCode = connection.getResponseCode();
+//            if (DEBUG) {
+//                System.out.println(getURL);
+//                System.out.println(responseCode);
+//            }
+//            connection.disconnect();
+//        } catch (Exception e) {
+//        }
+//    }
 
     public void setMD(String item) {
         try {
@@ -179,6 +184,24 @@ public class SerialMonitor {
             e.printStackTrace();
         }
 
+    }
+
+    public void setPrisoner(String pid, int zid) {
+        try {
+            URL getURL = new URL(url + "/addPrisoner?id=" + pid + "&zone=" + zid);
+            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if (DEBUG) {
+                System.out.println(getURL);
+                System.out.println(responseCode);
+            }
+            connection.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("failed to connect");
+        }
     }
 
     public void setZD(int zone, int temp, int noise, int light, int time) {
