@@ -95,44 +95,34 @@ public class SerialMonitor {
                     System.out.println(types[0]);
                     int channel = Integer.parseInt(types[0].split(":")[0].trim());
                     int[] values = new int[6];
-                    if (channel == 0) {
-                        values[0] = Integer.parseInt(types[1].split(":")[1].trim());
-                        values[1] = Integer.parseInt(types[2].split(":")[1].trim());
-                        values[2] = Integer.parseInt(types[3].split(":")[1].trim());
-                        values[3] = Integer.parseInt(types[4].split(":")[1].trim());
-                        if (values[0] == 1) {
-                            setPing(1);
-                            if (hour.compareTo(nextHour) == 1) {
-                                nextHour = LocalTime.of(hour.getHour() + 1, hour.getMinute(), hour.getSecond());
-                                setZD(1, values[3], values[2], values[1], hour.getHour());
-                            }
-                            z1counter++;
+                    if (channel == 0) { // environment response data
+                        values[0] = Integer.parseInt(types[1].split(":")[1].trim()); // zone ID
+                        values[1] = Integer.parseInt(types[2].split(":")[1].trim()); // temp
+                        values[2] = Integer.parseInt(types[3].split(":")[1].trim()); // noise
+                        values[3] = Integer.parseInt(types[4].split(":")[1].trim()); // light
+                        if (values[0] == 1) { //zone 1
+                            setZD(1, values[3], values[2], values[1], hour.getHour());
                             setRT(1, values[3], values[2], values[1], z1counter);
                         }
-                        if (values[0] == 2) {
-                            System.out.println(hour);
-                            System.out.println(nextHour);
-                            setPing(2);
-                            if (hour.compareTo(nextHour) == 1) {
-                                nextHour = LocalTime.of(hour.getHour() + 1, hour.getMinute(), hour.getSecond());
-                                setZD(2, values[3], values[2], values[1], hour.getHour());
-                            }
-                            z2counter++;
+                        if (values[0] == 2) { //zone 2
+                            setZD(2, values[3], values[2], values[1], hour.getHour());
                             setRT(2, values[3], values[2], values[1], z2counter);
                         }
-                        if (values[0] == 3) {
+                        if (values[0] == 3) { //zone 3
                             setPing(3);
-                            if (hour.compareTo(nextHour) == 1) {
-                                nextHour = LocalTime.of(hour.getHour() + 1, hour.getMinute(), hour.getSecond());
-                                setZD(3, values[3], values[2], values[1], hour.getHour());
-                            }
-                            z3counter++;
+                            setZD(3, values[3], values[2], values[1], hour.getHour());
                             setRT(3, values[3], values[2], values[1], z3counter);
                         }
                         checkRT();
-                    } else if (channel == 2) {
-                        int id = Integer.parseInt(types[1].split(":")[1].trim()); //people
-                        int idINzone = Integer.parseInt(types[2].split(":")[1].trim());
+                    } else if (channel == 1) {
+                        values[0] = Integer.parseInt(types[1].split(":")[1].trim()); //door ID
+                        values[1] = Integer.parseInt(types[2].split(":")[1].trim()); //locked status
+                        values[2] = Integer.parseInt(types[3].split(":")[1].trim()); //closed status
+                        values[3] = Integer.parseInt(types[4].split(":")[1].trim()); //alarmed status
+
+                    } else if (channel == 2) { // prisoner response data
+                        int id = Integer.parseInt(types[1].split(":")[1].trim()); // prisoner ID
+                        int idINzone = Integer.parseInt(types[2].split(":")[1].trim()); // zone ID
                         boolean check = false;
 //                            for (int x = 0; x < trackers.size(); x++) {
 //                                if(trackers.get(x).getId() == id) {
