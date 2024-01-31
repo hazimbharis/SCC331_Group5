@@ -1,0 +1,17 @@
+Sprint 4, due week 13 thursday
+Website frontend (can be local for this sprint)
+-> specific interfaces for specific users (visitors & prison staff)
+sensors and data visualisers for:
+- location of people (how are people being tracked)
+- numbers of people in each building (how many buildings and how do we check)
+- enviroment data in each building (this one seems ok)
+- extra function (prisoner level)
+
+languages:
+MySQL for database
+
+tips:
+we should reuse and improve on our code from 330
+
+write this down in a logbook document later
+
