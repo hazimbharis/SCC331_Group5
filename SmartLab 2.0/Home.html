@@ -60,7 +60,7 @@
     </style>
   </head>
   <body style="background-color: #e3d8d8">
-    <h1 style="text-align: center" id="heading"><b>Gym</b></h1>
+    <h1 style="position: relative; top: 10px; text-align: center" id="heading"><b>Gym</b></h1>
     <div class="items">
       <div class="item">
         <!-- Data from the API -->
@@ -123,22 +123,23 @@
       var temp = document.getElementById('temperature');
       var noises = document.getElementById('noise');
       var lights = document.getElementById('light');
-      var index = 0;
+      let index = 0;
       var zones = ['Gym', 'Canteen', 'Living Room', 'Library']
 
       function change_left(){
         index -= 1;
-        h1.innerHTML = zones[index%4]
+        if (index < 0) index = 3
+        h1.innerHTML = zones[Math.abs(index%4)]
       }
 
       function change_right(){
         index += 1;
         
-        h1.innerHTML = zones[index%4]
+        h1.innerHTML = zones[Math.abs(index%4)]
       }
       
       function fetchPopulationData() {
-        switch (index%4) {
+        switch (Math.abs(index%4)) {
           case 0:
             console.log('0')
             $.get('http://localhost:5000/api/gym', data => {
