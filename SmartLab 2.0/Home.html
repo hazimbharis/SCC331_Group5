@@ -60,6 +60,7 @@
     </style>
   </head>
   <body style="background-color: #e3d8d8">
+    <h1 style="text-align: center" id="heading"><b>Gym</b></h1>
     <div class="items">
       <div class="item">
         <!-- Data from the API -->
@@ -94,11 +95,100 @@
         ></i>
       </a>
     </div>
+    <div style="position: absolute; right: 400px; top: 20px" onclick="change_right()">
+      <a class="link" >
+        <i
+          style="color: #686576 !important"
+          class="fa-solid fa-right-long fa-4x"
+        ></i>
+      </a>
+    </div>
+    <div style="position: absolute;left: 400px; top: 20px" onclick="change_left()">
+      <a class="link" >
+        <i
+          style="color: #686576 !important"
+          class="fa-solid fa-left-long fa-4x"
+        ></i>
+      </a>
+    </div>
     <script src="Home.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
       integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script>
+      var h1 = document.getElementById('heading');
+      var temp = document.getElementById('temperature');
+      var noises = document.getElementById('noise');
+      var lights = document.getElementById('light');
+      var index = 0;
+      var zones = ['Gym', 'Canteen', 'Living Room', 'Library']
+
+      function change_left(){
+        index -= 1;
+        h1.innerHTML = zones[index%4]
+      }
+
+      function change_right(){
+        index += 1;
+        
+        h1.innerHTML = zones[index%4]
+      }
+      
+      function fetchPopulationData() {
+        switch (index%4) {
+          case 0:
+            console.log('0')
+            $.get('http://localhost:5000/api/gym', data => {
+                // Update the 'values' array with the new data received
+                values = data;
+                console.log(data);
+                temp.innerHTML = values[0].temp
+                noises.innerHTML = values[0].noise
+                lights.innerHTML = values[0].light
+                return  
+            });
+          case 1:
+            console.log('1')
+            $.get('http://localhost:5000/api/canteen', data => {
+                // Update the 'values' array with the new data received
+                values = data;
+                console.log(data);
+                temp.innerHTML = values[0].temp
+                noises.innerHTML = values[0].noise
+                lights.innerHTML = values[0].light
+                return
+            });
+          case 2:
+            console.log('2')
+            $.get('http://localhost:5000/api/library', data => {
+                // Update the 'values' array with the new data received
+                values = data;
+                console.log(data);
+                temp.innerHTML = values[0].temp
+                noises.innerHTML = values[0].noise
+                lights.innerHTML = values[0].light
+                return
+            });
+          case 3:
+            console.log('3')
+            $.get('http://localhost:5000/api/livingroom', data => {
+                // Update the 'values' array with the new data received
+                values = data;
+                console.log(data);
+                temp.innerHTML = values[0].temp
+                noises.innerHTML = values[0].noise
+                lights.innerHTML = values[0].light
+                return
+            });
+          }
+        }
+
+      fetchPopulationData();
+      setInterval(fetchPopulationData, 5000);  
+
+    </script>
   </body>
 </html>
