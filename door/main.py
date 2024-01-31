@@ -32,7 +32,7 @@ display.scroll("System set up", wait = False, delay = 100)
 music.pitch(300, duration = 500, wait = False)
 
 while True:
-    if (time.ticks_diff(time.ticks_ms(), last) > 500): #Limit the rate that data collected, compares current time to the last time data was collected
+    if (time.ticks_diff(time.ticks_ms(), last) > 1000): #Limit the rate that data collected, compares current time to the last time data was collected
         x = accelerometer.get_x() #Should be using get_strength() instead but it doesn't seem to be working?
         y = accelerometer.get_y()
         z = accelerometer.get_z()
@@ -73,8 +73,8 @@ while True:
         previousY = y
         previousZ = z
         last = time.ticks_ms()
-        print("002:" + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar))
-        radio.send("002:" + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar)) #Send data to base station via radio channel
+        print("002:," + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar) + ",")
+        radio.send("002:," + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar) + ",") #Send data to base station via radio channel
     if (button_a.was_pressed() and alarm == False):
         if (locked == False and closed == True):
             locked = True
