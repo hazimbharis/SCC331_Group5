@@ -2,29 +2,9 @@ from microbit import *
 import radio
 
 # Receives:
-# Channel 0: Information from zone
-# Channel 2: ID and current zone of person
-
-activeZones = [[], [], []]
-nowActive = [0, 0, 0]
-lastActive = [0 , 0, 0]
-
-def checkZones(zone):
-    if len(activeZones[zone]) > 0:
-        if nowActive[zone] == 1: lastActive[zone] = 1
-        else: nowActive[zone] = 1
-    else:
-        if nowActive[zone] == 0: lastActive[zone] = 0
-        else: nowActive[zone] = 0
-    
-    if nowActive[zone] != lastActive[zone]: radio.send("0,"+str(zone)+","+str(nowActive[zone])+"1") #Extra value at end means nothing - should ignore but needs it
-
-def updateZones(id, zone):
-    for x in range(len(activeZones)):
-        if len(activeZones[x]) > 0:
-            for y in range(len(activeZones[x])):
-                if activeZones[x][y] == id: activeZones[x].remove(id)
-    activeZones[zone-1].append(id)
+# Channel 001: ID of User and ID of Zone
+# Channel 002: Door ID and Status (Locked, Closed, Alarm)
+# Channel 003: Zone ID and Environment (Temp, Noise, Light)
 
 #ignore other functions other than main
 def main():
@@ -43,10 +23,10 @@ def main():
         message = radio.receive()
         if message is not None:
             print(message)
-            serialMessage = message.split(",")
+            #serialMessage = message.split(",")
             #print(serialMessage[0][:3])
-            if serialMessage[0][:3] == "001": #prisoner data: prisoner id and zone id
-                pass
+            #if serialMessage[0][:3] == "001": #prisoner data: prisoner id and zone id
+            #    pass
             #if len(message) > 9: print("0:,PID:"+serialMessage[1]+",ZID:"+str(calc(serialMessage[2])))
             #print("0:,PID:"+serialMessage[1]+",ZID:"+serialMessage[2])
             # if int(serialMessage[0]) == 1: #enviroment data: zone id, temp, noise and light
@@ -55,8 +35,6 @@ def main():
             # if int(serialMessage[0]) == 2: #door data: door id, locked, closed, alarmed
             #     print("2:,DID"+serialMessage[1]+",LOCK:"+serialMessage[2]+",CLOSE:"+serialMessage[3]+",ALARM:"+serialMessage[4])
             #     #updateZones(int(serialMessage[1]), int(serialMessage[2]))
-        # for x in range(3):
-        #     checkZones(x)
         
         
 main()  

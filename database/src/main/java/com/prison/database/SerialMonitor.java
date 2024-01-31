@@ -91,55 +91,43 @@ public class SerialMonitor {
                     System.out.println(data);
                 }
                 String[] types = data.split(",");
-                if (types.length < 6) {
+                if (types.length < 16) { //don't know why this is here
                     System.out.println("channel type: " + types[0]);
                     String channel = types[0].split(":")[0].trim();
                     System.out.println(channel);
                     int[] values = new int[6];
-                    //if (true) {
-                    if (channel.equals("001")) { // environment response data
-                        System.out.println("happened");
-                        String prisonerID = types[1]; // prisoner ID}
-                        System.out.println(prisonerID);
-                        int zoneID = Integer.parseInt(types[2]); // zone ID
-                        System.out.println(zoneID);
-                        setPrisoner(prisonerID, zoneID);
-                        System.out.println("fucntion finished");
+                    switch (channel) {
+                        case "001" -> {  // environment response data
+                            String prisonerID = types[1]; // prisoner ID}
+                            int zoneID = Integer.parseInt(types[2]); // zone ID
+                            setPrisoner(prisonerID, zoneID);
+                        }
+                        case "002" -> {  // door response data
+                            System.out.println(types[1]); //door ID
+                            System.out.println(types[2]); //locked status
+                            System.out.println(types[3]); //closed status
+                            System.out.println(types[4]); //alarmed status
 
+                            int doorID = Integer.parseInt(types[1]);
+                            boolean locked = Boolean.parseBoolean(types[2]);
+                            boolean closed = Boolean.parseBoolean(types[3]);
+                            boolean alarm = Boolean.parseBoolean(types[4]);
 
-//                        boolean check = false;
-//                        if (check == false) {
-//                            //trackers.add(new LocationTracker(id, idINzone));
-//                        }
+                            setDoor(doorID, locked, closed, alarm);
+                        }
+                        case "003" -> { // environment response data
+                            System.out.println(types[1]); //zone ID
+                            System.out.println(types[2]); //temp
+                            System.out.println(types[3]); //noise
+                            System.out.println(types[4]); //light
 
-//                        values[0] = Integer.parseInt(types[1].split(":")[1].trim()); // zone ID
-//                        values[1] = Integer.parseInt(types[2].split(":")[1].trim()); // temp
-//                        values[2] = Integer.parseInt(types[3].split(":")[1].trim()); // noise
-//                        values[3] = Integer.parseInt(types[4].split(":")[1].trim()); // light
-//                        if (values[0] == 1) { //zone 1
-//                            setZD(1, values[3], values[2], values[1], hour.getHour());
-//                            setRT(1, values[3], values[2], values[1], z1counter);
-//                        }
-//                        if (values[0] == 2) { //zone 2
-//                            setZD(2, values[3], values[2], values[1], hour.getHour());
-//                            setRT(2, values[3], values[2], values[1], z2counter);
-//                        }
-//                        if (values[0] == 3) { //zone 3
-//                            setZD(3, values[3], values[2], values[1], hour.getHour());
-//                            setRT(3, values[3], values[2], values[1], z3counter);
-//                        }
-//                        if (values[0] == 4) { //zone 4
-//                            setZD(3, values[3], values[2], values[1], hour.getHour());
-//                            setRT(3, values[3], values[2], values[1], z3counter);
-//                        }
-//                        checkRT();
-                    } else if (channel.equals("002")) { // door response data
-                        values[0] = Integer.parseInt(types[1].split(":")[1].trim()); //door ID
-                        values[1] = Integer.parseInt(types[2].split(":")[1].trim()); //locked status
-                        values[2] = Integer.parseInt(types[3].split(":")[1].trim()); //closed status
-                        values[3] = Integer.parseInt(types[4].split(":")[1].trim()); //alarmed status
+                            int zoneID = Integer.parseInt(types[1]);
+                            int temp = Integer.parseInt(types[2]);
+                            int noise = Integer.parseInt(types[3]);
+                            int light = Integer.parseInt(types[4]);
 
-                    } else if (channel.equals("003")) { // prisoner response data
+                            setEnvironment(zoneID, temp, noise, light);
+                        }
 
                     }
                 }
@@ -148,42 +136,6 @@ public class SerialMonitor {
 
 
         });
-    }
-
-    //old functions will change later
-
-//    public void setPing(int zone) {
-//        try {
-//            URL getURL = new URL(url + "/setPing?zone=" + zone);
-//            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
-//            connection.setRequestMethod("GET");
-//            connection.connect();
-//            int responseCode = connection.getResponseCode();
-//            if (DEBUG) {
-//                System.out.println(getURL);
-//                System.out.println(responseCode);
-//            }
-//            connection.disconnect();
-//        } catch (Exception e) {
-//        }
-//    }
-
-    public void setMD(String item) {
-        try {
-            URL getURL = new URL(url + "/insertMD?item=" + item);
-            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
-            connection.setRequestMethod("GET");
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            if (DEBUG) {
-                System.out.println(getURL);
-                System.out.println(responseCode);
-            }
-            connection.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void setPrisoner(String pid, int zid) {
@@ -203,10 +155,26 @@ public class SerialMonitor {
             System.out.println("failed to connect");
         }
     }
-
-    public void setZD(int zone, int temp, int noise, int light, int time) {
+    public void setDoor(int did, boolean locked, boolean closed, boolean alarm) {
         try {
-            URL getURL = new URL(url + "/insertZD?z=" + zone + "&t=" + temp + "&n=" + noise + "&l=" + light + "&time=" + time);
+            URL getURL = new URL(url + "/addDoor?door=" + did + "&locked=" + locked + "&closed=" + closed + "&alarm=" + alarm);
+            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if (DEBUG) {
+                System.out.println(getURL);
+                System.out.println(responseCode);
+            }
+            connection.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("failed to connect");
+        }
+    }
+    public void setEnvironment(int zid, int temp, int noise, int light) {
+        try {
+            URL getURL = new URL(url + "/addEnvironment?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
             HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -222,23 +190,23 @@ public class SerialMonitor {
         }
     }
 
-    public void setRT(int zone, int temp, int noise, int light, int counter) {
-        try {
-            URL getURL = new URL(url + "/insertRT?z=" + zone + "&t=" + temp + "&n=" + noise + "&l=" + light + "&id=" + counter);
-            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
-            connection.setRequestMethod("GET");
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            if (DEBUG) {
-                System.out.println(getURL);
-                System.out.println(responseCode);
-            }
-            connection.disconnect();
+    //old functions will change later
 
-        } catch (Exception e) {
-            System.out.println("failed to connect");
-        }
-    }
+//    public void setPing(int zone) {
+//        try {
+//            URL getURL = new URL(url + "/setPing?zone=" + zone);
+//            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+//            connection.setRequestMethod("GET");
+//            connection.connect();
+//            int responseCode = connection.getResponseCode();
+//            if (DEBUG) {
+//                System.out.println(getURL);
+//                System.out.println(responseCode);
+//            }
+//            connection.disconnect();
+//        } catch (Exception e) {
+//        }
+//    }
 
     public void checkRT() {
         try {
@@ -271,9 +239,6 @@ public class SerialMonitor {
                             conn.setRequestMethod("GET");
                             conn.connect();
                             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                setRT(zoneCount, Integer.parseInt(records.get(records.size() - 1)[1].split(":")[1]),
-                                        Integer.parseInt(records.get(records.size() - 1)[2].split(":")[1]),
-                                        Integer.parseInt(records.get(records.size() - 1)[3].split(":")[1]), 1);
                                 if (zoneCount == 1) {
                                     z1counter = 1;
                                 } else if (zoneCount == 2) {
