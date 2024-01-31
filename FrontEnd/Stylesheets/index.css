@@ -22,9 +22,9 @@ header {
     top: 0;
     width: 100%;
     position: fixed;
-    background-color: rgba(0,0,0, 0.5);
+
     z-index: 10;
-    color: white;
+    color: black;
     margin: 0;
     padding: 0;
 
@@ -38,7 +38,7 @@ body {
     height: 100vh;
     margin: 0;
     }
-  
+/*
 nav {
     display: flex;
     align-items: center;
@@ -60,4 +60,4 @@ nav a:hover {
 
     border-radius: 50px;
 }
-  
+*/
