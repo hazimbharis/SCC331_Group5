@@ -49,7 +49,7 @@
     <!-- Creates a chart using the chart.js library -->
     <script>
         
-        const labels = ['Gym', 'Canteen', 'Library'];
+        const labels = ['Gym', 'Canteen', 'Library', 'Living Room'];
         let values = [0, 0, 5, 0];
 
         const ctx = document.getElementById('myChart').getContext('2d');
@@ -80,70 +80,12 @@
                 // Update the 'values' array with the new data received
                 values = data;
                 console.log(data);
-                // Update the chart with the new data
                 myChart.data.datasets[0].data = values;
                 myChart.update();
             });
         }
-
-        // Initial data fetch and chart creation
         fetchPopulationData();
-
-        // Set up a timer to fetch and update data every 5 seconds (5000 milliseconds)
         setInterval(fetchPopulationData, 5000);    
-        
-/*
-// Function to generate random data for the chart
-function generateRandomData() {
-  const randomData = [];
-  for (let i = 0; i < 4; i++) {
-    randomData.push(Math.floor(Math.random() * 10)); // Generate random numbers between 0 and 100
-  }
-  return randomData;
-}
-
-// Function to update the chart with new random data
-function updateChart() {
-  const newData = generateRandomData();
-
-  myChart.data.datasets[0].data = newData;
-  myChart.options.scales.y.max = 10;
-  
-  myChart.update();
-}
-
-// Create initial data
-const initialData = generateRandomData();
-
-// Create and configure the chart
-const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
-  type: 'bar', // Specify the chart type (bar chart in this case)
-  data: {
-    labels: ['Gym', 'Canteen', 'Library', 'LivingRoom'],
-    datasets: [{
-      label: 'Population',
-      data: initialData,
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1
-    }]
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-});
-*/
-
-
-      
-
-
-
 
     </script>
     <script src="/SmartLab 2.0/SmartPrison.js"></script>

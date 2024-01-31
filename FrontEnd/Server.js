@@ -30,7 +30,7 @@ db.connect(err => {
   }
 });
 
-// Define API endpoint to fetch population data for four areas
+//API endpoint to fetch population data for four areas
 app.get('/api/population', (req, res) => {
     const query = `
       SELECT 
@@ -49,7 +49,23 @@ app.get('/api/population', (req, res) => {
       } 
     });
   });
-  
+//API EndPoint for Prisoner Positioning system
+app.get('/api/position', (req, res) =>{
+    const query = `
+    SELECT zoneID, prisonerID
+    FROM movement
+    WHERE zoneID IN (1, 2, 3, 4)
+    ORDER BY zoneID
+    `;
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        res.json(results[0]); // Send the results as an object
+      } 
+    });
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
