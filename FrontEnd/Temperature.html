@@ -47,19 +47,40 @@
                 labels: labels,
                 datasets: [{
                     label: 'Population',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(254, 115, 0, 0.6)',//rgba(75, 192, 192, 0.2)
+                    borderColor: 'rgba(254, 115, 0, 1)',//rgba(75, 192, 192, 1)
                     borderWidth: 1,
                     data: values
+                    
                 }]
             },
             options: {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        suggestedMax: 10 // Set the max value for the y-axis
+                        suggestedMax: 10, // Set the max value for the y-axis
+                        ticks: {
+                            color: 'white'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'White'
+                        }
                     }
+                },
+                plugins: {
+            legend: {
+                labels: {
+                    color: 'White' // Font color for legend labels
                 }
+            },
+            title: {
+                display: true,
+                text: 'Prisoner Location Chart',
+                color: 'White' // Font color for chart title
+            }
+        }
             }
         });
         function fetchPopulationData() {

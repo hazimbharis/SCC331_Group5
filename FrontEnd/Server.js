@@ -18,7 +18,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'MyNewPass',
+  password: 'aqtwmxsy76J',
   database: 'microbits'
 });
 
@@ -29,7 +29,22 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
-
+app.get('/api/door', (req, res) => {
+  const query = `
+  SELECT locked, closed, alarm
+  FROM lockstatus
+  WHERE doorID IN (1, 2, 3, 4)
+  ORDER BY doorID
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
 //start of bad code
 //API endpoint, to get env data from gym
 app.get('/api/gym', (req, res) => {
