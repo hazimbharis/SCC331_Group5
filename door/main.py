@@ -3,7 +3,7 @@ import music
 import time
 import radio
 
-name = "cell1" #Can be used as id for each door, maybe change to placeholder at start so it can be assigned
+name = 1 #Can be used as id for each door, maybe change to placeholder at start so it can be assigned
 state = "stationary" #Track the door's status, motion means door is moving, stationary means door is not moving
 last = time.ticks_ms()
 locked = False
@@ -56,24 +56,25 @@ while True:
         else:
             state = "stationary"
         if (locked == True):
-            lock = "locked"
+            lock = 1
         else:
-            lock = "unlocked"
+            lock = 0
         if (closed == True):
-            clos = "closed"
+            clos = 1
         else:
-            clos = "open"
+            clos = 0
         if (alarm == True):
-            alar = "warning"
+            alar = 1
         else:
-            alar = "normal"
-        print("door " + name + " " + clos + " " + state + " " + lock + " " + alar)
+            alar = 0
+        #print("door " + name + " " + clos + " " + state + " " + lock + " " + alar)
         #print(str(x) + " " + str(y) + " " + str(z)) #For testing
         previousX = x
         previousY = y
         previousZ = z
         last = time.ticks_ms()
-        radio.send("002," + name + "," + lock + "," + clos + "," + alar) #Send data to base station via radio channel
+        print("002:" + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar))
+        radio.send("002:" + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar)) #Send data to base station via radio channel
     if (button_a.was_pressed() and alarm == False):
         if (locked == False and closed == True):
             locked = True
