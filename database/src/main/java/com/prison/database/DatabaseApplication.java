@@ -130,14 +130,14 @@ public class DatabaseApplication {
 			if (check == 0) {
 				insertDataSQL="INSERT INTO lockstatus (doorID,locked,closed,alarm) VALUES (?,?,?,?)";
 				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
-					statement1.setString(1, String.valueOf(door));
-					statement1.setString(2, String.valueOf(locked));
-					statement1.setString(3, String.valueOf(closed));
-					statement1.setString(4, String.valueOf(alarm));
+					statement1.setInt(1, door);
+					statement1.setBoolean(2, locked);
+					statement1.setBoolean(3, closed);
+					statement1.setBoolean(4, alarm);
 					statement1.executeUpdate();
 				}
 			} else if (check == 1) {
-				insertDataSQL= "UPDATE movement SET locked = " + locked +", closed =" + closed +", alarm =" + alarm + " WHERE doorID = " + door ;
+				insertDataSQL= "UPDATE lockstatus SET locked = " + locked +", closed = " + closed +", alarm = " + alarm + " WHERE doorID = " + door ;
 				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
 					statement2.executeUpdate();
 				}

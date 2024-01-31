@@ -2,3 +2,9 @@ The system should be easy to use for all types of users
 The system should provide feedback to users when actions are performed
 The data stored in the database should be as accurate as possible
 Any battery power devices used should be energy efficient
+The UI should work on a large variety of devices
+The UI should run smoothly
+The system should be secure
+The system should be able to handle a large amount of users
+The system should ignore any messages not part of the system
+The UI should be accessible to all types of users
