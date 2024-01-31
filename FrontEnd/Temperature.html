@@ -3,52 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Chart.js Example</title>
-    <!-- Include Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Prison Location Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script><!--Chart JS library-->
     <link rel="stylesheet" type="text/css" href="Stylesheets/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/e0b1d3493e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/SmartLab 2.0/SmartPrison.css" />
 </head>
-<body style = "background-color: rgb(100, 89, 124);">
+<body style="background-color: #e3d8d8;">
     <header>
+        <!--
         <nav>
-
             <a href="Capacity.html">Capacity</a>
             <a href="Temperature.html">Temperature</a>
             <a>Option 3</a>
-        </nav>
+        </nav>            
+        -->
+        <h1>Prisoner Location Chart</h1>
     </header>
     <!-- Creates a canvas element to render the chart -->
     <div class ="table-div">
         <canvas id="myChart"></canvas>
     </div>
-
+    <div style="position: absolute; left: 50px; bottom: 50px">
+        <a class="link" href="/SmartLab 2.0/SmartPrison.html">
+          <i
+            style="color: #686576 !important"
+            class="fa-solid fa-left-long fa-4x"
+          ></i>
+        </a>
+      </div>
     <!-- Creates a chart using the chart.js library -->
-    <script>
-        // Sample data for the chart until mysql database has been configured and connected
-        const data = {
-            labels: ['Prison Area 1', 'Prison Area 2', 'Prison Area 3', 'Prison Area 4', 'Prison Area 5'],
-            datasets: [{
-                label: 'Temperature',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                data: [25, 22, 30, 16, 21]
-            }]
-        };
-
-        //Renders the chart
+    <script> 
+        const labels = ['Gym', 'Canteen', 'Library', 'LivingRoom'];
+        let values = [0, 0, 0, 0];
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
-            type: 'bar', // Specify the chart type - Bar chart
-            data: data,
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Population',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    data: values
+                }]
+            },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        suggestedMax: 10 // Set the max value for the y-axis
                     }
                 }
             }
         });
+        function fetchPopulationData() {
+            $.get('http://localhost:5000/api/population', data => {
+                // Update the 'values' array with the new data received
+                values = data;
+                console.log(data);
+                myChart.data.datasets[0].data = values;
+                myChart.update();
+            });
+        }
+        fetchPopulationData();
+        setInterval(fetchPopulationData, 5000);    
     </script>
+    <script src="/SmartLab 2.0/SmartPrison.js"></script>
 </body>
 </html>
