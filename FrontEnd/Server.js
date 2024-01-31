@@ -1,13 +1,25 @@
+
+/**
+ * Start Server with 'node Server.js'
+ * Run FrontEnd on differnt port to avoid conflicts
+ * To connect to API endpoint listen on port 5000
+ */
+
+
 const express = require('express');
 const mysql = require('mysql');
+const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = 5000;
+
+app.use(cors());
+
 
 const db = mysql.createConnection({
-  host: 'your-database-host',
-  user: 'your-username',
-  password: 'your-password',
-  database: 'your-database-name'
+  host: 'localhost',
+  user: 'root',
+  password: 'aqtwmxsy76J',
+  database: 'Microbits'
 });
 
 db.connect(err => {
@@ -34,7 +46,7 @@ app.get('/api/population', (req, res) => {
         res.status(500).json({ error: 'Database error' });
       } else {
         res.json(results[0]); // Send the results as an object
-      }
+      } 
     });
   });
   

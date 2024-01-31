@@ -14,6 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
     src="https://kit.fontawesome.com/e0b1d3493e.js"
     crossorigin="anonymous"
@@ -47,18 +48,14 @@
 
     <!-- Creates a chart using the chart.js library -->
     <script>
-        /*
-            function fetchPopulationData() {
-            $.get('/api/population', data => {
-                const labels = ['Gym', 'Canteen', 'Library', 'Living Room'];
-                const values = [
-                    0,
-                    0,
-                    5,
-                    0
-                ];
         
-                const newData = {
+        const labels = ['Gym', 'Canteen', 'Library'];
+        let values = [0, 0, 5, 0];
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
                 labels: labels,
                 datasets: [{
                     label: 'Population',
@@ -67,13 +64,35 @@
                     borderWidth: 1,
                     data: values
                 }]
-                };
-        
-                myChart.data = newData;
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10 // Set the max value for the y-axis
+                    }
+                }
+            }
+        });
+
+        function fetchPopulationData() {
+            $.get('http://localhost:5000/api/population', data => {
+                // Update the 'values' array with the new data received
+                values = data;
+                console.log(data);
+                // Update the chart with the new data
+                myChart.data.datasets[0].data = values;
                 myChart.update();
             });
-            }        
-        */
+        }
+
+        // Initial data fetch and chart creation
+        fetchPopulationData();
+
+        // Set up a timer to fetch and update data every 5 seconds (5000 milliseconds)
+        setInterval(fetchPopulationData, 5000);    
+        
+/*
 // Function to generate random data for the chart
 function generateRandomData() {
   const randomData = [];
@@ -101,7 +120,7 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const myChart = new Chart(ctx, {
   type: 'bar', // Specify the chart type (bar chart in this case)
   data: {
-    labels: ['Area 1', 'Area 2', 'Area 3', 'Area 4'],
+    labels: ['Gym', 'Canteen', 'Library', 'LivingRoom'],
     datasets: [{
       label: 'Population',
       data: initialData,
@@ -118,9 +137,8 @@ const myChart = new Chart(ctx, {
     }
   }
 });
+*/
 
-// Update the chart every 5 seconds
-setInterval(updateChart, 1000);
 
       
 
