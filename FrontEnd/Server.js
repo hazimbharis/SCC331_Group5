@@ -62,7 +62,7 @@ app.get('/api/position', (req, res) =>{
         console.error('Database query error: ' + err.message);
         res.status(500).json({ error: 'Database error' });
       } else {
-        res.json(results[0]); // Send the results as an object
+        res.json(results); // Send the results as an object
       } 
     });
 })
