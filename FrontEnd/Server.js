@@ -18,8 +18,8 @@ app.use(cors());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'aqtwmxsy76J',
-  database: 'Microbits'
+  password: 'MyNewPass',
+  database: 'microbits'
 });
 
 db.connect(err => {
@@ -30,6 +30,84 @@ db.connect(err => {
   }
 });
 
+//start of bad code
+//API endpoint, to get env data from gym
+app.get('/api/gym', (req, res) => {
+  const query = `
+    SELECT * FROM environment WHERE zoneID = 1
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+//API endpoint, to get env data from canteen
+app.get('/api/canteen', (req, res) => {
+  const query = `
+    SELECT * FROM environment WHERE zoneID = 2
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+//API endpoint, to get env data from livingroom
+app.get('/api/livingroom', (req, res) => {
+  const query = `
+    SELECT * FROM environment WHERE zoneID = 3
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+//API endpoint, to get env data from library
+app.get('/api/library', (req, res) => {
+  const query = `
+    SELECT * FROM environment WHERE zoneID = 4
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+// end of bad code
+
+//API endpoint, to get tables of all prisoners in each zone
+app.get('/api/movement', (req, res) => {
+  const query = `
+    SELECT * FROM movement
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
 //API endpoint to fetch population data for four areas
 app.get('/api/population', (req, res) => {
     const query = `
