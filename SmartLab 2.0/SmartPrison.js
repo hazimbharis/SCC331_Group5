@@ -6,31 +6,31 @@ let gymCount = 0;
 let canteenCount = 0;
 let libraryCount = 0;
 let livingRoomCount = 0;
+let formattedData = [];
 
-let data = [
-  {
-    id: 'A1234BC',
-    zone: '1',
-  },
-  {
-    id: 'A1235BE',
-    zone: '2',
-  },
-  {
-    id: 'A2411NY',
-    zone: '3',
-  },
-  {
-    id: 'A4751BM',
-    zone: '4',
-  },
-  {
-    id: 'A1231VT',
-    zone: '1',
-  },
-]; //fetched from API, backend
+function clearPrisoners() {
+  //Function to clear only the prisoner elements
+  document.querySelectorAll('.prisoner').forEach(el => el.remove());
+}
+function updateMovementInfo() {
+  $.get('http://localhost:5000/api/position', newData => {
+      formattedData = newData.map(item => ({
+      id: item.prisonerID,
+      zone: item.zoneID.toString()
+    }));
+    
+    console.log(formattedData);
+  });
+    // Clear existing prisoners
+    clearPrisoners();
+    // Reset counters
+    gymCount = 0;
+    canteenCount = 0;
+    libraryCount = 0;
+    livingRoomCount = 0;
 
-data.forEach((element) => {
+
+formattedData.forEach((element) => {
   // Create a div element
   let prisoner = document.createElement('div');
   prisoner.classList.add('prisoner');
@@ -64,3 +64,6 @@ data.forEach((element) => {
     livingRoom.children[1].innerHTML = `Living room: ${livingRoomCount}`;
   }
 });
+}
+updateMovementInfo();
+setInterval(updateMovementInfo, 500);
