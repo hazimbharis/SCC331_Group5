@@ -147,9 +147,9 @@
                 console.log(data);
                 temp.innerHTML = values[0].temp
                 noises.innerHTML = values[0].noise
-                lights.innerHTML = values[0].light
-                return  
+                lights.innerHTML = values[0].light  
             });
+            break
           case 1:
             console.log('1')
             $.get('http://localhost:5000/api/canteen', data => {
@@ -159,8 +159,8 @@
                 temp.innerHTML = values[0].temp
                 noises.innerHTML = values[0].noise
                 lights.innerHTML = values[0].light
-                return
             });
+            break
           case 2:
             console.log('2')
             $.get('http://localhost:5000/api/library', data => {
@@ -172,6 +172,7 @@
                 lights.innerHTML = values[0].light
                 return
             });
+            break
           case 3:
             console.log('3')
             $.get('http://localhost:5000/api/livingroom', data => {
@@ -183,11 +184,12 @@
                 lights.innerHTML = values[0].light
                 return
             });
+            break
           }
         }
 
       fetchPopulationData();
-      setInterval(fetchPopulationData, 5000);  
+      setInterval(fetchPopulationData, 1000);  
 
     </script>
   </body>
