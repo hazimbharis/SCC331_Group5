@@ -87,10 +87,8 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.movement WHERE movement.prisonerID = '"+id+"'";
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-			System.out.println(result);
 			while (result.next()) {
 				check = result.getInt(1);
-				System.out.println(check);
 			}
 
 			if (check == 0) {
@@ -109,6 +107,7 @@ public class DatabaseApplication {
 		}
 	}
 
+	//http://localhost:8080/addDoor?door=1&locked=false&closed=false&alarm=false
 	@GetMapping("/addDoor")
 	private void addDoor(@RequestParam(value = "door") int door,
 								  @RequestParam(value= "locked")boolean locked,
@@ -121,10 +120,8 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.lockstatus WHERE lockstatus.doorID = " + door;
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-			System.out.println(result);
 			while (result.next()) {
-				check = result.getInt(1);
-				System.out.println(check);
+				check = result.getInt(1); //checks if records exists
 			}
 
 			if (check == 0) {
@@ -145,6 +142,7 @@ public class DatabaseApplication {
 		}
 	}
 
+	//http://localhost:8080/addEnvironment?zone=1&temp=100&noise=24&light=0
 	@GetMapping("/addEnvironment")
 	private void addEnvironment(@RequestParam(value = "zone") int zone,
 						   @RequestParam(value= "temp")int temp,
@@ -157,10 +155,8 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.environment WHERE environment.zoneID = " + zone;
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-			System.out.println(result);
 			while (result.next()) {
-				check = result.getInt(1);
-				System.out.println(check);
+				check = result.getInt(1); // checks if a record exists
 			}
 
 			if (check == 0) {
@@ -173,7 +169,7 @@ public class DatabaseApplication {
 					statement1.executeUpdate();
 				}
 			} else if (check == 1) {
-				insertDataSQL= "UPDATE movement SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
+				insertDataSQL= "UPDATE environment SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
 				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
 					statement2.executeUpdate();
 				}

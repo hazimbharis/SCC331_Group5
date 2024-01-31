@@ -48,7 +48,7 @@ public class SerialMonitor {
 
 
         // Get the appropriate port and open
-        microbit = SerialPort.getCommPort("COM6");
+        microbit = SerialPort.getCommPort("COM3"); //change this to the specific microbit
         microbit.openPort();
         // Set the baud rate
         if (microbit.isOpen()) {
