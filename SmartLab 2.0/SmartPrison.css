@@ -84,3 +84,31 @@ h1 {
 .link > i:hover {
   transform: scale(1.5);
 }
+#gym-door {
+  position: absolute;
+  top: 50%;
+  left: -100px;
+  transform: translateY(-50%);
+}
+
+#library-door {
+  position: absolute;
+  top: 50%;
+  left: -100px;
+  transform: translateY(-50%);
+}
+
+#living-room-door {
+  position: absolute;
+  top: 50%;
+  right: -100px;
+  transform: translateY(-50%);
+}
+
+#canteen-door {
+  position: absolute;
+  top: 50%;
+  right: -100px;
+  transform: translateY(-50%);
+}
+

@@ -29,9 +29,10 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+//API endpoint to retreive door states from databse
 app.get('/api/door', (req, res) => {
   const query = `
-  SELECT locked, closed, alarm
+  SELECT doorID, locked, closed, alarm
   FROM lockstatus
   WHERE doorID IN (1, 2, 3, 4)
   ORDER BY doorID
@@ -41,6 +42,7 @@ app.get('/api/door', (req, res) => {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
+      
       res.json(results); // Send the results as an object
     } 
   });

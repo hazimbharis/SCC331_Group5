@@ -3,8 +3,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 70%;
-    height: 80%;
+    width: 60%;
+    
     min-width: fit-content;
     
     background-color: rgba(68, 65, 79, 1);
