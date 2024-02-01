@@ -42,7 +42,7 @@ app.get('/api/door', (req, res) => {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
-      
+      console.log(results);
       res.json(results); // Send the results as an object
     } 
   });
