@@ -81,7 +81,7 @@ while True:
             locked = True
             display.show(fill, wait = False) #wait prevents the rest of the code from blocking when display animation is occurring
             music.pitch(300, duration = 500, wait = False)
-        elif (locked == True):
+        elif (locked == True and closed == True):
             locked = False
             display.clear()
             music.pitch(300, duration = 500, wait = False) #Audio feedback
