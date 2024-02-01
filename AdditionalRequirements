@@ -7,4 +7,8 @@ The UI should run smoothly
 The system should be secure
 The system should be able to handle a large amount of users
 The system should ignore any messages not part of the system
-The UI should be accessible to all types of users
+The UI should be accessible to all types of users including those with disabilities
+The colour schemes used should be appropriate
+The system should not collect more data than necessary
+It should be easy for a user to connect parts of the system together
+The system should respect users' privacy
