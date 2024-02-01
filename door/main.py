@@ -39,6 +39,7 @@ while True:
         if (abs(closedX - x) + abs(closedY - y) + abs(closedZ - z) > 150): #If the angle deviates too much, the door is open
             closed = False
             if (locked == True): #Door should not be open and locked
+                alarm = True
                 music.pitch(100, duration = -1, wait = False)
                 display.show(Image.NO, wait = False)
             else:
@@ -47,7 +48,7 @@ while True:
             closed = True
             if (locked == False):
                 display.show(Image.SQUARE, wait = False) #Display to user that door is closed if it is not locked, indicates to user that door can be locked
-        if (abs(previousX - x) + abs(previousY - y) + abs(previousZ - z) > 110): #If too much change in any of the axis, count as moving
+        if (abs(previousX - x) + abs(previousY - y) + abs(previousZ - z) > 150): #If too much change in any of the axis, count as moving
             state = "motion"
             if (locked == True):
                 alarm = True
@@ -75,7 +76,7 @@ while True:
         last = time.ticks_ms()
         print("002:," + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar) + ",")
         radio.send("002:," + str(name) + "," + str(lock) + "," + str(clos) + "," + str(alar) + ",") #Send data to base station via radio channel
-    if (button_a.was_pressed() and alarm == False):
+    if (button_a.was_pressed() and alarm == False): #Locking and unlocking the door
         if (locked == False and closed == True):
             locked = True
             display.show(fill, wait = False) #wait prevents the rest of the code from blocking when display animation is occurring
@@ -84,7 +85,7 @@ while True:
             locked = False
             display.clear()
             music.pitch(300, duration = 500, wait = False) #Audio feedback
-    elif (button_b.was_pressed()):
+    elif (button_b.was_pressed()): #Turning off the alarm
         music.stop()
         if (locked == True):
             display.show(fill, wait = False)
