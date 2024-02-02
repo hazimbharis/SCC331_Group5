@@ -19,6 +19,10 @@
     height: auto;
     background-color: rgba(104, 101, 118, 0)
 }
+#title{
+    text-align: center;
+    padding: 2%
+}
 
 header {
     top: 0;

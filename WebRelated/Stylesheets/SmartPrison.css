@@ -2,12 +2,58 @@
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   box-sizing: border-box;
 }
+body{
+  margin: 0px;
+}
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  transition: opacity 1s ease-in-out;
+}
+#Drop-down-icon{
+  padding-left: 15px;
+  padding-top: 15px;
+  padding-right: 30% ;
+  font-size: 3vw;
 
-h1 {
+}
+#Drop-down-icon-play, #Drop-down-icon-pause, #Drop-down-icon-video, #Drop-down-icon-backward, #Drop-down-icon-forward{
+  font-size: 3vw;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.Drop-down-content {
+  display: none;
+  padding: 8px;
   text-align: center;
-  font-family: 'Open Sans', sans-serif;
+  padding-left: 15px;
+  position: absolute;
+  z-index: 1;
+  transition: opacity 1s ease-in-out;
 }
 
+
+
+.content-wrapper:hover .Drop-down-content {
+  display: block;
+  opacity: 1;
+}
+
+.Drop-down-content p {
+  margin: 0;
+}
+
+.Drop-down-content.active {
+  display: block;
+}
+
+.fa-bars {
+  margin-right: 8px;
+}
+
+h1 {
+  margin: 0;
+}
 #prisons {
   margin: auto;
   display: flex;

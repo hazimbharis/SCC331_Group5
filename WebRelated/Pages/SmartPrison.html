@@ -18,7 +18,46 @@
     <link rel="stylesheet" href="../Stylesheets/SmartPrison.css" />
   </head>
   <body style="background-color: #e3d8d8">
-    <h1>Prisoner Positioning System</h1>
+    
+      <div class="content-wrapper">
+        <div onclick="toggleDropdown()" id = "Drop-down-icon">
+          <i  class="fa-solid fa-bars"></i>
+        </div>
+        <h1>Prisoner Positioning System</h1> 
+        <div style="right: 0; top: 0; position: fixed; margin-right: 2%;" class="clock">
+          <h2 id="clock-text">00:00:00</h2>
+        </div>
+      </div>
+      <div class="Drop-down-content">
+
+        <div style="
+        justify-content: center;            
+        display: flex;
+        align-items: center;
+        padding-left: 8px;
+        padding-right: 8px;
+        border: 1px solid rgba(0,0,0,1);
+        border-radius: 10px, 10px, 10px, 10px;
+        height: 70vh; /* 100% of the viewport height */
+        flex-direction: column;
+        box-shadow: 5px 10px #888888;
+        ">
+        <div onclick="playClock()">
+         <i class="fa-solid fa-play" id="Drop-down-icon-play"  style="color: green;"></i>           
+        </div>
+       
+         <i class="fa-solid fa-backward" id="Drop-down-icon-backward"></i>
+         <i class="fa-solid fa-video" id="Drop-down-icon-video"></i>
+         <i class="fa-solid fa-forward" id="Drop-down-icon-forward" ></i>
+         <div onclick="pauseClock()">
+          <i class="fa-solid fa-pause" id="Drop-down-icon-pause"  style="color: red;"></i>           
+         </div>
+   
+        </div>
+
+      </div>
+
+ 
     <div id="prisons">
       <div class="prison" id="prison1">
         <div id="gym-door"></div>
@@ -57,6 +96,13 @@
         ></i>
       </a>
     </div>
+    <div style="text-align: center;">
+      <i class="fa-solid fa-play"></i>
+      <i class="fa-solid fa-play"></i>
+      <i class="fa-solid fa-play"></i>
+      <i class="fa-solid fa-play"></i>
+      <i class="fa-solid fa-play"></i>
+    </div>
     <script
       integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
       crossorigin="anonymous"
@@ -64,5 +110,6 @@
     ></script>
 
     <script src="../Scripts/SmartPrison.js"></script>
+    <script src="../Scripts/clock.js"></script>
   </body>
 </html>

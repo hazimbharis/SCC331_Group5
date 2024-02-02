@@ -26,6 +26,15 @@ const data = [
 
 
 
+function toggleDropdown() {
+  var dropdownContent = document.querySelector('.Drop-down-content');
+  if (dropdownContent) {
+      dropdownContent.classList.toggle('active');
+  } else {
+      console.error('Dropdown content element not found.');
+  }
+}
+
 
 function updateDoors(){
   $.get('http://localhost:5000/api/door', (newData) => {
