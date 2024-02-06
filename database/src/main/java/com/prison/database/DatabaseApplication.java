@@ -13,7 +13,7 @@ import java.sql.*;
 @RestController
 public class DatabaseApplication {
 	// Login variables
-	private static final String PASSWORD = "MyNewPass";
+	private static final String PASSWORD = "password";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static final String USER = "root";
 	private static Connection connection;
@@ -223,6 +223,24 @@ public class DatabaseApplication {
 			output = output.concat(String.join(",",id,temp,noise,light)+"!");
 		}
 		return output;
+	}
+
+	@GetMapping("/setup")
+	private void webSetup() throws SQLException {
+		for (int i = 0; i < tableNames.length; i++) {
+			String make = "CREATE TABLE IF NOT EXISTS " + tableNames[i] + "(" + tableQuery[i] + ")";
+			PreparedStatement stmt = connection.prepareStatement(make);
+			stmt.executeUpdate();
+		}
+	}
+	@GetMapping("/reset")
+	private String reset() throws SQLException {
+		for (int i = 0; i < tableNames.length; i++) {
+			String drop = "DROP TABLE IF EXISTS Microbits." + tableNames[i];
+			PreparedStatement stmt = connection.prepareStatement(drop);
+			stmt.executeUpdate();
+		}
+		return "all tables dropped";
 	}
 
 	//start of oldcode

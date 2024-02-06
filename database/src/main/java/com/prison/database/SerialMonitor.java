@@ -48,7 +48,7 @@ public class SerialMonitor {
 
 
         // Get the appropriate port and open
-        microbit = SerialPort.getCommPort("COM3"); //change this to the specific microbit
+        microbit = SerialPort.getCommPort("COM7");
         microbit.openPort();
         // Set the baud rate
         if (microbit.isOpen()) {
@@ -108,10 +108,31 @@ public class SerialMonitor {
                             System.out.println(types[3]); //closed status
                             System.out.println(types[4]); //alarmed status
 
+                            boolean locked;
+                            boolean closed;
+                            boolean alarm;
+
+                            if (types[2].equals("0")) {
+                                locked = false;
+                            } else {
+                                locked = true;
+                            }
+
+                            if (types[3].equals("0")) {
+                                closed = false;
+                            } else {
+                                closed = true;
+                            }
+
+                            if (types[4].equals("0")) {
+                                alarm = false;
+                            } else {
+                                alarm = true;
+                            }
+
+
+
                             int doorID = Integer.parseInt(types[1]);
-                            boolean locked = Boolean.parseBoolean(types[2]);
-                            boolean closed = Boolean.parseBoolean(types[3]);
-                            boolean alarm = Boolean.parseBoolean(types[4]);
 
                             setDoor(doorID, locked, closed, alarm);
                         }
