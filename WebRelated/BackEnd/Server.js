@@ -147,9 +147,9 @@ app.get('/api/population', (req, res) => {
 //API EndPoint for Prisoner Positioning system
 app.get('/api/position', (req, res) =>{
     const query = `
-    SELECT zoneID, prisonerID
-    FROM movement
-    WHERE zoneID IN (1, 2, 3, 4)
+    SELECT zoneID, prisonerID, id, firstNames, lastName, type
+    FROM movement, users
+    WHERE zoneID IN (1, 2, 3, 4) AND id = prisonerID
     ORDER BY zoneID
     `;
     db.query(query, (err, results) => {

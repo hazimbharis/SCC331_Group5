@@ -26,15 +26,6 @@ const data = [
 
 
 
-function toggleDropdown() {
-  var dropdownContent = document.querySelector('.Drop-down-content');
-  if (dropdownContent) {
-      dropdownContent.classList.toggle('active');
-  } else {
-      console.error('Dropdown content element not found.');
-  }
-}
-
 
 function updateDoors(){
   $.get('http://localhost:5000/api/door', (newData) => {
@@ -136,6 +127,7 @@ function updateMovementInfo() {
     formattedData = newData.map((item) => ({
       id: item.prisonerID,
       zone: item.zoneID.toString(),
+      type: item.type
     }));
 
     console.log(formattedData);
@@ -156,6 +148,12 @@ function updateMovementInfo() {
     // Create an icon element with Font Awesome classes
     let iconElement = document.createElement('i');
     iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
+    console.log(element)
+    if (element.type == "S") {
+      iconElement.style.color = "Blue"
+    } else if (element.type == "V") {
+      iconElement.style.color = "White"
+    }
 
     // Create a paragraph element for the prisoner ID
     let paragraphElement = document.createElement('p');
