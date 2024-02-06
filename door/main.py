@@ -16,27 +16,21 @@ radio.on()
 radio.config(length = 64, channel = 31)
 fill = Image("99999:" + "99999:" + "99999:" + "99999:" + "99999")
 closed = False
-closedX = 0
-closedY = 0
-closedZ = 0
+closedDeg = 0
 set = False
 
 display.scroll("Setting door system", wait = False, loop = True, delay = 100) #Setup
 while (set == False):
     if (button_a.was_pressed()):
-        closedX = accelerometer.get_x() #Set the MicroBit angle that the door is closed at
-        closedY = accelerometer.get_y()
-        closedZ = accelerometer.get_z()
+        closedDeg = compass.heading() #Set the MicroBit angle that the door is closed at
         set = True
 display.scroll("System set up", wait = False, delay = 100)
 music.pitch(300, duration = 500, wait = False)
 
 while True:
     if (time.ticks_diff(time.ticks_ms(), last) > 1000): #Limit the rate that data collected, compares current time to the last time data was collected
-        x = accelerometer.get_x() #Should be using get_strength() instead but it doesn't seem to be working?
-        y = accelerometer.get_y()
-        z = accelerometer.get_z()
-        if (abs(closedX - x) + abs(closedY - y) + abs(closedZ - z) > 150): #If the angle deviates too much, the door is open
+        h = compass.heading()
+        if (abs(closedDeg - h) > 20): #If the angle deviates too much, the door is open
             closed = False
             if (locked == True): #Door should not be open and locked
                 alarm = True
@@ -48,7 +42,10 @@ while True:
             closed = True
             if (locked == False):
                 display.show(Image.SQUARE, wait = False) #Display to user that door is closed if it is not locked, indicates to user that door can be locked
-        if (abs(previousX - x) + abs(previousY - y) + abs(previousZ - z) > 150): #If too much change in any of the axis, count as moving
+        x = accelerometer.get_x() #Should be using get_strength() instead but it doesn't seem to be working?
+        y = accelerometer.get_y()
+        z = accelerometer.get_z()
+        if (abs(previousX - x) + abs(previousY - y) + abs(previousZ - z) > 50): #If too much change in any of the axis, count as moving
             state = "motion"
             if (locked == True):
                 alarm = True
@@ -70,6 +67,7 @@ while True:
             alar = 0
         #print("door " + name + " " + clos + " " + state + " " + lock + " " + alar)
         #print(str(x) + " " + str(y) + " " + str(z)) #For testing
+        #print(str(h))
         previousX = x
         previousY = y
         previousZ = z
@@ -81,7 +79,7 @@ while True:
             locked = True
             display.show(fill, wait = False) #wait prevents the rest of the code from blocking when display animation is occurring
             music.pitch(300, duration = 500, wait = False)
-        elif (locked == True):
+        elif (locked == True and closed == True):
             locked = False
             display.clear()
             music.pitch(300, duration = 500, wait = False) #Audio feedback
