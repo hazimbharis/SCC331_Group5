@@ -127,6 +127,9 @@ function updateMovementInfo() {
     formattedData = newData.map((item) => ({
       id: item.prisonerID,
       zone: item.zoneID.toString(),
+      firstNames: item.firstNames,
+      lastName: item.lastName,
+      medicalConditions: item.medicalConditions,
       type: item.type
     }));
 
@@ -149,19 +152,30 @@ function updateMovementInfo() {
     let iconElement = document.createElement('i');
     iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
     console.log(element)
-    if (element.type == "S") {
-      iconElement.style.color = "Blue"
+    if (element.type == "S") { //Differentiate user types in UI using colours
+      iconElement.style.color = "Blue";
     } else if (element.type == "V") {
-      iconElement.style.color = "White"
+      iconElement.style.color = "White";
     }
-
     // Create a paragraph element for the prisoner ID
     let paragraphElement = document.createElement('p');
     paragraphElement.classList.add('prisoner-id');
     paragraphElement.style.color = '#e3d8d8';
     paragraphElement.textContent = element.id;
+
+    //Create tooltip when hovering over user
+    let hoverOver = document.createElement('p')
+    hoverOver.classList.add('hoverOver');
+    hoverCont = "Name: " + element.firstNames + " " + element.lastName;
+    if (element.medicalConditions != null) {
+      hoverCont = hoverCont + "\r\nMedical conditions: " + element.medicalConditions
+    }
+    hoverOver.textContent = hoverCont;
+    "\r\nMedical conditions: " + element.medicalConditions;
+
     prisoner.appendChild(iconElement);
     prisoner.appendChild(paragraphElement);
+    prisoner.appendChild(hoverOver)
     if (element.zone == '1') {
       gymCount++;
       gym.appendChild(prisoner);

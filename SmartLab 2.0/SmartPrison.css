@@ -69,6 +69,19 @@ h1 {
   font-family: 'Open Sans';
 }
 
+.prisoner > .hoverOver {
+  visibility: hidden;
+  color: #e3d8d8;
+  background-color: #000;
+  border-radius: 5px;
+  padding: 5px;
+  white-space: pre;
+}
+
+.prisoner:hover .hoverOver{
+  visibility: visible;
+}
+
 .title {
   font-family: 'Open Sans', sans-serif;
   position: absolute;
