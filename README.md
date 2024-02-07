@@ -3,18 +3,21 @@
 Smart Prison
 
 **Scrum masters**\
-Sprint 1 - Hazim\
-Sprint 2 - Saeed\
-Sprint 3 - Tega
+~~Sprint 4 - Hazim~~\
+Sprint 5 - Saeed\
+Sprint 6 - Tega
 
 Team tasks:\
-4.6  consideration of ethical issues related to domain\
-4.7\
-4.8
+5.6 clear architectural design\
+\
+5.7 consideration of ethical issues related to domain\
+\
+5.8 implementation of UX considerations\
+\
 
 Tasks:\
-Hazim -  MySQL Database & Base Microbit\
-Saeed - Microbit User Location code\
-Harry - Door tracker and alarm (4.4)\
-Tega - Sensors\
-Joseph - Web frontend
+Hazim -  Warnings & Mitigations (5.3)\
+Saeed - Telegram Bot (5.4)\
+Harry - Improving Past Implementation\
+Tega - Mobile Platform (5.2)\
+Joseph - Historical Data & Playback (5.1)
