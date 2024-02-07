@@ -10,6 +10,14 @@ let milliseconds = dateNow.getMilliseconds();
 
 playClock();
 
+function toggleDropdown() {
+    var dropdownContent = document.querySelector('.Drop-down-content');
+    if (dropdownContent) {
+        dropdownContent.classList.toggle('active');
+    } else {
+        console.error('Dropdown content element not found.');
+    }
+  }
 function playClock() {
     play = true;
 
@@ -28,7 +36,12 @@ function nextEvent() {
     setInterval(clockUpdater, 1);
     
 }
-
+function scrollToHeight(height) {
+    window.scrollTo({
+      top: height,
+      behavior: 'smooth'
+    });
+  }
 function clockUpdater() {
     if (play) {
         dateNow = new Date();

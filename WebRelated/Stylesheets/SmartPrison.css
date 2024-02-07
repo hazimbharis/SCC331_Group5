@@ -53,6 +53,7 @@ body{
 
 h1 {
   margin: 0;
+  text-align: center;
 }
 #prisons {
   margin: auto;
@@ -156,5 +157,43 @@ h1 {
   top: 50%;
   right: -100px;
   transform: translateY(-50%);
+}
+#Log-container{
+  padding: 10px;
+  margin-top: 32px;
+  width:80%;
+  left: 10%;
+  position: absolute;
+  height: 80%;
+  display: flex;
+
+  align-items: center;
+  border: 10px solid #44414f;
+  background-color: #686576;
+  overflow: hidden;
+}
+::-webkit-scrollbar {
+  width: 20px;
+  border-radius: 14px, 14px, 14px, 14px;
+}
+::-webkit-scrollbar-track {
+  background: #e3d8d8;
+}
+::-webkit-scrollbar-thumb {
+  background: #44414f;
+  border-radius: 14px, 14px, 14px, 14px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #44414f;
+}
+#Terminal {
+  color: white;
+  overflow-y: auto;
+  height: 100%;
+  direction: ltr; /*left to right*/
+  white-space: nowrap;
+  overflow-x: hidden;
+  width:100%;
+  bottom: 400%;
 }
 
