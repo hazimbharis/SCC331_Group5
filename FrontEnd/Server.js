@@ -145,22 +145,37 @@ app.get('/api/population', (req, res) => {
     });
   });
 //API EndPoint for Prisoner Positioning system
-app.get('/api/position', (req, res) =>{
-    const query = `
-    SELECT zoneID, prisonerID, id, firstNames, lastName, medicalConditions, type
-    FROM movement, users
-    WHERE zoneID IN (1, 2, 3, 4) AND id = prisonerID
-    ORDER BY zoneID
-    `;
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Database query error: ' + err.message);
-        res.status(500).json({ error: 'Database error' });
-      } else {
-        res.json(results); // Send the results as an object
-      } 
-    });
-})
+app.get('/api/position', (req, res) => {
+  const query = `
+  SELECT zoneID, prisonerID, id, firstNames, lastName, medicalConditions, type
+  FROM movement, users
+  WHERE zoneID IN (1, 2, 3, 4) AND id = prisonerID
+  ORDER BY zoneID
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+
+app.get('/api/staffRole/:id', (req, res) => {
+  const query = `
+  SELECT role
+  FROM staff
+  WHERE id = "` + req.params.id + '"';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -2,10 +2,10 @@ let gym = document.getElementById('prison1');
 let canteen = document.getElementById('prison2');
 let library = document.getElementById('prison3');
 let livingRoom = document.getElementById('prison4');
-let gymCount = 0;
-let canteenCount = 0;
-let libraryCount = 0;
-let livingRoomCount = 0;
+let gymCount = [0, 0, 0];
+let canteenCount = [0, 0, 0];
+let libraryCount = [0, 0, 0];
+let livingRoomCount = [0, 0, 0];
 
 
 let gymDoor = document.getElementById('gym-door');
@@ -138,10 +138,10 @@ function updateMovementInfo() {
   // Clear existing prisoners
   clearPrisoners();
   // Reset counters
-  gymCount = 0;
-  canteenCount = 0;
-  libraryCount = 0;
-  livingRoomCount = 0;
+  gymCount = [0, 0, 0];
+  canteenCount = [0, 0, 0];
+  libraryCount = [0, 0, 0];
+  livingRoomCount = [0, 0, 0];
 
   formattedData.forEach((element) => {
     // Create a div element
@@ -151,49 +151,77 @@ function updateMovementInfo() {
     // Create an icon element with Font Awesome classes
     let iconElement = document.createElement('i');
     iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
-    console.log(element)
-    if (element.type == "S") { //Differentiate user types in UI using colours
-      iconElement.style.color = "Blue";
-    } else if (element.type == "V") {
-      iconElement.style.color = "White";
+
+    //Create tooltip when hovering over user
+    let hoverOver = document.createElement('div')
+    hoverOver.classList.add('hoverOver');
+    hoverOver.style.color = '#e3d8d8';
+    hoverCont = "Name: " + element.firstNames + " " + element.lastName;
+    if (element.medicalConditions != null) {
+      hoverCont = hoverCont + "\r\nMedical conditions: " + element.medicalConditions
     }
+    "\r\nMedical conditions: " + element.medicalConditions;
+    var typex;
+    if (element.type == "S") { //Differentiate user types in UI using colours
+      iconElement.style.color = "Blue"; //Staff
+      r = getStaffRole(element.id)
+      typex = 1;
+    } else if (element.type == "V") { //Visitors
+      iconElement.style.color = "White";
+      typex = 2;
+    } else { //Prisoners
+      typex = 0
+    }
+    hoverOver.textContent = hoverCont;
     // Create a paragraph element for the prisoner ID
     let paragraphElement = document.createElement('p');
     paragraphElement.classList.add('prisoner-id');
     paragraphElement.style.color = '#e3d8d8';
     paragraphElement.textContent = element.id;
 
-    //Create tooltip when hovering over user
-    let hoverOver = document.createElement('p')
-    hoverOver.classList.add('hoverOver');
-    hoverCont = "Name: " + element.firstNames + " " + element.lastName;
-    if (element.medicalConditions != null) {
-      hoverCont = hoverCont + "\r\nMedical conditions: " + element.medicalConditions
-    }
-    hoverOver.textContent = hoverCont;
-    "\r\nMedical conditions: " + element.medicalConditions;
-
     prisoner.appendChild(iconElement);
     prisoner.appendChild(paragraphElement);
     prisoner.appendChild(hoverOver)
+
     if (element.zone == '1') {
-      gymCount++;
+      gymCount[typex]++;
       gym.appendChild(prisoner);
-      gym.children[2].innerHTML = `Gym: ${gymCount}`;
+      gym.children[2].innerHTML = `Gym: ${gymCount.reduce((x, y) => x + y, 0)}`;
     } else if (element.zone == '2') {
-      canteenCount++;
+      canteenCount[typex]++;
       canteen.appendChild(prisoner);
-      canteen.children[2].innerHTML = `Canteen: ${canteenCount}`;
+      canteen.children[2].innerHTML = `Canteen: ${canteenCount.reduce((x, y) => x + y, 0)}`;
     } else if (element.zone == '3') {
-      libraryCount++;
+      libraryCount[typex]++;
       library.appendChild(prisoner);
-      library.children[2].innerHTML = `Library: ${libraryCount}`;
+      library.children[2].innerHTML = `Library: ${libraryCount.reduce((x, y) => x + y, 0)}`;
     } else if (element.zone == '4') {
-      livingRoomCount++;
+      livingRoomCount[typex]++;
       livingRoom.appendChild(prisoner);
-      livingRoom.children[2].innerHTML = `Living room: ${livingRoomCount}`;
+      livingRoom.children[2].innerHTML = `Living room: ${livingRoomCount.reduce((x, y) => x + y, 0)}`;
     }
   });
+  zs = [gym, canteen, library, livingRoom];
+  zcs = [gymCount, canteenCount, libraryCount, livingRoomCount];
+  i = 0;
+  zs.forEach((elem) => {
+    let hoverOver = document.createElement('div');
+    hoverOver.classList.add('hoverOver');
+    hoverOver.textContent = "Prisoners: " + zcs[i][0] + " Staff: " + zcs[i][1] + " Visitors: " + zcs[i][2];
+    hoverOver.style.position = "absolute"
+    hoverOver.style.width = "220px"
+    hoverOver.style.bottom = "100%"
+    hoverOver.style.left = "50%";
+    hoverOver.style.transform = "translateX(-50%)"
+    elem.children[2].appendChild(hoverOver)
+    i++
+  })
+}
+
+function getStaffRole(id) {
+  x = "asd"
+  $.get('http://localhost:5000/api/staffRole/' + id, (newData) => x = newData)
+  console.log(x)
 }
 
 updateDoors();

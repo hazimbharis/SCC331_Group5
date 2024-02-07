@@ -69,13 +69,18 @@ h1 {
   font-family: 'Open Sans';
 }
 
-.prisoner > .hoverOver {
+.hoverOver {
+  position: sticky;
   visibility: hidden;
-  color: #e3d8d8;
-  background-color: #000;
+  color: '#e3d8d8';
+  background-color: black;
   border-radius: 5px;
   padding: 5px;
   white-space: pre;
+  z-index: 5;
+  font-size: 14px;
+  font-family: 'Open Sans';
+  text-align: center;
 }
 
 .prisoner:hover .hoverOver{
@@ -83,12 +88,16 @@ h1 {
 }
 
 .title {
-  font-family: 'Open Sans', sans-serif;
   position: absolute;
+  font-family: 'Open Sans', sans-serif;
   bottom: 5px;
   left: 50%;
   color: #e3d8d8;
   transform: translateX(-50%);
+}
+
+.title:hover .hoverOver{
+  visibility: visible;
 }
 
 .link > i {
