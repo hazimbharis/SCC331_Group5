@@ -1,0 +1,152 @@
+* {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  position: relative;
+top: 340px;;
+}
+#prisons {
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  width: 1000px;
+  height: 600px;
+}
+
+.prison {
+  padding: 10px;
+  width: 500px;
+  height: 300px;
+  background-color: #686576;
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.prison > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.15;
+}
+
+#prison1 {
+  border: 10px solid #44414f;
+  position: relative;
+  top: 20px;
+  
+  
+  
+}
+#prison2 {
+  border: 10px solid #44414f;
+  
+  position: relative;
+  left:30px;
+  top: 20px;
+}
+#prison3 {
+  border: 10px solid #44414f;
+  
+  position: relative;
+  top:  50px;
+  
+
+  
+}
+#prison4 {
+  border: 10px solid #44414f;
+  
+  
+  position: relative;
+  top: 50px;
+  left: 30px;
+  
+
+}
+
+.prisoner {
+  padding: 5px;
+  display: inline-block;
+  text-align: center;
+}
+
+.prisoner > i {
+  color: #fe7300;
+}
+
+.prisoner > p {
+  margin: 0;
+  color: #000;
+  font-size: 14px;
+  font-family: 'Open Sans';
+}
+
+.title {
+  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#door1 {
+  border: 5px solid;
+  width: 30px;
+  height: 130px;
+  background-color: #61412D;
+  position: relative;
+  top: 750PX;
+  left: 760PX;
+  transition: transform 0.5s;;
+}
+#door2 {
+  border: 5px solid;
+  width: 30px;
+  height: 130px;
+  background-color: #61412D;
+  position: relative;
+  top: 300PX;
+  left: 760px;
+  transition: transform 0.5s;;
+}
+#door3 {
+  border: 5px solid;
+  width: 130px;
+  height: 30px;
+  background-color: #61412D;
+  position: relative;
+  top: 380PX;
+  left: 420px;
+  transition: transform 0.5s;;
+}
+#door4 {
+  border: 5px solid;
+  width: 130px;
+  height: 30px;
+  background-color: #61412D;
+  position: relative;
+  top: 350PX;
+  left : 960px;
+  transition: transform 0.5s;;
+}
+#door1:hover {
+  transform: rotateX(-90deg);
+}
+#door2:hover {
+  transform: rotateX(-90deg);
+}
+#door3:hover {
+  transform: rotateY(-90deg);
+}
+#door4:hover {
+  transform: rotateY(-90deg);
+}
+ ::-webkit-scrollbar {
+  display:none;
+}
