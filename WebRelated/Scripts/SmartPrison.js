@@ -290,7 +290,7 @@ function updateMovementInfo() {
     paragraphElement.textContent = element.id;
     prisoner.appendChild(iconElement);
     prisoner.appendChild(paragraphElement);
-    prisoner.appendChild(hoverOver)
+    prisoner.appendChild(hoverOver);
 
     if (element.zone == '1') {
       gymCount[typex]++;
@@ -317,6 +317,7 @@ function updateMovementInfo() {
       checkLocationChange(oldMovementData, element, iconElement);
 
     }
+    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - 52) / 2)) * -1) + "px" //52 if from (2 * padding size) + size of prisoner icon
   });
   var zs = [gym, canteen, library, livingRoom];
   var zcs = [gymCount, canteenCount, libraryCount, livingRoomCount];
