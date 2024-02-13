@@ -25,6 +25,7 @@ h1 {
 .form {
     font-family: 'Open Sans';
     margin: 2px;
+    border-color: #44414f
 }
 
 .formLabels {
@@ -85,4 +86,8 @@ h1 {
 
 #endDate {
     left: 0%;
+}
+
+#msg {
+    line-height: 100%;
 }

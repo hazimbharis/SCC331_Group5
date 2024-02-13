@@ -202,6 +202,156 @@ app.get('/api/staffRole/:id', (req, res) => {
   });
 });
 
+app.use(express.urlencoded());
+
+app.use(express.json())
+
+app.post('/api/addPrisoner', (req, res) => {
+  //Generate a random ID adhering to the protocol, small chance for collison with other IDs, will worse with more prisoners
+  let id = "";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nums = "0123456789";
+  for (i = 0; i < 2; i++) {
+    id += chars.charAt(Math.floor(Math.random() * (chars.length))); 
+  }
+  for (i = 0; i < 4; i++) {
+    id += nums.charAt(Math.floor(Math.random() * (nums.length))); 
+  }
+  for (i = 0; i < 2; i++) {
+    id += chars.charAt(Math.floor(Math.random() * (chars.length))); 
+  }
+  //Will probably need to check if ID has already been taken
+  let medCon = req.body.prisoner.medCon;
+  if (medCon == "") {
+    medCon = "NULL";
+  }
+  else {
+    medCon = `"` + medCon + `"`;
+  }
+  console.log(req.body)
+  console.log(req.body.prisoner.fName)
+  let inp = req.body.prisoner
+  const uQuery = `
+  INSERT INTO users
+  VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
+  const pQuery = `
+  INSERT INTO prisoners
+  VALUES("` + id + `","` + inp.convs + `","` + inp.startDate + `","` + inp.endDate + `")`;
+  console.log(req.params);
+  console.log(uQuery);
+  console.log(pQuery);
+  db.query(uQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+  db.query(pQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+});
+
+app.post('/api/addStaff', (req, res) => {
+  //Generate a random ID adhering to the protocol, small chance for collison with other IDs, will worse with more prisoners
+  let id = "";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nums = "0123456789";
+  for (i = 0; i < 4; i++) {
+    id += chars.charAt(Math.floor(Math.random() * (chars.length))); 
+  }
+  for (i = 0; i < 4; i++) {
+    id += nums.charAt(Math.floor(Math.random() * (nums.length))); 
+  }
+  //Will probably need to check if ID has already been taken
+  let medCon = req.body.staff.medCon;
+  if (medCon == "") {
+    medCon = "NULL";
+  }
+  else {
+    medCon = `"` + medCon + `"`;
+  }
+  console.log(req.body)
+  console.log(req.body.staff.fName)
+  let inp = req.body.staff
+  const uQuery = `
+  INSERT INTO users
+  VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
+  const pQuery = `
+  INSERT INTO staff
+  VALUES("` + id + `","` + inp.role +  `")`;
+  console.log(req.params);
+  console.log(uQuery);
+  console.log(pQuery);
+  db.query(uQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+  db.query(pQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+});
+
+app.post('/api/addVisitor', (req, res) => {
+  //Generate a random ID adhering to the protocol, small chance for collison with other IDs, will worse with more prisoners
+  let id = "";
+  const nums = "0123456789";
+  for (i = 0; i < 8; i++) {
+    id += nums.charAt(Math.floor(Math.random() * (nums.length))); 
+  }
+  //Will probably need to check if ID has already been taken
+  let medCon = req.body.visitor.medCon;
+  if (medCon == "") {
+    medCon = "NULL";
+  }
+  else {
+    medCon = `"` + medCon + `"`;
+  }
+  console.log(req.body)
+  console.log(req.body.visitor.fName)
+  let inp = req.body.visitor
+  const uQuery = `
+  INSERT INTO users
+  VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
+  const pQuery = `
+  INSERT INTO visitors
+  VALUES("` + id + `","` + inp.pNo +  `")`;
+  console.log(req.params);
+  console.log(uQuery);
+  console.log(pQuery);
+  db.query(uQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+  db.query(pQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
