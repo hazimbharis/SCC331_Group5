@@ -124,7 +124,12 @@ h1 {
   color: #e3d8d8;
   transform: translateX(-50%);
 }
-
+.Drop-down-content div i{
+  transition: transform 0.5s ease-in-out;
+}
+.Drop-down-content div i:hover {
+  transform: scale(1.5);
+}
 .link > i {
   transition: transform 0.5s ease-in-out;
 }
@@ -159,18 +164,25 @@ h1 {
   transform: translateY(-50%);
 }
 #Log-container{
+
   padding: 10px;
   margin-top: 32px;
-  width:80%;
-  left: 10%;
+  width: 80%; /* Set the width to 80% of the viewport width */
   position: absolute;
   height: 80%;
   display: flex;
-
   align-items: center;
   border: 10px solid #44414f;
   background-color: #686576;
   overflow: hidden;
+  
+  /* Center horizontally */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  
 }
 ::-webkit-scrollbar {
   width: 20px;

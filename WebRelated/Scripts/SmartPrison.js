@@ -62,6 +62,7 @@ function updateDoors(){
   openIcon.style.color = '#633200';
   
   let lockIcon = document.createElement('i');
+  
   lockIcon.classList.add('fa-solid', 'fa-lock', 'fa-2x');
   lockIcon.style.color = '#e3d8d8';
   lockIcon.style.position = 'absolute';
@@ -122,7 +123,7 @@ function updateDoors(){
         gymDoor.appendChild(closedIcon.cloneNode(true));
         changedIcon = closedIcon.cloneNode(true);
       } else if (el.locked) {     
-        gymDoor.appendChild(closedIcon.cloneNode(true));
+        //gymDoor.appendChild(closedIcon.cloneNode(true));
         gymDoor.appendChild(lockIcon.cloneNode(true)); 
         changedIcon = closedIcon.cloneNode(true);
       } else {
