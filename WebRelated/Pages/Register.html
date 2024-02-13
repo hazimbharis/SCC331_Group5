@@ -12,39 +12,42 @@
     <script src="https://kit.fontawesome.com/e0b1d3493e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../Stylesheets/Register.css" />
 </head>
-<body style="background-color: #e3d8d8;">
+<body style = "background-color: #e3d8d8;">
     <header>
-        <h1 id="title" >Register User</h1>
+        <h1 id = "title" >Register User</h1>
     </header>
     <div class = "types">
-        <button type = "button" class = "button">Add prisoner</button>
-        <button type = "button" class = "button">Add staff</button>
-        <button type = "button" class = "button">Add visitor</button>
+        <button type = "button" class = "button" onclick = "prisonerMode()">Add prisoner</button>
+        <button type = "button" class = "button" onclick = "staffMode()">Add staff</button>
+        <button type = "button" class = "button" onclick = "visitorMode()">Add visitor</button>
     </div>
     <div class = "formContainer">
-        <form>
-            <label class = "formLabels">First names</label><br>
-            <input type = "text" id = "fName" name = "fName" class = "form"><br>
-            <label class = "formLabels">Last name</label><br>
-            <input type = "text" id = "lName" name = "lName" class = "form"><br>
-            <label class = "formLabels">Date of birth</label><br>
-            <input type = "date" id = "dOB" name = "dOB" class = "form"><br>
-            <label class = "formLabels">Gender</label><br>
-            <input type = "text" id = "gender" name = "gender" class = "form"><br>
-            <label class = "formLabels">Medical conditions</label><br>
-            <input type = "text" id = "medCon" name = "medCon" class = "form"><br>
-            <label class = "formLabels">Convictions</label><br>
-            <input type = "text" id = "convictions" name = "convictions" class = "form"><br>
-            <label class = "formLabels">Start date</label><br>
-            <input type = "date" id = "startDate" name = "startDate" class = "form"><br>
-            <label class = "formLabels">End date</label><br>
-            <input type = "date" id="endDate" name = "endDate" class = "form"><br>
-            <label class = "formLabels">Role</label><br>
-            <input type = "text" id = "role" name = "role" class = "form"><br>
-            <label class = "formLabels">Phone number</label><br>
-            <input type = "text" id = "phoneNo" name = "phoneNo" class = "form"><br>
-            <input type = "submit" value = "Add user" class = "form"><br>
+        <form id = "add">
+            <div id = "first">
+                <h3 style = "margin: 0px; color: #e3d8d8">User information</h3>
+                <label class = "formLabels">First names:</label>
+                <input type = "text" id = "fName" class = "form" maxlength = "50">
+                <label class = "formLabels">Last name:</label>
+                <input type = "text" id = "lName" class = "form" maxlength = "50"><br>
+                <label class = "formLabels">Date of birth:</label>
+                <input type = "date" id = "dOB" class = "form"><br>
+                <label class = "formLabels">Gender:</label>
+                <input type = "text" id = "gender" class = "form" maxLength = "10"><br>
+                <label class = "formLabels">Medical conditions:</label>
+                <input type = "text" id = "medCon" class = "form" maxLength = "100">
+            </div>
+            <div id = "second">
+                <h3 style = "margin: 0px; color: #e3d8d8" id = "secondHead">Information</h3>
+                <div id = "secondIns">
+                </div>
+            </div>
+            <div id = "third">
+                <h3 style = "margin: 0px; color: #e3d8d8">Submit</h3>
+                <button type = "button" class = "button" id = "submit" onclick = "processAdd()" style = "visibility: hidden;">Add user</button>
+                <label class = "formLabels"></label>
+            </div>
         </form>
     </div>
+    <script src="../Scripts/Register.js"></script>
 </body>
 </html>

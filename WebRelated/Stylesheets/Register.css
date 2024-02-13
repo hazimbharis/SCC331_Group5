@@ -35,7 +35,7 @@ h1 {
 
 .types {
     position: absolute;
-    top: 15%
+    top: 100px
 }
 
 .formContainer {
@@ -43,7 +43,46 @@ h1 {
     background-color: #686576;
     border: 5px solid #44414f;
     border-radius: 10px;
-    top: 20%;
-    left: 15%;
-    right: 15%;
+    top: 150px;
+    width: 1200px;
+}
+
+#first {
+    padding-left: 5px;
+    padding-right: 5px;
+    line-height: 250%;
+    border-bottom: 5px solid #44414f;
+}
+
+#second {
+    padding-left: 5px;
+    padding-right: 5px;
+    line-height: 250%;
+    border-bottom: 5px solid #44414f;;
+}
+
+#third {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 20px;
+    line-height: 250%;
+}
+
+#medCon {
+    width: 500px;
+}
+
+#submit {
+    height: 50px;
+    width: 100px;
+    background-color: #e3d8d8;
+    color: black;
+}
+
+#submit:hover {
+    background-color: #44414f;
+}
+
+#endDate {
+    left: 0%;
 }

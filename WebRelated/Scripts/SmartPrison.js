@@ -4,7 +4,7 @@ let gym = document.getElementById('prison1');
 let canteen = document.getElementById('prison2');
 let library = document.getElementById('prison3');
 let livingRoom = document.getElementById('prison4');
-let gymCount = [0, 0, 0];
+let gymCount = [0, 0, 0]; //First element is prisoners, second is staff, third is visitors
 let canteenCount = [0, 0, 0];
 let libraryCount = [0, 0, 0];
 let livingRoomCount = [0, 0, 0];
@@ -319,9 +319,11 @@ function updateMovementInfo() {
     }
     hoverOver.style.marginLeft = String((((hoverOver.clientWidth - 52) / 2)) * -1) + "px" //52 if from (2 * padding size) + size of prisoner icon
   });
+  });
   var zs = [gym, canteen, library, livingRoom];
   var zcs = [gymCount, canteenCount, libraryCount, livingRoomCount];
   var i = 0;
+  //Create the tooltips for each of the zones
   zs.forEach((elem) => {
     let hoverOver = document.createElement('div');
     hoverOver.classList.add('hoverOver');
@@ -334,7 +336,6 @@ function updateMovementInfo() {
     elem.children[2].appendChild(hoverOver)
     i++
   })
-  });
 }
 
 function checkLocationChange(oldMovementData, element, iconElement){
