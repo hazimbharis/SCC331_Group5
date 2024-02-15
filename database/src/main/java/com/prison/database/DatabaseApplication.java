@@ -13,7 +13,7 @@ import java.sql.*;
 @RestController
 public class DatabaseApplication {
 	// Login variables
-	private static final String PASSWORD = "password";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static final String USER = "root";
 	private static Connection connection;
@@ -28,7 +28,7 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, role VARCHAR(20) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
-			"id VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeOfUse timestamp, FOREIGN KEY (prisonerID) REFERENCES users(id)"
+			"id VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeOfUse timestamp, FOREIGN KEY (id) REFERENCES users(id)"
 	};
 
 	// Microbit variables
