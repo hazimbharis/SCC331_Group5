@@ -116,6 +116,24 @@ h1 {
   font-family: 'Open Sans';
 }
 
+.hoverOver {
+  position: absolute;
+  visibility: hidden;
+  color: '#e3d8d8';
+  background-color: black;
+  border-radius: 5px;
+  padding: 5px;
+  white-space: pre;
+  z-index: 5;
+  font-size: 14px;
+  font-family: 'Open Sans';
+  text-align: center;
+}
+
+.prisoner:hover .hoverOver{
+  visibility: visible;
+}
+
 .title {
   font-family: 'Open Sans', sans-serif;
   position: absolute;
@@ -123,6 +141,10 @@ h1 {
   left: 50%;
   color: #e3d8d8;
   transform: translateX(-50%);
+}
+
+.title:hover .hoverOver{
+  visibility: visible;
 }
 
 .link > i {
@@ -197,3 +219,31 @@ h1 {
   bottom: 400%;
 }
 
+.legend {
+  width: 100px;
+  position: absolute;
+  left: 83.5%;
+  top: 10.5%;
+  border: 2px solid #44414f;
+  background-color: #686576;
+}
+
+legend {
+  font-family: 'Open Sans';
+  font-size: 14px;
+  color: #e3d8d8;
+  background-color: #686576;
+  border: 2px solid #44414f;
+}
+
+.leglab {
+  font-family: 'Open Sans';
+  font-size: 14px;
+  color: #e3d8d8;
+}
+
+.colleg {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}

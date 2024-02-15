@@ -170,22 +170,169 @@ app.get('/api/population', (req, res) => {
     });
   });
 //API EndPoint for Prisoner Positioning system
-app.get('/api/position', (req, res) =>{
-    const query = `
-    SELECT zoneID, prisonerID, id, firstNames, lastName, type
-    FROM movement, users
-    WHERE zoneID IN (1, 2, 3, 4) AND id = prisonerID
-    ORDER BY zoneID
-    `;
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Database query error: ' + err.message);
-        res.status(500).json({ error: 'Database error' });
-      } else {
-        res.json(results); // Send the results as an object
-      } 
-    });
-})
+app.get('/api/position', (req, res) => {
+  const query = `
+  SELECT zoneID, prisonerID, id, firstNames, lastName, medicalConditions, type
+  FROM movement, users
+  WHERE zoneID IN (1, 2, 3, 4) AND id = prisonerID
+  ORDER BY zoneID
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+
+app.get('/api/staffRole/:id', (req, res) => {
+  const query = `
+  SELECT role
+  FROM staff
+  WHERE id = "` + req.params.id + '"';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0])
+    } 
+  });
+});
+
+app.use(express.urlencoded());
+
+app.use(express.json())
+
+app.post('/api/addPrisoner', (req, res) => {
+  //Generate a random ID adhering to the protocol, small chance for collison with other IDs, will worse with more prisoners
+  let id = "";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nums = "0123456789";
+  for (i = 0; i < 2; i++) {
+    id += chars.charAt(Math.floor(Math.random() * (chars.length))); 
+  }
+  for (i = 0; i < 4; i++) {
+    id += nums.charAt(Math.floor(Math.random() * (nums.length))); 
+  }
+  for (i = 0; i < 2; i++) {
+    id += chars.charAt(Math.floor(Math.random() * (chars.length))); 
+  }
+  //Will probably need to check if ID has already been taken
+  let medCon = req.body.prisoner.medCon;
+  if (medCon == "") {
+    medCon = "NULL";
+  }
+  else {
+    medCon = `"` + medCon + `"`;
+  }
+  let inp = req.body.prisoner //Get the details passed in via the body of the request, assumes all are valid
+  const uQuery = `
+  INSERT INTO users
+  VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
+  const pQuery = `
+  INSERT INTO prisoners
+  VALUES("` + id + `","` + inp.convs + `","` + inp.startDate + `","` + inp.endDate + `")`;
+  db.query(uQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.json("Failed");
+    } else {
+      db.query(pQuery, (err, results) => {
+        if (err) {
+          console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
+          res.json("Failed");
+        } else {
+          res.json("Success");
+        } 
+      });
+    }
+  });
+});
+
+app.post('/api/addStaff', (req, res) => {
+  //Generate a random ID adhering to the protocol, small chance for collison with other IDs, will worse with more prisoners
+  let id = "";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nums = "0123456789";
+  for (i = 0; i < 4; i++) {
+    id += chars.charAt(Math.floor(Math.random() * (chars.length))); 
+  }
+  for (i = 0; i < 4; i++) {
+    id += nums.charAt(Math.floor(Math.random() * (nums.length))); 
+  }
+  //Will probably need to check if ID has already been taken
+  let medCon = req.body.staff.medCon;
+  if (medCon == "") {
+    medCon = "NULL";
+  }
+  else {
+    medCon = `"` + medCon + `"`;
+  }
+  let inp = req.body.staff
+  const uQuery = `
+  INSERT INTO users
+  VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
+  const pQuery = `
+  INSERT INTO staff
+  VALUES("` + id + `","` + inp.role +  `")`;
+  db.query(uQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.json("Failed")
+    } else {
+      db.query(pQuery, (err, results) => {
+        if (err) {
+          console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
+          res.json("Failed");
+        } else {
+          res.json("Success");
+        } 
+      });
+    }
+  });
+});
+
+app.post('/api/addVisitor', (req, res) => {
+  //Generate a random ID adhering to the protocol, small chance for collison with other IDs, will worse with more prisoners
+  let id = "";
+  const nums = "0123456789";
+  for (i = 0; i < 8; i++) {
+    id += nums.charAt(Math.floor(Math.random() * (nums.length))); 
+  }
+  //Will probably need to check if ID has already been taken
+  let medCon = req.body.visitor.medCon;
+  if (medCon == "") {
+    medCon = "NULL";
+  }
+  else {
+    medCon = `"` + medCon + `"`;
+  }
+  let inp = req.body.visitor
+  const uQuery = `
+  INSERT INTO users
+  VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
+  const pQuery = `
+  INSERT INTO visitors
+  VALUES("` + id + `","` + inp.pNo +  `")`;
+  db.query(uQuery, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.json("Failed");
+    } else {
+      db.query(pQuery, (err, results) => {
+        if (err) {
+          console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
+          res.json("Failed");
+        } else {
+          res.json("Success");
+        } 
+      });
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
