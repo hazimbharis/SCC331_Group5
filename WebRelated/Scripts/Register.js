@@ -3,20 +3,21 @@ let box = document.getElementById("secondIns");
 const date = new Date();
 const today = date.toISOString().split("T");
 
-document.getElementById("dOB").setAttribute("max", today[0]);
+document.getElementById("dOB").setAttribute("max", today[0]); //Set the max date that can be selected in date of birth to today
 
 function processAdd() {
     let feedback = document.getElementById("feedback");
     let valid = true;
     let fName = document.getElementById("fName").value;
     let errors = []
+    document.getElementById("feedback").textContent = ""; //Reset feedback box
     if (fName.length == 0 || fName.length > 50) { //Need validation on this side in case frontend is tampered with
         valid = false;
-        errors.push("First names must be between 1 and 50 characters");
-        document.getElementById("fName").style.borderColor = "red";
+        errors.push("First names must be between 1 and 50 characters"); //Add to the list of error messages
+        document.getElementById("fName").style.borderColor = "red"; //If an input is invalid, hightlight the invalid input element with a red border
     }
     else {
-        document.getElementById("fName").style.borderColor = "#44414f";
+        document.getElementById("fName").style.borderColor = "#44414f"; //Set border back to normal if input becomes valid again
     }
     let lName = document.getElementById("lName").value;
     if (lName.length == 0 || lName.length > 50) {
@@ -36,7 +37,7 @@ function processAdd() {
     else
     {
         let dOBD = new Date(dOB);
-        if (dOBD.getTime() > date.getTime()) {
+        if (dOBD.getTime() > date.getTime()) { //Make sure date selected is on/before today by comparing the milliseconds since epoch
             valid = false;
             errors.push("Date must be before today");
             document.getElementById("dOB").style.borderColor = "red";
@@ -64,6 +65,7 @@ function processAdd() {
         document.getElementById("medCon").style.borderColor = "#44414f";
     }
 
+    //Prisoners
     if (type == "P") {
         let convs = document.getElementById("convictions").value;
         if (convs.length == 0 || convs.length > 100) {
@@ -92,7 +94,7 @@ function processAdd() {
         else {
             document.getElementById("endDate").style.borderColor = "#44414f";
         }
-        if (startDate.length > 0 && endDate.length > 0) {
+        if (startDate.length > 0 && endDate.length > 0) { //Make sure start date is before end date
             let sDate = new Date(startDate);
             let eDate = new Date(endDate);
             if (sDate.getTime() > eDate.getTime()) {
@@ -102,6 +104,8 @@ function processAdd() {
                 errors.push("Start date must be before or on end date");
             }
         }
+        //If valid is true, that means all data will work with the database constraints for the corresponding table
+        //Create a fetch request using the POST method via the API, pass the data needed using JSON format in the body
         if (valid == true) {
             fetch('http://localhost:5000/api/addPrisoner', {
                 method: "POST",
@@ -121,13 +125,23 @@ function processAdd() {
                         endDate: endDate
                     }
                 })
-            })
+            }).then(res => { //Wait for response from server to check if user addition failed or succeeded and output appropriate message
+                res.json().then(value => {
+                    if (value == "Success") {
+                        feedback.textContent = "New prisoner added";
+                    }
+                    else if (value == "Failed") {
+                        feedback.textContent = "Prisoner addition failed"
+                    }
+                });
+            });
         }
         else {
-            feedback.textContent = "Invalid fields: " + errors.join(", ");
+            feedback.textContent = "Invalid fields: " + errors.join(", "); //Feedback all errors in input form if inputs are invalid
         }
     }
 
+    //Staff
     else if (type == "S")
     {
         let role = document.getElementById("role").value;
@@ -156,17 +170,32 @@ function processAdd() {
                         role: role
                     }
                 })
-            })
+            }).then(res => {
+                res.json().then(value => {
+                    if (value == "Success") {
+                        feedback.textContent = "New staff added";
+                    }
+                    else if (value == "Failed") {
+                        feedback.textContent = "Staff addition failed"
+                    }
+                });
+            });
         }
         else {
             feedback.textContent = "Invalid fields: " + errors.join(", ");
         }
     }
 
+    //Visitors
     else if (type == "V")
     {
         let pNo = document.getElementById("pNo").value;
-        if (pNo.length != 11) {
+        if (isNaN(pNo) == true) { //Make sure phone number is actually a number
+            valid = false;
+            errors.push("Phone number must only contain numbers");
+            document.getElementById("pNo").style.borderColor = "red";
+        }
+        else if (pNo.length != 11) {
             valid = false;
             errors.push("Phone number must be 11 characters");
             document.getElementById("pNo").style.borderColor = "red";
@@ -191,7 +220,16 @@ function processAdd() {
                         pNo: pNo
                     }
                 })
-            })
+            }).then(res => {
+                res.json().then(value => {
+                    if (value == "Success") {
+                        feedback.textContent = "New visitor added";
+                    }
+                    else if (value == "Failed") {
+                        feedback.textContent = "Visitor addition failed"
+                    }
+                });
+            });
         }
         else {
             feedback.textContent = "Invalid fields: " + errors.join(", ");
@@ -200,10 +238,11 @@ function processAdd() {
 }
 
 function prisonerMode() {
-    type = "P";
-    box.replaceChildren();
+    type = "P"; //Switch user type
+    box.replaceChildren(); //Remove all children of this element
+    document.getElementById("feedback").textContent = "";
     document.getElementById("secondHead").textContent = "Prisoner information";
-    var cLabel = document.createElement("label");
+    var cLabel = document.createElement("label"); //Add the type specific input form needed
     cLabel.classList.add("formLabels");
     cLabel.textContent = "Convictions: ";
     var conv = document.createElement("input");
@@ -211,6 +250,7 @@ function prisonerMode() {
     conv.id = "convictions";
     conv.type = "text";
     conv.style.width = "500px";
+    conv.setAttribute("maxlength", 100);
     var br = document.createElement("br");
     var sLabel = document.createElement("label");
     sLabel.classList.add("formLabels");
@@ -233,12 +273,13 @@ function prisonerMode() {
     box.appendChild(startDate);
     box.appendChild(eLabel);
     box.appendChild(endDate);
-    document.getElementById("submit").style.visibility = "visible";
+    document.getElementById("submit").style.visibility = "visible"; //Let the user try to add the new user to the system
 }
 
 function staffMode() {
     type = "S";
     box.replaceChildren();
+    document.getElementById("feedback").textContent = "";
     document.getElementById("secondHead").textContent = "Staff information";
     var sLabel = document.createElement("label");
     sLabel.classList.add("formLabels");
@@ -247,6 +288,7 @@ function staffMode() {
     role.classList.add("form");
     role.id = "role";
     role.type = "text";
+    role.setAttribute("maxLength", 20);
     box.appendChild(sLabel);
     box.appendChild(role);
     document.getElementById("submit").style.visibility = "visible";
@@ -255,6 +297,7 @@ function staffMode() {
 function visitorMode() {
     type = "V";
     box.replaceChildren();
+    document.getElementById("feedback").textContent = "";
     document.getElementById("secondHead").textContent = "Visitor information";
     var pLabel = document.createElement("label");
     pLabel.classList.add("formLabels");
@@ -263,6 +306,7 @@ function visitorMode() {
     pNo.classList.add("form");
     pNo.id = "pNo";
     pNo.type = "text";
+    pNo.setAttribute("maxLength", 11);
     box.appendChild(pLabel);
     box.appendChild(pNo);
     document.getElementById("submit").style.visibility = "visible";

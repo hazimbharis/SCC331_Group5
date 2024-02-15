@@ -228,33 +228,27 @@ app.post('/api/addPrisoner', (req, res) => {
   else {
     medCon = `"` + medCon + `"`;
   }
-  console.log(req.body)
-  console.log(req.body.prisoner.fName)
-  let inp = req.body.prisoner
+  let inp = req.body.prisoner //Get the details passed in via the body of the request, assumes all are valid
   const uQuery = `
   INSERT INTO users
   VALUES("` + id + `","` + inp.fName + `","` + inp.lName + `","` + inp.dOB + `","` + inp.gender + `",` + medCon + `,"` + inp.type + `")`;
   const pQuery = `
   INSERT INTO prisoners
   VALUES("` + id + `","` + inp.convs + `","` + inp.startDate + `","` + inp.endDate + `")`;
-  console.log(req.params);
-  console.log(uQuery);
-  console.log(pQuery);
   db.query(uQuery, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
-      res.status(500).json({ error: 'Database error' });
+      res.json("Failed");
     } else {
-      res.json(results[0])
-    } 
-  });
-  db.query(pQuery, (err, results) => {
-    if (err) {
-      console.error('Database query error: ' + err.message);
-      res.status(500).json({ error: 'Database error' });
-    } else {
-      res.json(results[0])
-    } 
+      db.query(pQuery, (err, results) => {
+        if (err) {
+          console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
+          res.json("Failed");
+        } else {
+          res.json("Success");
+        } 
+      });
+    }
   });
 });
 
@@ -277,8 +271,6 @@ app.post('/api/addStaff', (req, res) => {
   else {
     medCon = `"` + medCon + `"`;
   }
-  console.log(req.body)
-  console.log(req.body.staff.fName)
   let inp = req.body.staff
   const uQuery = `
   INSERT INTO users
@@ -286,24 +278,20 @@ app.post('/api/addStaff', (req, res) => {
   const pQuery = `
   INSERT INTO staff
   VALUES("` + id + `","` + inp.role +  `")`;
-  console.log(req.params);
-  console.log(uQuery);
-  console.log(pQuery);
   db.query(uQuery, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
-      res.status(500).json({ error: 'Database error' });
+      res.json("Failed")
     } else {
-      res.json(results[0])
-    } 
-  });
-  db.query(pQuery, (err, results) => {
-    if (err) {
-      console.error('Database query error: ' + err.message);
-      res.status(500).json({ error: 'Database error' });
-    } else {
-      res.json(results[0])
-    } 
+      db.query(pQuery, (err, results) => {
+        if (err) {
+          console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
+          res.json("Failed");
+        } else {
+          res.json("Success");
+        } 
+      });
+    }
   });
 });
 
@@ -322,8 +310,6 @@ app.post('/api/addVisitor', (req, res) => {
   else {
     medCon = `"` + medCon + `"`;
   }
-  console.log(req.body)
-  console.log(req.body.visitor.fName)
   let inp = req.body.visitor
   const uQuery = `
   INSERT INTO users
@@ -331,24 +317,20 @@ app.post('/api/addVisitor', (req, res) => {
   const pQuery = `
   INSERT INTO visitors
   VALUES("` + id + `","` + inp.pNo +  `")`;
-  console.log(req.params);
-  console.log(uQuery);
-  console.log(pQuery);
   db.query(uQuery, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
-      res.status(500).json({ error: 'Database error' });
+      res.json("Failed");
     } else {
-      res.json(results[0])
-    } 
-  });
-  db.query(pQuery, (err, results) => {
-    if (err) {
-      console.error('Database query error: ' + err.message);
-      res.status(500).json({ error: 'Database error' });
-    } else {
-      res.json(results[0])
-    } 
+      db.query(pQuery, (err, results) => {
+        if (err) {
+          console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
+          res.json("Failed");
+        } else {
+          res.json("Success");
+        } 
+      });
+    }
   });
 });
 

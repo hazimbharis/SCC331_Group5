@@ -274,7 +274,7 @@ function updateMovementInfo() {
     var typex;
     if (element.type == "S") { //Differentiate user types in UI using colours
       iconElement.style.color = "Blue"; //Staff
-      typex = 1;
+      typex = 1; //Represents which array element they should append to
     } else if (element.type == "V") { //Visitors
       iconElement.style.color = "White";
       typex = 2;
@@ -295,7 +295,7 @@ function updateMovementInfo() {
     if (element.zone == '1') {
       gymCount[typex]++;
       gym.appendChild(prisoner);
-      gym.children[2].innerHTML = `Gym: ${gymCount.reduce((x, y) => x + y, 0)}`;
+      gym.children[2].innerHTML = `Gym: ${gymCount.reduce((x, y) => x + y, 0)}`; //Use reduce on the array to get total number of people in each area by combing all types
       checkLocationChange(oldMovementData, element, iconElement);
 
     } else if (element.zone == '2') {
@@ -317,7 +317,7 @@ function updateMovementInfo() {
       checkLocationChange(oldMovementData, element, iconElement);
 
     }
-    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - 52) / 2)) * -1) + "px" //52 if from (2 * padding size) + size of prisoner icon
+    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - 52) / 2)) * -1) + "px" //52 is from (2 * padding size) + size of prisoner icon
   });
   });
   var zs = [gym, canteen, library, livingRoom];
