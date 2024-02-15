@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register User</title>
+    <link rel="stylesheet" type="text/css" href="../Stylesheets/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/e0b1d3493e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../Stylesheets/Register.css" />
+</head>
+<body style = "background-color: #e3d8d8;">
+    <header>
+        <h1 id = "title" >Register User</h1>
+    </header>
+    <div class = "types">
+        <button type = "button" class = "button" onclick = "prisonerMode()">Add prisoner</button>
+        <button type = "button" class = "button" onclick = "staffMode()">Add staff</button>
+        <button type = "button" class = "button" onclick = "visitorMode()">Add visitor</button>
+    </div>
+    <div class = "formContainer">
+        <form id = "add">
+            <div id = "first">
+                <h3 style = "margin: 0px; color: #e3d8d8">User information</h3>
+                <label class = "formLabels">First names:</label>
+                <input type = "text" id = "fName" class = "form" maxlength = "50">
+                <label class = "formLabels">Last name:</label>
+                <input type = "text" id = "lName" class = "form" maxlength = "50"><br>
+                <label class = "formLabels">Date of birth:</label>
+                <input type = "date" id = "dOB" class = "form"><br>
+                <label class = "formLabels">Gender:</label>
+                <input type = "text" id = "gender" class = "form" maxLength = "10"><br>
+                <label class = "formLabels">Medical conditions:</label>
+                <input type = "text" id = "medCon" class = "form" maxLength = "100">
+            </div>
+            <div id = "second">
+                <h3 style = "margin: 0px; color: #e3d8d8" id = "secondHead">Information</h3>
+                <div id = "secondIns">
+                </div>
+            </div>
+            <div id = "third">
+                <h3 style = "margin: 0px; color: #e3d8d8">Submit</h3>
+                <button type = "button" class = "button" id = "submit" onclick = "processAdd()" style = "visibility: hidden;">Add user</button>
+                <div id = "msg">
+                    <label class = "formLabels" id = "feedback"></label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="../Scripts/Register.js"></script>
+</body>
+</html>
