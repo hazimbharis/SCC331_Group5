@@ -39,11 +39,15 @@ function addToTerminal(message, icon) {
   }
 
 export function addToLog(newEntry, icon) {
+    
     console.log(newEntry);
+    console.log(icon);
+    console.log(typeof(icon));
     var queueSize = logsQueue.push(newEntry);
     console.log(queueSize-1);
     addToTerminal(logsQueue[queueSize-1], icon);
 }
+
 
 
 
