@@ -29,6 +29,31 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+/**
+ * CREATE TABLE your_table_name (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    your_timestamp_column TIMESTAMP(3) -- Define the column with precision for milliseconds
+);
+
+ */
+
+//API endpoint to reterive timestamps from movement table
+app.get('/api/MovementTime', (req, res) => {//'2024-02-05 15:30:45.123' - format of timestamp to be added
+  const query = `
+  SELECT prisonerID, zoneID, timestamp
+  FROM movement
+  WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 3 HOUR)
+  ORDER BY timestamp ASC`;
+  db.query(query, (err, results) => {
+    if(err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({error: 'Database error' });
+    }else{
+      //console.log(results);
+      res.json(results);
+    }
+  });
+});
 //API endpoint to retreive door states from databse
 app.get('/api/door', (req, res) => {
   const query = `
@@ -42,7 +67,7 @@ app.get('/api/door', (req, res) => {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
-      console.log(results);
+      //console.log(results);
       res.json(results); // Send the results as an object
     } 
   });
