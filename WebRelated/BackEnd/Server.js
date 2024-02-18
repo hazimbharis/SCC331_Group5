@@ -187,17 +187,17 @@ app.get('/api/position', (req, res) => {
   });
 });
 
-app.get('/api/staffRole/:id', (req, res) => {
+app.get('/api/staffRole', (req, res) => {
   const query = `
-  SELECT role
+  SELECT *
   FROM staff
-  WHERE id = "` + req.params.id + '"';
+  `;
   db.query(query, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
-      res.json(results[0])
+      res.json(results);
     } 
   });
 });

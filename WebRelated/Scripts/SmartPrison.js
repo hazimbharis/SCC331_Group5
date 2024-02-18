@@ -16,6 +16,7 @@ let livingRoomDoor = document.getElementById('living-room-door');
 
 let formattedData = [];
 let formattedData2 = [];
+let staffData = {};
 
 // Door
 const data = [
@@ -232,6 +233,14 @@ function clearPrisoners() {
 
 function updateMovementInfo() {
   var oldMovementData = formattedData;
+  
+  //Get staff roles
+  $.get('http://localhost:5000/api/staffRole', (newData) => {
+    newData.forEach(entry => {
+      staffData[entry.id] = entry.role;
+    });
+  })
+
   $.get('http://localhost:5000/api/position', (newData) => {
     formattedData = newData.map((item) => ({
       id: item.prisonerID,
@@ -275,6 +284,7 @@ function updateMovementInfo() {
     if (element.type == "S") { //Differentiate user types in UI using colours
       iconElement.style.color = "Blue"; //Staff
       typex = 1; //Represents which array element they should append to
+      hoverCont = hoverCont + "\r\nRole: " + staffData[element.id];
     } else if (element.type == "V") { //Visitors
       iconElement.style.color = "White";
       typex = 2;
@@ -328,7 +338,7 @@ function updateMovementInfo() {
       checkLocationChange(oldMovementData, element, iconElement);
 
     }
-    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - 52) / 2)) * -1) + "px" //52 is from (2 * padding size) + size of prisoner icon
+    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - prisoner.clientWidth + 15) / 2)) * -1) + "px" //Center the tooltip (not perfect due to rounding)
   });
   });
 }

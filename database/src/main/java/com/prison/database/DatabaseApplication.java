@@ -19,7 +19,7 @@ public class DatabaseApplication {
 	private static Connection connection;
 
 	// Database variables
-	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement"};
+	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement", "zoneHistory"};
 	private static final String[] tableQuery ={
 			"doorID INT PRIMARY KEY, locked BOOL NOT NULL, closed BOOL NOT NULL, alarm BOOL NOT NULL",
 			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL",
@@ -27,7 +27,8 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, convictions VARCHAR(100) NOT NULL, startDate DATE NOT NULL, endDate DATE, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, role VARCHAR(20) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
-			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)"
+			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
+			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL, date DATE, time TIME"
 	};
 
 	// Microbit variables

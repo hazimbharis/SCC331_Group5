@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Zone Environment History</title>
     <script
       src="https://kit.fontawesome.com/e0b1d3493e.js"
       crossorigin="anonymous"
@@ -14,43 +14,24 @@
       href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../Stylesheets/Home.css" />
+    <link rel="stylesheet" href="../Stylesheets/ZoneEnvHistory.css" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   </head>
   <body style="background-color: #e3d8d8">
     <h1 style="position: relative; top: 10px; text-align: center" id="heading"><b>Gym</b></h1>
-    <div class="items">
-      <div class="item">
-        <!-- Data from the API -->
-        <p class="item-value" id="temperature">17°C</p>
-        <div style="display: flex; align-items: center">
-          <i class="fa-solid fa-temperature-low fa-2x"></i>
-          <p class="item-title">Temperature</p>
-        </div>
+    <div class="board">
+      <div class = "menu">
+        <button class = "button" onclick = "temperature()">Temperature</button>
+        <button class = "button" onclick = "noise()">Noise</button>
+        <button class = "button" onclick = "light()">Light</button><br>
+        <label class = "label">Enter date:</label>
+        <input type = "date" class = "date"></input>
+        <button class = "submit" onclick = "date()">Search</button>
       </div>
-      <div class="item">
-        <!-- Data from the API -->
-        <p class="item-value" id="noise">102.7</p>
-        <div style="display: flex; align-items: center">
-          <i class="fa-solid fa-volume-high fa-2x"></i>
-          <p class="item-title">Noise</p>
-        </div>
+      <div class="graphs">
+        <label class = "label">dsasdasd</label>
+        <div id = "graph"></div>
       </div>
-      <div class="item">
-        <!-- Data from the API -->
-        <p class="item-value" id="light">22.1</p>
-        <div style="display: flex; align-items: center">
-          <i class="fa-solid fa-lightbulb fa-2x"></i>
-          <p class="item-title">Light</p>
-        </div>
-      </div>
-    </div>
-    <div style="position: absolute; right: 50px; bottom: 50px">
-      <a class="link" href="../Pages/SmartPrison.html">
-        <i
-          style="color: #686576 !important"
-          class="fa-solid fa-right-long fa-4x"
-        ></i>
-      </a>
     </div>
     <div style="position: absolute; right: 400px; top: 20px" onclick="change_right()">
       <a class="link" >
@@ -68,7 +49,7 @@
         ></i>
       </a>
     </div>
-    <script src="../Scripts/Home.js"></script>
+    <script src="../Scripts/ZoneEnvHistory.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
       integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
