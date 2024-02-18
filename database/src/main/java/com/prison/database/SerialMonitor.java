@@ -149,6 +149,15 @@ public class SerialMonitor {
 
                             setEnvironment(zoneID, temp, noise, light);
                         }
+                        case "004"-> { // help signal from guard microbit
+                            String forcelock = "FORCELOCK";
+                            microbit.writeBytes(forcelock.getBytes(), forcelock.length()); //central microbit sends a message which all doors will be waiting to hear
+
+                            // some extra code to send to frontend that there is an alert
+                            // maybe set an alert value in column in mysql table
+                            // frontend will have to have a display thing for it
+
+                        }
 
                     }
                 }
