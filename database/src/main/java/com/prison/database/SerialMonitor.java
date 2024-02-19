@@ -135,6 +135,9 @@ public class SerialMonitor {
                             int doorID = Integer.parseInt(types[1]);
 
                             setDoor(doorID, locked, closed, alarm);
+
+                            //alarm check
+
                         }
                         case "003" -> { // environment response data
                             System.out.println(types[1]); //zone ID
@@ -148,6 +151,11 @@ public class SerialMonitor {
                             int light = Integer.parseInt(types[4]);
 
                             setEnvironment(zoneID, temp, noise, light);
+
+                            //temp check
+                            //noise check
+                            //light check
+
                         }
                         case "004"-> { // help signal from guard microbit
                             String forcelock = "FORCELOCK";
@@ -205,6 +213,24 @@ public class SerialMonitor {
     public void setEnvironment(int zid, int temp, int noise, int light) {
         try {
             URL getURL = new URL(url + "/addEnvironment?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
+            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if (DEBUG) {
+                System.out.println(getURL);
+                System.out.println(responseCode);
+            }
+            connection.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("failed to connect");
+        }
+    }
+
+    public void setWarning(int zid, int wid) {
+        try {
+            URL getURL = new URL(url + "/addWarning?zone=" + zid + "&warning=" + wid);
             HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
