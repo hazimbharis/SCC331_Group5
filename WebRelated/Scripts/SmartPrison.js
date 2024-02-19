@@ -242,7 +242,7 @@ function updateMovementInfo() {
       type: item.type
     }));
 
-    //console.log(formattedData);
+  console.log(formattedData);
 
   // Clear existing prisoners
   clearPrisoners();

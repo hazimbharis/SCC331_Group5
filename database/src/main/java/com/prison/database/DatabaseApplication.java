@@ -29,7 +29,7 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
 			"id VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeOfUse timestamp, FOREIGN KEY (id) REFERENCES users(id)",
-			"zoneID INT PRIMARY KEY NOT NULL, warningID INT NOT NULL" // zone where warning occuring, type of warning: 1 guard assist, 2 temp, 3 temp, 4 noise, 5 light
+			"zoneID INT NOT NULL, warningID INT NOT NULL" // zone where warning occuring, type of warning: 1 guard assist, 2 temp, 3 temp, 4 noise, 5 light
 	};
 
 	// Microbit variables

@@ -153,15 +153,28 @@ public class SerialMonitor {
                             setEnvironment(zoneID, temp, noise, light);
 
                             //temp check
+                            if (temp > 100) setWarning(zoneID, 2);
+                            if (temp < 0) setWarning(zoneID, 3);
                             //noise check
+                            if (noise > 100) setWarning(zoneID, 4);
                             //light check
+                            if (noise > 100) setWarning(zoneID, 4);
 
                         }
                         case "004"-> { // help signal from guard microbit
                             String forcelock = "FORCELOCK";
-                            microbit.writeBytes(forcelock.getBytes(), forcelock.length()); //central microbit sends a message which all doors will be waiting to hear
+
+
+                            int zoneID = Integer.parseInt(types[1]);
+                            //not sure how to store this data, can make the warnings table store guard IDs (int to varchar)
+                            int guardID = Integer.parseInt(types[2]);
+
+
+                            //central microbit sends a message which all doors will be waiting to hear
+                            microbit.writeBytes(forcelock.getBytes(), forcelock.length());
 
                             // some extra code to send to frontend that there is an alert
+                            setWarning(zoneID, guardID);
                             // maybe set an alert value in column in mysql table
                             // frontend will have to have a display thing for it
 
