@@ -197,7 +197,7 @@ app.get('/api/staffRole', (req, res) => {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
-      res.json(results);
+      res.json(results); //Returns all columns of the staff table
     } 
   });
 });
@@ -331,6 +331,23 @@ app.post('/api/addVisitor', (req, res) => {
     }
   });
 });
+
+//Returns all zone history data for the date requested, ordered by zoneID and time ascending
+app.get('/api/zoneHistory/:date', (req, res) => {
+  const query = `
+  SELECT *
+  FROM zonehistory
+  WHERE date = "` + req.params.date + `"
+  ORDER BY zoneID, time`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

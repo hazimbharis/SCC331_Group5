@@ -13,13 +13,13 @@ import java.sql.*;
 @RestController
 public class DatabaseApplication {
 	// Login variables
-	private static final String PASSWORD = "password";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static final String USER = "root";
 	private static Connection connection;
 
 	// Database variables
-	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement", "zoneHistory"};
+	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement", "zonehistory"};
 	private static final String[] tableQuery ={
 			"doorID INT PRIMARY KEY, locked BOOL NOT NULL, closed BOOL NOT NULL, alarm BOOL NOT NULL",
 			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL",
@@ -28,7 +28,7 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, role VARCHAR(20) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
-			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL, date DATE, time TIME"
+			"zoneID INT NOT NULL, temp INT NOT NULL, noise INT NOT NULL, light DOUBLE(7,2) NOT NULL, date DATE NOT NULL, time TIME NOT NULL, PRIMARY KEY(zoneID, date, time)"
 	};
 
 	// Microbit variables

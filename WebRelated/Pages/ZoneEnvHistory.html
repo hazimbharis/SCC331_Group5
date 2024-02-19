@@ -10,44 +10,25 @@
     ></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600;700;900&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="../Stylesheets/ZoneEnvHistory.css" />
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   </head>
   <body style="background-color: #e3d8d8">
-    <h1 style="position: relative; top: 10px; text-align: center" id="heading"><b>Gym</b></h1>
+    <h1 style="position: relative; top: 10px; text-align: center" id="heading"><b>Zone Environment History</b></h1>
     <div class="board">
       <div class = "menu">
-        <button class = "button" onclick = "temperature()">Temperature</button>
-        <button class = "button" onclick = "noise()">Noise</button>
-        <button class = "button" onclick = "light()">Light</button><br>
+        <button class = "button" id = "temp" onclick = "temperature()">Temperature</button>
+        <button class = "button" id = "noise" onclick = "noise()">Noise</button>
+        <button class = "button" id = "light" onclick = "light()">Light</button>
+        <hr>
         <label class = "label">Enter date:</label>
-        <input type = "date" class = "date"></input>
+        <input type = "date" class = "date" id = "date"></input>
         <button class = "submit" onclick = "date()">Search</button>
       </div>
       <div class="graphs">
-        <label class = "label">dsasdasd</label>
+        <label class = "label" id = "feedback"></label><br>
         <div id = "graph"></div>
       </div>
-    </div>
-    <div style="position: absolute; right: 400px; top: 20px" onclick="change_right()">
-      <a class="link" >
-        <i
-          style="color: #686576 !important"
-          class="fa-solid fa-right-long fa-4x"
-        ></i>
-      </a>
-    </div>
-    <div style="position: absolute;left: 400px; top: 20px" onclick="change_left()">
-      <a class="link" >
-        <i
-          style="color: #686576 !important"
-          class="fa-solid fa-left-long fa-4x"
-        ></i>
-      </a>
     </div>
     <script src="../Scripts/ZoneEnvHistory.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
