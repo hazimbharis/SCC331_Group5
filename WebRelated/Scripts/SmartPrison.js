@@ -4,6 +4,8 @@ let gym = document.getElementById('prison1');
 let canteen = document.getElementById('prison2');
 let library = document.getElementById('prison3');
 let livingRoom = document.getElementById('prison4');
+
+let gymFrontEnd = document.getElementById('prison1FrontEnd2');
 let gymCount = [0, 0, 0]; //First element is prisoners, second is staff, third is visitors
 let canteenCount = [0, 0, 0];
 let libraryCount = [0, 0, 0];

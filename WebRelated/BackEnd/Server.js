@@ -9,11 +9,13 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 const port = 5000;
 
 app.use(cors());
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -40,11 +42,13 @@ db.connect(err => {
 //API endpoint to reterive timestamps from movement table
 app.get('/api/MovementTime', (req, res) => {//'2024-02-05 15:30:45.123' - format of timestamp to be added
   const query = `
-  SELECT prisonerID, zoneID, timestamp
-  FROM movement
-  WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 3 HOUR)
-  ORDER BY timestamp ASC`;
+    SELECT m.prisonerID, m.zoneID, m.timeStamp, u.type, u.firstNames, u.lastName, u.medicalConditions
+    FROM movement AS m
+    JOIN users AS u ON m.prisonerID = u.id
+    ORDER BY m.timeStamp DESC;
+  `;
   db.query(query, (err, results) => {
+    console.log("test");
     if(err) {
       console.error('Database query error: ' + err.message);
       res.status(500).json({error: 'Database error' });
@@ -140,7 +144,6 @@ app.get('/api/movement', (req, res) => {
   const query = `
     SELECT * FROM movement
   `;
-  
   db.query(query, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
