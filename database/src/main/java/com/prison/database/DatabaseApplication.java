@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
 @RestController
@@ -20,7 +22,7 @@ public class DatabaseApplication {
 	private static Connection connection;
 
 	// Database variables
-	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement", "history", "warnings"};
+	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement", "history", "warnings", "zonehistory", "doorhistory"};
 	private static final String[] tableQuery ={
 			"doorID INT PRIMARY KEY, locked BOOL NOT NULL, closed BOOL NOT NULL, alarm BOOL NOT NULL",
 			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL",
@@ -28,10 +30,11 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, convictions VARCHAR(100) NOT NULL, startDate DATE NOT NULL, endDate DATE, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, role VARCHAR(20) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
-			"prisonerID VARCHAR(100) NOT NULL, zoneID INT NOT NULL, timeStamp TIMESTAMP(3) NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)"
-			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
+			"prisonerID VARCHAR(100) NOT NULL, zoneID INT NOT NULL, timeStamp TIMESTAMP(3) NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
 			"id VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeOfUse timestamp, FOREIGN KEY (id) REFERENCES users(id)",
-			"zoneID INT NOT NULL, warningID INT NOT NULL" // zone where warning occuring, type of warning: 1 guard assist, 2 temp, 3 temp, 4 noise, 5 light
+			"zoneID INT NOT NULL, warningID INT NOT NULL", // zone where warning occuring, type of warning: 1 guard assist, 2 temp, 3 temp, 4 noise, 5 light
+			"zoneID INT NOT NULL, temp INT NOT NULL, noise INT NOT NULL, light DOUBLE(7,2) NOT NULL, date DATE NOT NULL, time TIME NOT NULL, PRIMARY KEY(zoneID, date, time)",
+			"doorID INT NOT NULL, status VARCHAR(20) NOT NULL, date DATE NOT NULL, time TIME NOT NULL, FOREIGN KEY (doorID) REFERENCES lockstatus(doorID), PRIMARY KEY(doorID, date, time)"
 	};
 
 	// Microbit variables
@@ -155,12 +158,13 @@ public class DatabaseApplication {
 	private void addEnvironment(@RequestParam(value = "zone") int zone,
 						   @RequestParam(value= "temp")int temp,
 						   @RequestParam(value= "noise")int noise,
-						   @RequestParam(value= "light")int light) throws SQLException {
+						   @RequestParam(value= "light")double light) throws SQLException {
 		int check = 0;
 		String insertDataSQL;
 		ResultSet result;
 
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.environment WHERE environment.zoneID = " + zone;
+
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
 			while (result.next()) {
@@ -216,6 +220,50 @@ public class DatabaseApplication {
 				//	statement2.executeUpdate();
 				// }
 			}
+		}
+	}
+
+	@GetMapping("/addZoneHistory")
+	private void addZoneHistory(@RequestParam(value = "zone") int zone,
+								@RequestParam(value= "temp") int temp,
+								@RequestParam(value= "noise") int noise,
+								@RequestParam(value= "light") double light) throws SQLException {
+		LocalDateTime datetime = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //Get the current time and date
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String date = datetime.format(dateFormat);
+		String time = datetime.format(timeFormat);
+		String iStatement = "INSERT INTO Microbits.zonehistory (zoneID, temp, noise, light, date, time) VALUES (?, ?, ?, ? ,?, ?)";
+		try (PreparedStatement pStatement = connection.prepareStatement(iStatement)) {
+			pStatement.setInt(1, zone);
+			pStatement.setInt(2, temp);
+			pStatement.setInt(3, noise);
+			pStatement.setDouble(4, light);
+			pStatement.setString(5, date);
+			pStatement.setString(6, time);
+			pStatement.executeUpdate();
+		} catch (Exception e) {
+			//In case it tries to add an entry with the same zone, time and date, do nothing
+		}
+	}
+
+	@GetMapping("/addDoorHistory")
+	private void addDoorHistory(@RequestParam(value = "door") int door,
+								@RequestParam(value = "status") String status) throws SQLException {
+		LocalDateTime datetime = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //Get the current time and date
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String date = datetime.format(dateFormat);
+		String time = datetime.format(timeFormat);
+		String iStatement = "INSERT INTO Microbits.doorhistory (doorID, status, date, time) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pStatement = connection.prepareStatement(iStatement)) {
+			pStatement.setInt(1, door);
+			pStatement.setString(2, status);
+			pStatement.setString(3, date);
+			pStatement.setString(4, time);
+			pStatement.executeUpdate();
+		} catch (Exception e) {
+			//In case it tries to add an entry with the same zone, time and date, do nothing
 		}
 	}
 

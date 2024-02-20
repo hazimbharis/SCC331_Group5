@@ -190,22 +190,20 @@ app.get('/api/position', (req, res) => {
   });
 });
 
-app.get('/api/staffRole/:id', (req, res) => {
+app.get('/api/staffRole', (req, res) => {
   const query = `
-  SELECT role
+  SELECT *
   FROM staff
-  WHERE id = "` + req.params.id + '"';
+  `;
   db.query(query, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
-      res.json(results[0])
+      res.json(results); //Returns all columns of the staff table
     } 
   });
 });
-
-//app.use(express.urlencoded());
 
 app.use(express.json())
 
@@ -241,14 +239,14 @@ app.post('/api/addPrisoner', (req, res) => {
   db.query(uQuery, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
-      res.json("Failed");
+      res.json({result: "Failed"});
     } else {
       db.query(pQuery, (err, results) => {
         if (err) {
           console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
-          res.json("Failed");
+          res.json({result: "Failed"});
         } else {
-          res.json("Success");
+          res.json({result: "Success", id: id});
         } 
       });
     }
@@ -284,14 +282,14 @@ app.post('/api/addStaff', (req, res) => {
   db.query(uQuery, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
-      res.json("Failed")
+      res.json({result: "Failed"})
     } else {
       db.query(pQuery, (err, results) => {
         if (err) {
           console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
-          res.json("Failed");
+          res.json({result: "Failed"});
         } else {
-          res.json("Success");
+          res.json({result: "Success", id: id});
         } 
       });
     }
@@ -323,19 +321,98 @@ app.post('/api/addVisitor', (req, res) => {
   db.query(uQuery, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
-      res.json("Failed");
+      res.json({result: "Failed"});
     } else {
       db.query(pQuery, (err, results) => {
         if (err) {
           console.error('Database query error: ' + err.message); //Send response back to client to feedback whether adding the user failed or succeeded
-          res.json("Failed");
+          res.json({result: "Failed"});
         } else {
-          res.json("Success");
+          res.json({result: "Success", id: id});
         } 
       });
     }
   });
 });
+
+//Returns all zone history data for the date requested, ordered by zoneID and time ascending
+app.get('/api/zoneHistory/:date', (req, res) => {
+  const query = `
+  SELECT *
+  FROM zonehistory
+  WHERE date = "` + req.params.date + `"
+  ORDER BY zoneID, time`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+//Returns all door history data for the date requested
+app.get('/api/doorHistory/:date', (req, res) => {
+  const query = `
+  SELECT *
+  FROM doorhistory
+  WHERE date = "` + req.params.date + `"
+  ORDER BY doorID, time`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/prisoners', (req, res) => {
+  const query = `
+  SELECT *
+  FROM users, prisoners
+  WHERE users.id = prisoners.id`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/staff', (req, res) => {
+  const query = `
+  SELECT *
+  FROM users, staff
+  WHERE users.id = staff.id`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/visitors', (req, res) => {
+  const query = `
+  SELECT *
+  FROM users, visitors
+  WHERE users.id = visitors.id`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
