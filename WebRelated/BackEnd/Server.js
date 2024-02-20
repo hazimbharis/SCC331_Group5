@@ -366,6 +366,51 @@ app.get('/api/doorHistory/:date', (req, res) => {
   });
 })
 
+app.get('/api/prisoners', (req, res) => {
+  const query = `
+  SELECT *
+  FROM users, prisoners
+  WHERE users.id = prisoners.id`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/staff', (req, res) => {
+  const query = `
+  SELECT *
+  FROM users, staff
+  WHERE users.id = staff.id`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/visitors', (req, res) => {
+  const query = `
+  SELECT *
+  FROM users, visitors
+  WHERE users.id = visitors.id`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

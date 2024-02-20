@@ -21,6 +21,8 @@ public class SerialMonitor {
     private SerialPort microbit;
     private int zones = 4;
     private double [][] prevZoneValues = new double[zones][3]; //Stores previous zone values as zone history only stores changes so needed for comparison
+    private int doors = 4;
+    private String[] prevDoorValues = new String[doors];
 
     //unnecessary variables, will remove later
     private int z1counter;
@@ -45,6 +47,9 @@ public class SerialMonitor {
             for (int j = 0; j < 3; j++) {
                 prevZoneValues[i][j] = 0; //Initialise array
             }
+        }
+        for (int i = 0; i < doors; i ++) {
+            prevDoorValues[i] = "none";
         }
 
         // List all the ports available
@@ -196,6 +201,32 @@ public class SerialMonitor {
                 System.out.println(responseCode);
             }
             connection.disconnect();
+            String status;
+            if (alarm == true) {
+                status = "alarm";
+            }
+            else if (locked == true) {
+                status = "locked";
+            }
+            else if (closed == true) {
+                status = "closed";
+            }
+            else {
+                status = "open";
+            }
+            if (status.equals(prevDoorValues[did]) == false) {
+                URL dHURL = new URL(url + "/addDoorHistory?door=" + did + "&status=" + status);
+                HttpURLConnection conn = (HttpURLConnection) dHURL.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+                int resCode = conn.getResponseCode();
+                if (DEBUG) {
+                    System.out.println(dHURL);
+                    System.out.println(resCode);
+                }
+                connection.disconnect();
+                prevDoorValues[did] = status;
+            }
 
         } catch (Exception e) {
             System.out.println("failed to connect");

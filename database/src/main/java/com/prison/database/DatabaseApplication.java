@@ -214,6 +214,26 @@ public class DatabaseApplication {
 		}
 	}
 
+	@GetMapping("/addDoorHistory")
+	private void addDoorHistory(@RequestParam(value = "door") int door,
+								@RequestParam(value = "status") String status) throws SQLException {
+		LocalDateTime datetime = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //Get the current time and date
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String date = datetime.format(dateFormat);
+		String time = datetime.format(timeFormat);
+		String iStatement = "INSERT INTO Microbits.doorhistory (doorID, status, date, time) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pStatement = connection.prepareStatement(iStatement)) {
+			pStatement.setInt(1, door);
+			pStatement.setString(2, status);
+			pStatement.setString(3, date);
+			pStatement.setString(4, time);
+			pStatement.executeUpdate();
+		} catch (Exception e) {
+			//In case it tries to add an entry with the same zone, time and date, do nothing
+		}
+	}
+
 	//http://localhost:8080/getPrisoners?zone=1
 	@GetMapping("/getPrisoners")
 	private String getPrisoners(@RequestParam(value = "zone")int zone) throws  SQLException {

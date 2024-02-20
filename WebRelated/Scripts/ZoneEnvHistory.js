@@ -34,7 +34,7 @@ function drawGraph() {
             document.getElementById("feedback").textContent = "No data for selected day"; //If no data for day selected, feedback to user
         }
         else {
-          document.getElementById("feedback").textContent = ""; //Clear text if valid day
+          document.getElementById("feedback").textContent = selectedDate;
         }
         google.charts.load("current", {packages: ["corechart", "line"]}); //Specify line graph
         google.charts.setOnLoadCallback(draw);
@@ -111,7 +111,7 @@ function drawDoors() { //Door history visualisation uses a different type of gra
             document.getElementById("feedback").textContent = "No data for selected day";
         }
         else {
-            document.getElementById("feedback").textContent = "";
+            document.getElementById("feedback").textContent = selectedDate;
             google.charts.load("current", {packages:["timeline"]}); //Use Google Charts timeline
             google.charts.setOnLoadCallback(drawD);
         }
