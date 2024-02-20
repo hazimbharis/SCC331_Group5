@@ -154,8 +154,16 @@ h2{
   transform: scale(1.5);
 }
 
-.title:hover .hoverOver{
+.title:hover .hoverOver {
   visibility: visible;
+}
+
+.title .hoverOver {
+  position: absolute;
+  width: 220px;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .link > i {

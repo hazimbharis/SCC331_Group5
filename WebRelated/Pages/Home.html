@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
     <script
       src="https://kit.fontawesome.com/e0b1d3493e.js"
       crossorigin="anonymous"
@@ -13,51 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <style>
-      * {
-        box-sizing: border-box;
-        font-weight: 500;
-        font-family: 'Source Code Pro', monospace;
-      }
-      .items {
-        margin-top: 100px;
-        display: flex;
-        justify-content: space-evenly;
-      }
-      .item {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: baseline;
-        width: 350px;
-        height: 350px;
-        border-radius: 20px;
-        background-color: #686576;
-      }
-      i {
-        color: #e3d8d8 !important;
-      }
-      .item-title {
-        margin-left: 10px;
-        font-size: 40px;
-        color: #e3d8d8;
-      }
-      .item-value {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        color: #e3d8d8;
-        font-size: 60px;
-        transform: translate(-50%, -50%);
-        margin: 0;
-      }
-      .link > i {
-        transition: transform 0.5s ease-in-out;
-      }
-      .link > i:hover {
-        transform: scale(1.5);
-      }
-    </style>
+    <link rel="stylesheet" href="../Stylesheets/Home.css" />
   </head>
   <body style="background-color: #e3d8d8">
     <h1 style="position: relative; top: 10px; text-align: center" id="heading"><b>Gym</b></h1>
@@ -118,80 +75,5 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script>
-      var h1 = document.getElementById('heading');
-      var temp = document.getElementById('temperature');
-      var noises = document.getElementById('noise');
-      var lights = document.getElementById('light');
-      let index = 0;
-      var zones = ['Gym', 'Canteen', 'Living Room', 'Library']
-
-      function change_left(){
-        index -= 1;
-        if (index < 0) index = 3
-        h1.innerHTML = zones[Math.abs(index%4)]
-      }
-
-      function change_right(){
-        index += 1;
-        
-        h1.innerHTML = zones[Math.abs(index%4)]
-      }
-      
-      function fetchPopulationData() {
-        switch (Math.abs(index%4)) {
-          case 0:
-            console.log('0')
-            $.get('http://localhost:5000/api/gym', data => {
-                // Update the 'values' array with the new data received
-                values = data;
-                console.log(data);
-                temp.innerHTML = values[0].temp
-                noises.innerHTML = values[0].noise
-                lights.innerHTML = values[0].light  
-            });
-            break
-          case 1:
-            console.log('1')
-            $.get('http://localhost:5000/api/canteen', data => {
-                // Update the 'values' array with the new data received
-                values = data;
-                console.log(data);
-                temp.innerHTML = values[0].temp
-                noises.innerHTML = values[0].noise
-                lights.innerHTML = values[0].light
-            });
-            break
-          case 2:
-            console.log('2')
-            $.get('http://localhost:5000/api/library', data => {
-                // Update the 'values' array with the new data received
-                values = data;
-                console.log(data);
-                temp.innerHTML = values[0].temp
-                noises.innerHTML = values[0].noise
-                lights.innerHTML = values[0].light
-                return
-            });
-            break
-          case 3:
-            console.log('3')
-            $.get('http://localhost:5000/api/livingroom', data => {
-                // Update the 'values' array with the new data received
-                values = data;
-                console.log(data);
-                temp.innerHTML = values[0].temp
-                noises.innerHTML = values[0].noise
-                lights.innerHTML = values[0].light
-                return
-            });
-            break
-          }
-        }
-
-      fetchPopulationData();
-      setInterval(fetchPopulationData, 1000);  
-
-    </script>
   </body>
 </html>
