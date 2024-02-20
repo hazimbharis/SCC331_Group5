@@ -18,7 +18,7 @@ while True:
     noise = microphone.sound_level()
     light = display.read_light_level()
     radio.send('Zone1')
-    radio.send
+    radio.send()
     sleep(random.randint(50, 150)) 
     
 

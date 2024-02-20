@@ -13,13 +13,14 @@ import java.sql.*;
 @RestController
 public class DatabaseApplication {
 	// Login variables
-	private static final String PASSWORD = "pass1234";
+
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static final String USER = "root";
 	private static Connection connection;
 
 	// Database variables
-	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement"};
+	private static final String[] tableNames = {"lockstatus","environment","users", "prisoners", "staff", "visitors", "movement", "history", "warnings"};
 	private static final String[] tableQuery ={
 			"doorID INT PRIMARY KEY, locked BOOL NOT NULL, closed BOOL NOT NULL, alarm BOOL NOT NULL",
 			"zoneID INT PRIMARY KEY NOT NULL, temp VARCHAR(100) NOT NULL, noise VARCHAR(100) NOT NULL, light VARCHAR(100) NOT NULL",
@@ -28,6 +29,9 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, role VARCHAR(20) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"prisonerID VARCHAR(100) NOT NULL, zoneID INT NOT NULL, timeStamp TIMESTAMP(3) NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)"
+			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
+			"id VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeOfUse timestamp, FOREIGN KEY (id) REFERENCES users(id)",
+			"zoneID INT NOT NULL, warningID INT NOT NULL" // zone where warning occuring, type of warning: 1 guard assist, 2 temp, 3 temp, 4 noise, 5 light
 	};
 
 	// Microbit variables
@@ -91,10 +95,8 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.movement WHERE movement.prisonerID = '"+id+"'";
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-			System.out.println(result);
 			while (result.next()) {
 				check = result.getInt(1);
-				System.out.println(check);
 			}
 
 			if (check == 0) {
@@ -113,6 +115,7 @@ public class DatabaseApplication {
 		}
 	}
 
+	//http://localhost:8080/addDoor?door=1&locked=false&closed=false&alarm=false
 	@GetMapping("/addDoor")
 	private void addDoor(@RequestParam(value = "door") int door,
 								  @RequestParam(value= "locked")boolean locked,
@@ -125,10 +128,8 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.lockstatus WHERE lockstatus.doorID = " + door;
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-			System.out.println(result);
 			while (result.next()) {
-				check = result.getInt(1);
-				System.out.println(check);
+				check = result.getInt(1); //checks if records exists
 			}
 
 			if (check == 0) {
@@ -149,6 +150,7 @@ public class DatabaseApplication {
 		}
 	}
 
+	//http://localhost:8080/addEnvironment?zone=1&temp=100&noise=24&light=0
 	@GetMapping("/addEnvironment")
 	private void addEnvironment(@RequestParam(value = "zone") int zone,
 						   @RequestParam(value= "temp")int temp,
@@ -161,10 +163,8 @@ public class DatabaseApplication {
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.environment WHERE environment.zoneID = " + zone;
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
-			System.out.println(result);
 			while (result.next()) {
-				check = result.getInt(1);
-				System.out.println(check);
+				check = result.getInt(1); // checks if a record exists
 			}
 
 			if (check == 0) {
@@ -177,10 +177,44 @@ public class DatabaseApplication {
 					statement1.executeUpdate();
 				}
 			} else if (check == 1) {
-				insertDataSQL= "UPDATE movement SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
+				insertDataSQL= "UPDATE environment SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
 				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
 					statement2.executeUpdate();
 				}
+			}
+		}
+	}
+
+	@GetMapping("/addWarning")
+	private void addWarning(@RequestParam(value = "zone") int zone,
+								@RequestParam(value= "warning")int warning,
+								@RequestParam(value= "noise")int noise,
+								@RequestParam(value= "light")int light) throws SQLException {
+		int check = 0;
+		String insertDataSQL;
+		ResultSet result;
+
+		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.warnings WHERE warnings.zoneID = " + zone + " AND warnings.warningID = " + warning;
+		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
+			result = statement.executeQuery();
+			while (result.next()) {
+				check = result.getInt(1); // checks if a record exists
+			}
+
+			if (check == 0) {
+				insertDataSQL="INSERT INTO warnings (zoneID,warningID) VALUES (?,?)";
+				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
+					statement1.setString(1, String.valueOf(zone));
+					statement1.setString(2, String.valueOf(warning));
+					statement1.executeUpdate();
+				}
+			} else if (check == 1) {
+				// don't run any statements - specific warning for that specific zone already exists
+
+				// insertDataSQL= "UPDATE warnings SET warningID = " + warning + " WHERE zoneID = " + zone ;
+				// try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
+				//	statement2.executeUpdate();
+				// }
 			}
 		}
 	}

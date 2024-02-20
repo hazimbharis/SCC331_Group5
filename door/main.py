@@ -88,3 +88,12 @@ while True:
         if (locked == True):
             display.show(fill, wait = False)
         alarm = False
+
+    message = radio.receive()
+
+    if message is not None:
+        if message == "FORCELOCK":
+            closed = 1
+            lock = 1
+            alarm = 1
+            # do something else maybe idk

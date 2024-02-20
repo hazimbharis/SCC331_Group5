@@ -205,7 +205,7 @@ app.get('/api/staffRole/:id', (req, res) => {
   });
 });
 
-app.use(express.urlencoded());
+//app.use(express.urlencoded());
 
 app.use(express.json())
 

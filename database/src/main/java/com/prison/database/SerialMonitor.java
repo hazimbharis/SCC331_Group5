@@ -135,6 +135,9 @@ public class SerialMonitor {
                             int doorID = Integer.parseInt(types[1]);
 
                             setDoor(doorID, locked, closed, alarm);
+
+                            //alarm check
+
                         }
                         case "003" -> { // environment response data
                             System.out.println(types[1]); //zone ID
@@ -148,6 +151,33 @@ public class SerialMonitor {
                             int light = Integer.parseInt(types[4]);
 
                             setEnvironment(zoneID, temp, noise, light);
+
+                            //temp check
+                            if (temp > 100) setWarning(zoneID, 2);
+                            if (temp < 0) setWarning(zoneID, 3);
+                            //noise check
+                            if (noise > 100) setWarning(zoneID, 4);
+                            //light check
+                            if (noise > 100) setWarning(zoneID, 4);
+
+                        }
+                        case "004"-> { // help signal from guard microbit
+                            String forcelock = "FORCELOCK";
+
+
+                            int zoneID = Integer.parseInt(types[1]);
+                            //not sure how to store this data, can make the warnings table store guard IDs (int to varchar)
+                            int guardID = Integer.parseInt(types[2]);
+
+
+                            //central microbit sends a message which all doors will be waiting to hear
+                            microbit.writeBytes(forcelock.getBytes(), forcelock.length());
+
+                            // some extra code to send to frontend that there is an alert
+                            setWarning(zoneID, guardID);
+                            // maybe set an alert value in column in mysql table
+                            // frontend will have to have a display thing for it
+
                         }
 
                     }
@@ -196,6 +226,24 @@ public class SerialMonitor {
     public void setEnvironment(int zid, int temp, int noise, int light) {
         try {
             URL getURL = new URL(url + "/addEnvironment?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
+            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if (DEBUG) {
+                System.out.println(getURL);
+                System.out.println(responseCode);
+            }
+            connection.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("failed to connect");
+        }
+    }
+
+    public void setWarning(int zid, int wid) {
+        try {
+            URL getURL = new URL(url + "/addWarning?zone=" + zid + "&warning=" + wid);
             HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
