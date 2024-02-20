@@ -9,28 +9,28 @@ document.getElementById("date").setAttribute("max", today[0]); //Set the max dat
 function drawGraph() {
     //API call to get the zone history data for the day selected
     $.get('http://localhost:5000/api/zoneHistory/' + selectedDate, (newData) => {
-        if (currentType == "temp") { //Get the appropriate data depending on the user's selection of environment type
+        if (currentType === "temp") { //Get the appropriate data depending on the user's selection of environment type
             databaseData = newData.map((row) => ({
                 id: row.zoneID,
                 val: row.temp,
                 time: row.time
             }))
         }
-        else if (currentType == "noise") {
+        else if (currentType === "noise") {
             databaseData = newData.map((row) => ({
               id: row.zoneID,
               val: row.noise,
               time: row.time
             }))
         }
-        else if (currentType == "light") {
+        else if (currentType === "light") {
             databaseData = newData.map((row) => ({
               id: row.zoneID,
               val: row.light,
               time: row.time
             }))
         }
-        if (databaseData.length == 0) {
+        if (databaseData.length === 0) {
             document.getElementById("feedback").textContent = "No data for selected day"; //If no data for day selected, feedback to user
         }
         else {
@@ -57,13 +57,13 @@ function draw() {
     })
 
     var yTitle; //Change the y axis title to represent what is being displayed
-    if (currentType == "temp") {
+    if (currentType === "temp") {
         yTitle = "Temperature (°C)";
     }
-    else if (currentType == "noise") {
+    else if (currentType === "noise") {
         yTitle = "Noise level (dB)";
     }
-    else if (currentType == "light") {
+    else if (currentType === "light") {
         yTitle = "Light level (lx)";
     }
 
@@ -100,6 +100,68 @@ function draw() {
     chart.draw(data, style);
 }
 
+function drawDoors() { //Door history visualisation uses a different type of graph so needs a unique function
+    $.get('http://localhost:5000/api/doorHistory/' + selectedDate, (newData) => {
+        databaseData = newData.map((row) => ({
+            id: row.doorID,
+            val: row.status,
+            time: row.time
+        }))
+        if (databaseData.length === 0) {
+            document.getElementById("feedback").textContent = "No data for selected day";
+        }
+        else {
+            document.getElementById("feedback").textContent = "";
+            google.charts.load("current", {packages:["timeline"]}); //Use Google Charts timeline
+            google.charts.setOnLoadCallback(drawD);
+        }
+    })
+}
+
+function drawD() {
+    var data = new google.visualization.DataTable();
+    data.addColumn({type: "string", id: "doorName"});
+    data.addColumn({type: "string", id: "doorName"});
+    data.addColumn({type: "string", role: "style"}); //This column is used for bar styling
+    data.addColumn({type: "date", id: "start"});
+    data.addColumn({type: "date", id: "end"});
+    for (var i = 0; i < databaseData.length; i++) {
+        var endTime;
+        if ((i + 1) >= databaseData.length || databaseData[i + 1].id !== databaseData[i].id) { //If end of entries or next entry does not have the same zoneID, the end time is 23:59:59 for this entry
+            endTime = new Date(0, 0, 0, 23, 59, 59); //Date format is (year, month, day, hour, minute, second), ignore year, month and day as that is not important due to selected date
+        }
+        else {
+            endTime = databaseData[i + 1].time; //A timeline entry must have an end time, therefore the end date of an entry is the start time of the next entry
+            endTime = endTime.split(":");
+            endTime = new Date(0, 0, 0, endTime[0], endTime[1], endTime[2]);
+        }
+        var time = databaseData[i].time;
+        time = time.split(":");
+        time = new Date(0, 0, 0, time[0], time[1], time[2]);
+        var status = databaseData[i].val;
+        var colour;
+        if (status === "alarm") { //Colour the bar appropriately based on status value
+            colour = "red";
+        }
+        else if (status === "locked") {
+            colour = "#00ee00";
+        }
+        else if (status === "closed") {
+            colour = "blue";
+        }
+        else {
+            colour = "#ffdd00";
+        }
+        data.addRows([[String(databaseData[i].id), status, colour, time, endTime]])
+    }
+    var chart = new google.visualization.Timeline(document.getElementById("graph"));
+    var style = {
+        fontName: "Verdana",
+        height: 350,
+    }
+    chart.draw(data, style);
+}
+
 function temperature() {
     if (currentType != null) {
         document.getElementById(currentType).style.backgroundColor = ""; //If a previous type was selected, clear the hightlight that it was selected, reset style properties
@@ -109,7 +171,11 @@ function temperature() {
     document.getElementById(currentType).style.backgroundColor = "#44414f"; //Highlight selected button corresponding to the correct type
     document.getElementById(currentType).style.color = "#e3d8d8";
     if (selectedDate != null) { //Draw graph if date is also inputted
+        document.getElementById("feedback").textContent = "";
         drawGraph();
+    }
+    else {
+        document.getElementById("feedback").textContent = "Please select a date";
     }
 }
 
@@ -122,7 +188,11 @@ function noise() {
     document.getElementById(currentType).style.backgroundColor = "#44414f";
     document.getElementById(currentType).style.color = "#e3d8d8";
     if (selectedDate != null) {
+        document.getElementById("feedback").textContent = "";
         drawGraph();
+    }
+    else {
+        document.getElementById("feedback").textContent = "Please select a date";
     }
 }
 
@@ -135,13 +205,44 @@ function light() {
     document.getElementById(currentType).style.backgroundColor = "#44414f";
     document.getElementById(currentType).style.color = "#e3d8d8";
     if (selectedDate != null) {
+        document.getElementById("feedback").textContent = "";
         drawGraph();
+    }
+    else {
+        document.getElementById("feedback").textContent = "Please select a date";
+    }
+}
+
+function doors() {
+    if (currentType != null) {
+        document.getElementById(currentType).style.backgroundColor = "";
+        document.getElementById(currentType).style.color = "";
+    }
+    currentType = "doors";
+    document.getElementById(currentType).style.backgroundColor = "#44414f";
+    document.getElementById(currentType).style.color = "#e3d8d8";
+    if (selectedDate != null) {
+        document.getElementById("feedback").textContent = "";
+        drawDoors();
+    }
+    else {
+        document.getElementById("feedback").textContent = "Please select a date";
     }
 }
 
 function date() {
     selectedDate = document.getElementById("date").value;
-    if (currentType != null && selectedDate != null) { //Draw graph if date and type is inputted
-        drawGraph();
+    if (selectedDate === "") {
+        document.getElementById("feedback").textContent = "Please select a date";
+        selectedDate = null;
+    }
+    else if (currentType != null && selectedDate !== "") { //Draw graph if date and type is inputted
+        document.getElementById("feedback").textContent = "";
+        if (currentType === "doors") {
+            drawDoors();
+        }
+        else {
+            drawGraph();
+        }
     }
 }

@@ -26,7 +26,7 @@
     margin-top: 50px;
     position: relative;
     justify-content: space-evenly;
-    background-color: #686576;
+    background-color: #e3d8d8;
     height: 500px;
     width: 1200px;
     border: 5px solid #44414f;
@@ -34,6 +34,7 @@
 }
 
 .menu {
+    background-color: #686576;
     margin: auto;
     display: flex;
     justify-content: center;
@@ -75,6 +76,7 @@ hr {
     position: absolute;
     width: 100%;
     text-align: center;
+    color: black;
 }
 
 #graph {

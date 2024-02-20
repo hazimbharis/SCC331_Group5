@@ -349,6 +349,23 @@ app.get('/api/zoneHistory/:date', (req, res) => {
   });
 })
 
+//Returns all door history data for the date requested
+app.get('/api/doorHistory/:date', (req, res) => {
+  const query = `
+  SELECT *
+  FROM doorhistory
+  WHERE date = "` + req.params.date + `"
+  ORDER BY doorID, time`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
