@@ -55,18 +55,23 @@ h1 {
   margin: 0;
   text-align: center;
 }
+h2{
+  user-select: none;
+}
 #prisons {
   margin: auto;
   display: flex;
   flex-wrap: wrap;
   width: 1000px;
   height: 600px;
+
 }
 
 .prison {
   padding: 10px;
   width: 500px;
   height: 300px;
+
   background-color: #686576;
   position: relative;
   display: flex;
@@ -142,9 +147,23 @@ h1 {
   color: #e3d8d8;
   transform: translateX(-50%);
 }
+.Drop-down-content div i{
+  transition: transform 0.5s ease-in-out;
+}
+.Drop-down-content div i:hover {
+  transform: scale(1.5);
+}
 
-.title:hover .hoverOver{
+.title:hover .hoverOver {
   visibility: visible;
+}
+
+.title .hoverOver {
+  position: absolute;
+  width: 220px;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .link > i {
@@ -181,18 +200,25 @@ h1 {
   transform: translateY(-50%);
 }
 #Log-container{
+
   padding: 10px;
   margin-top: 32px;
-  width:80%;
-  left: 10%;
+  width: 80%; /* Set the width to 80% of the viewport width */
   position: absolute;
   height: 80%;
   display: flex;
-
   align-items: center;
   border: 10px solid #44414f;
   background-color: #686576;
   overflow: hidden;
+  
+  /* Center horizontally */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  
 }
 ::-webkit-scrollbar {
   width: 20px;

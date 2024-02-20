@@ -1,3 +1,20 @@
+
+
+// Create a div element
+let prisoner = document.createElement('div');
+prisoner.classList.add('prisoner');
+
+// Create an icon element with Font Awesome classes
+let iconElement = document.createElement('i');
+iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
+
+
+
+let gym = document.getElementById('prison1');
+let canteen = document.getElementById('prison2');
+let library = document.getElementById('prison3');
+let livingRoom = document.getElementById('prison4');
+
 let clockText = document.getElementById("clock-text");
 let play = true;
 let timeIncrementor = 30// minutes back and forth when user presses button
@@ -6,10 +23,34 @@ let hours = dateNow.getHours();
 let minutes = dateNow.getMinutes();
 let seconds = dateNow.getSeconds();
 let milliseconds = dateNow.getMilliseconds();
+let day = dateNow.getDay();
+let month = dateNow.getMonth();
+let year = dateNow.getFullYear();
 
-
+var movementData = [];
+var movementDataIndex = -1 // Indexes movementData to display all movement events after  movementData(index).timeStamp
 playClock();
 
+function clearPrisoners() {
+    //Function to clear only the prisoner elements
+    document.querySelectorAll('.prisoner').forEach((el) => el.remove());
+  }
+function getMovementData(){
+    $.get('http://localhost:5000/api/MovementTime', (newData) => {
+        //console.log(newData);
+        movementData = newData.map((item) => ({
+          prisonerID: item.prisonerID,
+          zoneID: item.zoneID,
+          timeStamp: item.timeStamp,
+          type: item.type,
+          firstName: item.firstNames,
+          lastName: item.lastName,
+          medicalConditions: item.medicalConditions,
+        }));
+      });
+
+    //console.log(movementData);
+}
 function toggleDropdown() {
     var dropdownContent = document.querySelector('.Drop-down-content');
     if (dropdownContent) {
@@ -20,22 +61,182 @@ function toggleDropdown() {
   }
 function playClock() {
     play = true;
-
 }
 function pauseClock() {
     play = false;
 }
-function prevEvent() {
-    play = false
-    hours -=1;
-    setInterval(clockUpdater, 1);
+function renderUsers() {
+    clearPrisoners();
+    let renderedPrisoners = new Set(); // Keep track of rendered prisoners
+
+    for (let x = movementDataIndex + 1; x < movementData.length; x++) {
+        if (movementData[x]) {
+            if (!renderedPrisoners.has(movementData[x].prisonerID)) { // Check if prisoner has already been rendered
+                let iconElement = document.createElement('i');
+                iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
+
+
+
+                switch (movementData[x].type) {
+                    case 'P':
+                        iconElement.style.color = '#fe7300';
+                        break;
+                    case 'V':
+                        iconElement.style.color = "White";
+                        break;
+                    case 'S':
+                        iconElement.style.color = "Blue";
+                        break;
+                    default:
+                        console.log("Type not recognised");
+                }
+
+
+                let prisoner = document.createElement('div');
+                prisoner.classList.add('prisoner');
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('prisoner-id');
+                if(x ===  movementDataIndex + 1){
+                    paragraphElement.style.color = 'yellow';
+                    paragraphElement.style.fontSize = '18px';
+                    //iconElement.style.border = '1px solid black'
+                    //iconElement.style.boxShadow = '0px 0px 10px 0px rgba(0, 0, 0, 0.5)';
+                    iconElement.style.boxShadow =  '0 0 10px rgba(255, 255, 255, 1)';
+                    iconElement.style.backgroundColor = 'rgba(255, 255, 255, 0.4)'
+                    iconElement.style.borderRadius = '20px';
+                }else{
+                    paragraphElement.style.color = '#e3d8d8';                    
+                }
+                prisoner.onclick = function() {
+                    // Construct the URL with query parameters
+                    console.log("TEST");
+                    let url = '../pages/userHistory.html';
+                    url += '?prisonerID=' + encodeURIComponent(movementData[x].prisonerID);
+                    url += '&firstName=' + encodeURIComponent(movementData[x].firstName);
+                    url += '&lastName=' + encodeURIComponent(movementData[x].lastName);
+                    // Add more parameters as needed
+
+                    // Redirect to the constructed URL
+                    window.location.href = url;
+                };
+
+
+                paragraphElement.textContent = movementData[x].prisonerID;
+                prisoner.appendChild(paragraphElement);
+
+                let hoverOver = document.createElement('div')// hover functionality
+                hoverOver.classList.add('hoverOver');
+                hoverOver.style.color = '#e3d8d8';
+                hoverOver.style.marginTop = '50px'
+                hoverOver.style.position = 'absolute';
+
+                
+                let role = movementData[x].type === "P" ? "\n Role: Prisoner" : movementData[x].type === "V" ? "\n Role: Visitor" : "\n Role: Prison Officer";
+                let hoverCont = "Name: " + movementData[x].firstName + " " + movementData[x].lastName + role;
+                if (movementData[x].medicalConditions != null) {
+                    hoverCont = hoverCont + "\r\nMedical conditions: " + movementData[x].medicalConditions
+                }
+                hoverOver.textContent = hoverCont;
+
+                prisoner.appendChild(hoverOver);
+                switch (movementData[x].zoneID) {
+                    case 1:
+                        gym.appendChild(prisoner);
+                        break;
+                    case 2:
+                        canteen.appendChild(prisoner);
+                        break;
+                    case 3:
+                        library.appendChild(prisoner);
+                        break;
+                    case 4:
+                        livingRoom.appendChild(prisoner);
+                        break;
+                    default:
+                        console.log("Zone ID not recognised");
+                }
+                prisoner.appendChild(iconElement);
+                
+                // Add prisoner to rendered set
+                renderedPrisoners.add(movementData[x].prisonerID);
+            }
+        } else {
+            console.log(`Element at index ${x} is undefined`);
+        }
+    }
+}
+
+
+
+
+async function forwardBackEvent(rewind) {
+    
+    if (rewind && movementDataIndex < movementData.length - 1) {
+        movementDataIndex++; // Increment when navigating forward
+    } else if (!rewind && movementDataIndex > 0) {
+        movementDataIndex--; // Decrement when navigating backward
+    }
+    await getMovementData(); // Wait for movement data to be fetched
+    console.log("MD.length: " + movementData.length);
+    console.log("MDI: " + movementDataIndex);
+    
+    if (movementData.length > movementDataIndex && movementDataIndex >= 0) {
+        const timestampString = movementData[movementDataIndex].timeStamp;
+        const dateObj = new Date(timestampString);
+        
+        // Extract individual components
+        year = dateObj.getFullYear();
+        month = dateObj.getMonth() + 1; // Months are zero-based, so add 1
+        day = dateObj.getDate();
+        hours = dateObj.getHours();
+        minutes = dateObj.getMinutes();
+        seconds = dateObj.getSeconds();
+        milliseconds = dateObj.getMilliseconds();
+
+        milliseconds = (milliseconds < 10) ? '000' + milliseconds :  (milliseconds < 100) ? '00' + milliseconds :  milliseconds;
+        hours = (hours < 10) ? '0' + hours : hours;
+        minutes = (minutes < 10) ? '0' + minutes : minutes;
+        seconds = (seconds < 10) ? '0' + seconds : seconds;
+        month = (month < 10) ? '0' + month: month;
+        day = (day < 10) ? '0' + day : day;
+
+        console.log("Date:", year + "-" + month + "-" + day);
+        console.log("Hour:", hours);
+        console.log("Minute:", minutes);
+        console.log("Second:", seconds);
+        console.log("Millisecond:", milliseconds);
+        clockText.textContent = day + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
+
+        
+        renderUsers();
+    }
+    play = !rewind && movementDataIndex === movementData.length - 1;
+}
+
+
+
+
+function prevEvent(){
+
+        forwardBackEvent(true);        
+
+
 }
 function nextEvent() {
-    play = false
-    hours +=1;
-    setInterval(clockUpdater, 1);
-    
+    if (movementDataIndex === 0) {
+        play = true;
+        movementDataIndex= -1;
+        clearPrisoners()
+        // - 1 to signify historic playback has been disabled
+        // Optionally, you may want to stop the clock updater when play is set to true
+        // clearInterval(clockInterval);
+    } else if(movementDataIndex != -1){
+        play = false;
+        forwardBackEvent(false);        
+    }
 }
+
+
 function scrollToHeight(height) {
     window.scrollTo({
       top: height,
@@ -44,8 +245,13 @@ function scrollToHeight(height) {
   }
 function clockUpdater() {
     if (play) {
+        getMovementData();
+        renderUsers();
         dateNow = new Date();
 
+        day = dateNow.getUTCDate();
+        month = dateNow.getMonth() + 1;
+        year = dateNow.getFullYear();
         hours = dateNow.getHours();
         minutes = dateNow.getMinutes();
         seconds = dateNow.getSeconds();
@@ -56,8 +262,10 @@ function clockUpdater() {
         hours = (hours < 10) ? '0' + hours : hours;
         minutes = (minutes < 10) ? '0' + minutes : minutes;
         seconds = (seconds < 10) ? '0' + seconds : seconds;
+        month = (month < 10) ? '0' + month: month;
+        day = (day < 10) ? '0' + day : day;
     }
-        clockText.textContent = hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
+    clockText.textContent  = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
 
 }
 if (play) {
@@ -65,5 +273,5 @@ if (play) {
     setInterval(clockUpdater, 1);
 }
 clockUpdater();
-
+getMovementData();
 

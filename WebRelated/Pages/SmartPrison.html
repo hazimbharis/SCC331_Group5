@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Visualization</title>
+    <title>Smart Prison System</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -49,7 +50,7 @@
           <i class="fa-solid fa-backward" id="Drop-down-icon-backward"></i>       
         </div>
         <div onclick="scrollToHeight(1200)">
-         <i class="fa-solid fa-video" id="Drop-down-icon-video"></i>          
+         <i class="fa-solid fa-computer" id="Drop-down-icon-video"></i>          
         </div>
 
          <div onclick="nextEvent()">
@@ -60,28 +61,34 @@
          </div>
         </div>
       </div>
-
- 
     <div id="prisons">
       <div class="prison" id="prison1">
         <div id="gym-door"></div>
         <i class="fa-solid fa-dumbbell fa-4x"></i>
-        <div class="title">Gym: 0</div>
+        <div class="title">Gym: 0
+          <span class="hoverOver">Prisoners: 0 Staff: 0 Visitors: 0</span>
+        </div>
       </div>
       <div class="prison" id="prison2">
         <div id="canteen-door"></div>
         <i class="fa-solid fa-utensils fa-4x"></i>
-        <div class="title">Canteen: 0</div>
+        <div class="title">Canteen: 0
+          <span class="hoverOver">Prisoners: 0 Staff: 0 Visitors: 0</span>
+        </div>
       </div>
       <div class="prison" id="prison3">
         <div id="library-door"></div>
         <i class="fa-solid fa-book-open fa-4x"></i>
-        <div class="title">Library: 0</div>
+        <div class="title">Library: 0
+          <span class="hoverOver">Prisoners: 0 Staff: 0 Visitors: 0</span>
+        </div>
       </div>
       <div class="prison" id="prison4">
         <div id="living-room-door"></div>
         <i class="fa-solid fa-tv fa-4x"></i>
-        <div class="title">Living room: 0</div>
+        <div class="title">Living room: 0
+          <span class="hoverOver">Prisoners: 0 Staff: 0 Visitors: 0</span>
+        </div>
       </div>
     </div>
     <div style="position: absolute; left: 50px; bottom: 50px">
@@ -110,9 +117,11 @@
       <label class = "leglab">Visitor</label>
     </fieldset>
     <h1 style="margin-top: 4%;">Prison Update Terminal</h1>
+
     <div id="Log-container">
       <div id="Terminal"></div>
-     </div>
+    </div>      
+
     <div onclick="scrollToHeight(0)" style="position: absolute; right: 50px; top: 190%;">
 
 

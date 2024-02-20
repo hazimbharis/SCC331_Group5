@@ -4,6 +4,8 @@ let gym = document.getElementById('prison1');
 let canteen = document.getElementById('prison2');
 let library = document.getElementById('prison3');
 let livingRoom = document.getElementById('prison4');
+
+let gymFrontEnd = document.getElementById('prison1FrontEnd2');
 let gymCount = [0, 0, 0]; //First element is prisoners, second is staff, third is visitors
 let canteenCount = [0, 0, 0];
 let libraryCount = [0, 0, 0];
@@ -16,6 +18,7 @@ let livingRoomDoor = document.getElementById('living-room-door');
 
 let formattedData = [];
 let formattedData2 = [];
+let staffData = {};
 
 // Door
 const data = [
@@ -62,6 +65,7 @@ function updateDoors(){
   openIcon.style.color = '#633200';
   
   let lockIcon = document.createElement('i');
+  
   lockIcon.classList.add('fa-solid', 'fa-lock', 'fa-2x');
   lockIcon.style.color = '#e3d8d8';
   lockIcon.style.position = 'absolute';
@@ -122,7 +126,7 @@ function updateDoors(){
         gymDoor.appendChild(closedIcon.cloneNode(true));
         changedIcon = closedIcon.cloneNode(true);
       } else if (el.locked) {     
-        gymDoor.appendChild(closedIcon.cloneNode(true));
+        //gymDoor.appendChild(closedIcon.cloneNode(true));
         gymDoor.appendChild(lockIcon.cloneNode(true)); 
         changedIcon = closedIcon.cloneNode(true);
       } else {
@@ -232,6 +236,14 @@ function clearPrisoners() {
 
 function updateMovementInfo() {
   var oldMovementData = formattedData;
+  
+  //Get staff roles
+  $.get('http://localhost:5000/api/staffRole', (newData) => {
+    newData.forEach(entry => {
+      staffData[entry.id] = entry.role;
+    });
+  })
+
   $.get('http://localhost:5000/api/position', (newData) => {
     formattedData = newData.map((item) => ({
       id: item.prisonerID,
@@ -263,7 +275,7 @@ function updateMovementInfo() {
     iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
 
     //Create tooltip when hovering over user
-    let hoverOver = document.createElement('div')
+    let hoverOver = document.createElement('div');
     hoverOver.classList.add('hoverOver');
     hoverOver.style.color = '#e3d8d8';
     let hoverCont = "Name: " + element.firstNames + " " + element.lastName;
@@ -275,6 +287,7 @@ function updateMovementInfo() {
     if (element.type == "S") { //Differentiate user types in UI using colours
       iconElement.style.color = "Blue"; //Staff
       typex = 1; //Represents which array element they should append to
+      hoverCont = hoverCont + "\r\nRole: " + staffData[element.id];
     } else if (element.type == "V") { //Visitors
       iconElement.style.color = "White";
       typex = 2;
@@ -292,50 +305,45 @@ function updateMovementInfo() {
     prisoner.appendChild(paragraphElement);
     prisoner.appendChild(hoverOver);
 
+    let tTip  = document.createElement('div');
+    tTip.classList.add('hoverOver');
+
     if (element.zone == '1') {
       gymCount[typex]++;
       gym.appendChild(prisoner);
       gym.children[2].innerHTML = `Gym: ${gymCount.reduce((x, y) => x + y, 0)}`; //Use reduce on the array to get total number of people in each area by combing all types
+      tTip.textContent = "Prisoners: " + gymCount[0] + " Staff: " + gymCount[1] + " Visitors: " + gymCount[2];
+      gym.children[2].appendChild(tTip);
       checkLocationChange(oldMovementData, element, iconElement);
 
     } else if (element.zone == '2') {
       canteenCount[typex]++;
       canteen.appendChild(prisoner);
       canteen.children[2].innerHTML = `Canteen: ${canteenCount.reduce((x, y) => x + y, 0)}`;
+      tTip.textContent = "Prisoners: " + canteenCount[0] + " Staff: " + canteenCount[1] + " Visitors: " + canteenCount[2];
+      canteen.children[2].appendChild(tTip);
       checkLocationChange(oldMovementData, element, iconElement);
 
     } else if (element.zone == '3') {
       libraryCount[typex]++;
       library.appendChild(prisoner);
       library.children[2].innerHTML = `Library: ${libraryCount.reduce((x, y) => x + y, 0)}`;
+      tTip.textContent = "Prisoners: " + libraryCount[0] + " Staff: " + libraryCount[1] + " Visitors: " + libraryCount[2];
+      library.children[2].appendChild(tTip);
       checkLocationChange(oldMovementData, element, iconElement);
 
     } else if (element.zone == '4') {
       livingRoomCount[typex]++;
       livingRoom.appendChild(prisoner);
       livingRoom.children[2].innerHTML = `Living room: ${livingRoomCount.reduce((x, y) => x + y, 0)}`;
+      tTip.textContent = "Prisoners: " + livingRoomCount[0] + " Staff: " + livingRoomCount[1] + " Visitors: " + livingRoomCount[2];
+      livingRoom.children[2].appendChild(tTip);
       checkLocationChange(oldMovementData, element, iconElement);
 
     }
-    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - 52) / 2)) * -1) + "px" //52 is from (2 * padding size) + size of prisoner icon
+    hoverOver.style.marginLeft = String((((hoverOver.clientWidth - prisoner.clientWidth + 15) / 2)) * -1) + "px" //Center the tooltip (not perfect due to rounding)
   });
   });
-  var zs = [gym, canteen, library, livingRoom];
-  var zcs = [gymCount, canteenCount, libraryCount, livingRoomCount];
-  var i = 0;
-  //Create the tooltips for each of the zones
-  zs.forEach((elem) => {
-    let hoverOver = document.createElement('div');
-    hoverOver.classList.add('hoverOver');
-    hoverOver.textContent = "Prisoners: " + zcs[i][0] + " Staff: " + zcs[i][1] + " Visitors: " + zcs[i][2];
-    hoverOver.style.position = "absolute"
-    hoverOver.style.width = "220px"
-    hoverOver.style.bottom = "100%"
-    hoverOver.style.left = "50%";
-    hoverOver.style.transform = "translateX(-50%)"
-    elem.children[2].appendChild(hoverOver)
-    i++
-  })
 }
 
 function checkLocationChange(oldMovementData, element, iconElement){

@@ -127,11 +127,11 @@ function processAdd() {
                 })
             }).then(res => { //Wait for response from server to check if user addition failed or succeeded and output appropriate message
                 res.json().then(value => {
-                    if (value == "Success") {
-                        feedback.textContent = "New prisoner added";
+                    if (value.result == "Success") {
+                        feedback.textContent = "New prisoner added with ID: " + value.id;
                     }
-                    else if (value == "Failed") {
-                        feedback.textContent = "Prisoner addition failed"
+                    else if (value.result == "Failed") {
+                        feedback.textContent = "Prisoner addition failed";
                     }
                 });
             });
@@ -172,11 +172,11 @@ function processAdd() {
                 })
             }).then(res => {
                 res.json().then(value => {
-                    if (value == "Success") {
-                        feedback.textContent = "New staff added";
+                    if (value.result == "Success") {
+                        feedback.textContent = "New staff added with ID: " + value.id;;
                     }
-                    else if (value == "Failed") {
-                        feedback.textContent = "Staff addition failed"
+                    else if (value.result == "Failed") {
+                        feedback.textContent = "Staff addition failed";
                     }
                 });
             });
@@ -222,11 +222,11 @@ function processAdd() {
                 })
             }).then(res => {
                 res.json().then(value => {
-                    if (value == "Success") {
-                        feedback.textContent = "New visitor added";
+                    if (value.result == "Success") {
+                        feedback.textContent = "New visitor added with ID: " + value.id;;
                     }
-                    else if (value == "Failed") {
-                        feedback.textContent = "Visitor addition failed"
+                    else if (value.result == "Failed") {
+                        feedback.textContent = "Visitor addition failed";
                     }
                 });
             });
