@@ -19,6 +19,8 @@ public class SerialMonitor {
     private LocalTime hour = LocalTime.now();
     private LocalTime nextHour = LocalTime.now().plusSeconds(10);//LocalTime.of(hour.getHour()+1,hour.getMinute(),hour.getSecond());
     private SerialPort microbit;
+    private int zones = 4;
+    private double [][] prevZoneValues = new double[zones][3]; //Stores previous zone values as zone history only stores changes so needed for comparison
 
     //unnecessary variables, will remove later
     private int z1counter;
@@ -39,6 +41,12 @@ public class SerialMonitor {
          *   Add to Monitor, NOT application
          *   This should add the required dependency  */
 
+        for (int i = 0; i < zones; i ++) {
+            for (int j = 0; j < 3; j++) {
+                prevZoneValues[i][j] = 0; //Initialise array
+            }
+        }
+
         // List all the ports available
         if (DEBUG) {
             for (SerialPort s : SerialPort.getCommPorts()) {
@@ -48,7 +56,7 @@ public class SerialMonitor {
 
 
         // Get the appropriate port and open
-        microbit = SerialPort.getCommPort("COM7");
+        microbit = SerialPort.getCommPort("COM3");
         microbit.openPort();
         // Set the baud rate
         if (microbit.isOpen()) {
@@ -145,7 +153,7 @@ public class SerialMonitor {
                             int zoneID = Integer.parseInt(types[1]);
                             int temp = Integer.parseInt(types[2]);
                             int noise = Integer.parseInt(types[3]);
-                            int light = Integer.parseInt(types[4]);
+                            double light = Double.parseDouble(types[4]);
 
                             setEnvironment(zoneID, temp, noise, light);
                         }
@@ -193,7 +201,7 @@ public class SerialMonitor {
             System.out.println("failed to connect");
         }
     }
-    public void setEnvironment(int zid, int temp, int noise, int light) {
+    public void setEnvironment(int zid, int temp, int noise, double light) {
         try {
             URL getURL = new URL(url + "/addEnvironment?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
             HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
@@ -205,6 +213,21 @@ public class SerialMonitor {
                 System.out.println(responseCode);
             }
             connection.disconnect();
+            if (prevZoneValues[zid][0] != temp || prevZoneValues[zid][1] != noise || prevZoneValues[zid][2] != light) { //Add new zone history entry if any value has changed from its previous value
+                URL zHURL = new URL(url + "/addZoneHistory?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
+                HttpURLConnection conn = (HttpURLConnection) zHURL.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+                int resCode = conn.getResponseCode();
+                if (DEBUG) {
+                    System.out.println(zHURL);
+                    System.out.println(resCode);
+                }
+                connection.disconnect();
+                prevZoneValues[zid][0] = temp;
+                prevZoneValues[zid][1] = noise;
+                prevZoneValues[zid][2] = light;
+            }
 
         } catch (Exception e) {
             System.out.println("failed to connect");

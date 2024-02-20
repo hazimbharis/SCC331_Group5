@@ -89,6 +89,10 @@ function draw() {
                 fontName: "Verdana",
                 fontSize: 12,
             }
+        },
+        animation: {
+            duration: 200,
+            startup: true
         }
     };
 
@@ -98,8 +102,8 @@ function draw() {
 
 function temperature() {
     if (currentType != null) {
-      document.getElementById(currentType).style.backgroundColor = "#e3d8d8"; //If a previous type was selected, clear the hightlight that it was selected
-      document.getElementById(currentType).style.color = "black";
+        document.getElementById(currentType).style.backgroundColor = ""; //If a previous type was selected, clear the hightlight that it was selected, reset style properties
+        document.getElementById(currentType).style.color = "";
     }
     currentType = "temp";
     document.getElementById(currentType).style.backgroundColor = "#44414f"; //Highlight selected button corresponding to the correct type
@@ -111,8 +115,8 @@ function temperature() {
 
 function noise() {
     if (currentType != null) {
-      document.getElementById(currentType).style.backgroundColor = "#e3d8d8";
-      document.getElementById(currentType).style.color = "black";
+        document.getElementById(currentType).style.backgroundColor = "";
+        document.getElementById(currentType).style.color = "";
     }
     currentType = "noise";
     document.getElementById(currentType).style.backgroundColor = "#44414f";
@@ -124,8 +128,8 @@ function noise() {
 
 function light() {
     if (currentType != null) {
-      document.getElementById(currentType).style.backgroundColor = "#e3d8d8";
-      document.getElementById(currentType).style.color = "black";
+        document.getElementById(currentType).style.backgroundColor = "";
+        document.getElementById(currentType).style.color = "";
     }
     currentType = "light";
     document.getElementById(currentType).style.backgroundColor = "#44414f";

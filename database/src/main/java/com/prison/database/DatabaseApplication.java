@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
 @RestController
@@ -154,12 +156,13 @@ public class DatabaseApplication {
 	private void addEnvironment(@RequestParam(value = "zone") int zone,
 						   @RequestParam(value= "temp")int temp,
 						   @RequestParam(value= "noise")int noise,
-						   @RequestParam(value= "light")int light) throws SQLException {
+						   @RequestParam(value= "light")double light) throws SQLException {
 		int check = 0;
 		String insertDataSQL;
 		ResultSet result;
 
 		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.environment WHERE environment.zoneID = " + zone;
+
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
 			System.out.println(result);
@@ -178,11 +181,35 @@ public class DatabaseApplication {
 					statement1.executeUpdate();
 				}
 			} else if (check == 1) {
-				insertDataSQL= "UPDATE movement SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
+				insertDataSQL= "UPDATE environment SET temp = " + temp +", noise =" + noise +", light =" + light + " WHERE zoneID = " + zone ;
 				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
 					statement2.executeUpdate();
 				}
 			}
+		}
+	}
+
+	@GetMapping("/addZoneHistory")
+	private void addZoneHistory(@RequestParam(value = "zone") int zone,
+								@RequestParam(value= "temp") int temp,
+								@RequestParam(value= "noise") int noise,
+								@RequestParam(value= "light") double light) throws SQLException {
+		LocalDateTime datetime = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //Get the current time and date
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String date = datetime.format(dateFormat);
+		String time = datetime.format(timeFormat);
+		String iStatement = "INSERT INTO Microbits.zonehistory (zoneID, temp, noise, light, date, time) VALUES (?, ?, ?, ? ,?, ?)";
+		try (PreparedStatement pStatement = connection.prepareStatement(iStatement)) {
+			pStatement.setInt(1, zone);
+			pStatement.setInt(2, temp);
+			pStatement.setInt(3, noise);
+			pStatement.setDouble(4, light);
+			pStatement.setString(5, date);
+			pStatement.setString(6, time);
+			pStatement.executeUpdate();
+		} catch (Exception e) {
+			//In case it tries to add an entry with the same zone, time and date, do nothing
 		}
 	}
 
