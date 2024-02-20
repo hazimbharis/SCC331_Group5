@@ -133,6 +133,38 @@ app.get('/api/library', (req, res) => {
     } 
   });
 });
+//API endpoint, to get env data from library
+app.get('/api/warnings', (req, res) => {
+  const query = `
+    SELECT * FROM warnings
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results); // Send the results as an object
+    } 
+  });
+});
+//API endpoint, to get env data from library
+app.delete('/api/deletewarning/:zid/:wid', (req, res) => {
+  const zid = req.params.zid
+  const wid = req.params.wid
+
+
+  //const query = `DELETE FROM warnings WHERE zoneID = ? AND warningID = ?`, [zid], [wid]
+
+  db.query('DELETE FROM warnings WHERE zoneID = ? AND warningID = ?', zid, wid, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      //res.json(results); // Send the results as an object
+    } 
+  });
+});
 // end of bad code
 
 //API endpoint, to get tables of all prisoners in each zone

@@ -19,12 +19,10 @@ zone_rssi = {
     4 : None
 }
 
-def
-
 while True:
     if (button_a.was_pressed()): #Activate HELP MODE
         music.pitch(100, duration = -1, wait = False)
-        radio.send("004:,HELP")
+        radio.send("004:,HELP,")
 
     ping = radio.receive_full()
     if ping:

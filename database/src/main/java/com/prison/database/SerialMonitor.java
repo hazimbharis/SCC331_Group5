@@ -174,7 +174,7 @@ public class SerialMonitor {
                             microbit.writeBytes(forcelock.getBytes(), forcelock.length());
 
                             // some extra code to send to frontend that there is an alert
-                            setWarning(zoneID, guardID);
+                            setWarning(zoneID, 1);
                             // maybe set an alert value in column in mysql table
                             // frontend will have to have a display thing for it
 

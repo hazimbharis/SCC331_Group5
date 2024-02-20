@@ -17,6 +17,7 @@ let livingRoomDoor = document.getElementById('living-room-door');
 
 
 let formattedData = [];
+let alertShown = false;
 
 // Door
 const data = [{doorID: 1, locked: 0, closed: 1, alarm: 0}, {
@@ -99,6 +100,50 @@ function clearPrisoners() {
   document.querySelectorAll('.prisoner').forEach((el) => el.remove());
 }
 
+function checkAlerts() { 
+  //checks each interval if alerts exist
+
+  if (!alertShown)
+    showAlerts()
+  //create a variable which checks if an alert is already being shown
+  //if alerts exist, do showAlerts
+
+}
+
+async function showAlerts() {
+  const zones = ["GYM", "CANTEEN", "LIBRARY", "LIVING ROOM"]
+  const warnings = ["Guard needs help in ", "Temperature too high in ", "Temperature too low in ", "Noise too high in ", "Lights too low in "]
+
+  //Fetched from API
+  let warningData = [{zoneID: 1, warningID: 1}, {zoneID: 2, warningID: 3}]
+  
+  await $.get('http://localhost:5000/api/warnings', (newData) => {
+    warningData = newData.map((item) => ({
+      zoneID: item.zoneID,
+      warningID: item.warningID,
+    }));
+  
+    console.log(warningData);
+  });
+
+  alertShown = true
+  console.log(warningData)
+  
+  for (const warning of warningData) {
+    await Swal.fire({
+      title: "Warning!",
+      text: `${warnings[warning.warningID - 1]}${zones[warning.zoneID - 1]}`,
+      icon: "error",
+      background: "#e3d8d8",
+      confirmButtonColor: "#44414f"
+    }).then((value) => { 
+       $.get('http://localhost:5000/api/deletewarning/'+warning.zoneID+'/'+warning.warningID)
+
+    }) 
+  }
+
+  alertShown = false
+}
 
 function updateMovementInfo() {
   // $.get('http://localhost:5000/api/position', (newData) => {
@@ -183,27 +228,8 @@ function updateMovementInfo() {
     }
   });
 
-  const zones = ["GYM", "CANTEEN", "LIBRARY", "LIVING ROOM"]
-  const warnings = ["Guard needs help in ", "Temperature too high in ", "Temperature too low in ", "Noise too high in ", "Lights too low in "]
-
-
-  //Fetched from API
-  let warningData = [{zoneID: 1, warningID: 1}, {zoneID: 2, warningID: 3}]
-
-  const showAlerts = async () => {
-    for (const warning of warningData) {
-      await Swal.fire({
-        title: "Warning!",
-        text: `${warnings[warning.warningID - 1]}${zones[warning.zoneID - 1]}`,
-        icon: "error",
-        background: "#e3d8d8",
-        confirmButtonColor: "#44414f"
-      })
-    }
-  }
-
-  showAlerts()
 }
 
 updateMovementInfo();
-// setInterval(updateMovementInfo, 500);
+showAlerts()
+setInterval(checkAlerts, 500);
