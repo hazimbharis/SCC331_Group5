@@ -27,7 +27,7 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, convictions VARCHAR(100) NOT NULL, startDate DATE NOT NULL, endDate DATE, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, role VARCHAR(20) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
-			"prisonerID VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeStamp TIMESTAMP(3) NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)"
+			"prisonerID VARCHAR(100) NOT NULL, zoneID INT NOT NULL, timeStamp TIMESTAMP(3) NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)"
 	};
 
 	// Microbit variables

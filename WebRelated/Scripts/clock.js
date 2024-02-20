@@ -37,7 +37,7 @@ function clearPrisoners() {
   }
 function getMovementData(){
     $.get('http://localhost:5000/api/MovementTime', (newData) => {
-        console.log(newData);
+        //console.log(newData);
         movementData = newData.map((item) => ({
           prisonerID: item.prisonerID,
           zoneID: item.zoneID,
@@ -49,7 +49,7 @@ function getMovementData(){
         }));
       });
 
-    console.log(movementData);
+    //console.log(movementData);
 }
 function toggleDropdown() {
     var dropdownContent = document.querySelector('.Drop-down-content');
@@ -74,6 +74,8 @@ function renderUsers() {
             if (!renderedPrisoners.has(movementData[x].prisonerID)) { // Check if prisoner has already been rendered
                 let iconElement = document.createElement('i');
                 iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
+
+
 
                 switch (movementData[x].type) {
                     case 'P':
@@ -105,16 +107,30 @@ function renderUsers() {
                 }else{
                     paragraphElement.style.color = '#e3d8d8';                    
                 }
+                prisoner.onclick = function() {
+                    // Construct the URL with query parameters
+                    console.log("TEST");
+                    let url = '../pages/userHistory.html';
+                    url += '?prisonerID=' + encodeURIComponent(movementData[x].prisonerID);
+                    url += '&firstName=' + encodeURIComponent(movementData[x].firstName);
+                    url += '&lastName=' + encodeURIComponent(movementData[x].lastName);
+                    // Add more parameters as needed
+
+                    // Redirect to the constructed URL
+                    window.location.href = url;
+                };
+
 
                 paragraphElement.textContent = movementData[x].prisonerID;
                 prisoner.appendChild(paragraphElement);
 
-                let hoverOver = document.createElement('div')
+                let hoverOver = document.createElement('div')// hover functionality
                 hoverOver.classList.add('hoverOver');
                 hoverOver.style.color = '#e3d8d8';
+                hoverOver.style.marginTop = '50px'
                 hoverOver.style.position = 'absolute';
 
-
+                
                 let role = movementData[x].type === "P" ? "\n Role: Prisoner" : movementData[x].type === "V" ? "\n Role: Visitor" : "\n Role: Prison Officer";
                 let hoverCont = "Name: " + movementData[x].firstName + " " + movementData[x].lastName + role;
                 if (movementData[x].medicalConditions != null) {

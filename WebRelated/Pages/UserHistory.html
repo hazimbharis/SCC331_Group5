@@ -1,0 +1,106 @@
+<link rel="stylesheet" type="text/css" href="../Stylesheets/index.css">
+</head>
+<body style = "background-color: rgb(100, 89, 124);">
+    <header>
+
+
+    </header>
+    <div id = "id"></div>
+    <div id = "PI-Container">
+        <div id="pie-chart"></div>
+      
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <script>
+        // Function to extract query parameters from the URL
+        function getQueryVariable(variable) {
+            let query = window.location.search.substring(1);
+            let vars = query.split('&');
+            for (let i = 0; i < vars.length; i++) {
+                let pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) === variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            console.error('Query variable %s not found', variable);
+        }
+
+        // Example usage
+        let prisonerID = getQueryVariable('prisonerID');
+        let firstName = getQueryVariable('firstName');
+        let lastName = getQueryVariable('lastName');
+
+        document.getElementById("id").textContent = prisonerID;
+
+    // Sample data
+    const data = [
+        { category: 'Gym', value: 300 },
+        { category: 'Living Room', value: 200 },
+        { category: 'Library', value: 100 },
+        { category: 'Canteen', value: 50 }
+    ];
+
+    // Set up dimensions
+    const width = 400;
+    const height = 400;
+    const radius = Math.min(width, height) / 2;
+
+    // Create SVG element
+    const svg = d3.select("#pie-chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2},${height / 2})`);
+
+    // Create a color scale
+    const color = d3.scaleOrdinal()
+        .domain(data.map(d => d.category))
+        .range(d3.schemeCategory10);
+
+    // Create arc generator
+    const arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius);
+
+    // Create pie layout
+    const pie = d3.pie()
+        .sort(null)
+        .value(d => d.value);
+
+    // Generate pie chart
+    const arcs = svg.selectAll("arc")
+        .data(pie(data))
+        .enter()
+        .append("g");
+
+    arcs.append("path")
+        .attr("d", arc)
+        .attr("fill", d => color(d.data.category));
+
+    // Add labels with Font Awesome icons
+    arcs.append("text")
+        .attr("transform", d => `translate(${arc.centroid(d)})`)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "12px")
+        .text(d => {
+            if (d.data.category === 'Gym') {
+                return '\uf0d1'; // Font Awesome icon for "dumbbell"
+            } else {
+                return d.data.category; // Text for other categories
+            }
+        })
+        .attr("class", "icon-label")
+        .style("font-family", "FontAwesome")
+        .font-size("400px");
+
+        // Use prisonerID, firstName, lastName to customize the page content
+
+    </script>
+
+
+</body>
+</html>
