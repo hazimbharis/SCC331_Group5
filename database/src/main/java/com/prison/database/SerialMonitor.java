@@ -176,15 +176,15 @@ public class SerialMonitor {
                         }
                         case "004"-> { // help signal from guard microbit
                             String forcelock = "FORCELOCK";
+                            byte[] msg = forcelock.getBytes();
 
 
                             int zoneID = Integer.parseInt(types[1]);
                             //not sure how to store this data, can make the warnings table store guard IDs (int to varchar)
-                            int guardID = Integer.parseInt(types[2]);
 
 
                             //central microbit sends a message which all doors will be waiting to hear
-                            microbit.writeBytes(forcelock.getBytes(), forcelock.length());
+                            microbit.writeBytes(msg, msg.length);
 
                             // some extra code to send to frontend that there is an alert
                             setWarning(zoneID, 1);
