@@ -204,7 +204,7 @@ public class SerialMonitor {
 
     public void setPrisoner(String pid, int zid) {
         try {
-            URL getURL = new URL(url + "/addPrisoner?id=" + pid + "&zone=" + zid);
+            URL getURL = new URL(url + "/movementTime?id=" + pid + "&zone=" + zid);
             HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();

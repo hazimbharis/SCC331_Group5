@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'MyNewPass',
+  password: 'pass1234',
   database: 'microbits'
 });
 
@@ -59,7 +59,7 @@ app.get('/api/NewUIPositions', (req, res) => {//'2024-02-05 15:30:45.123' - form
   db.query(query, (err, results) => {
     console.log("test");
     if(err) {
-      console.error('Database query error: ' + err.message);
+      console.error('Database query error Movememt UI: ' + err.message);
       res.status(500).json({error: 'Database error' });
     }else{
       //console.log(results);
