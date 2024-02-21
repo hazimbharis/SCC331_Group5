@@ -53,7 +53,7 @@ def send_welcome(message):
     get_data_from_db()
 
 
-@bot.message_handler(func=lambda message: message.text == "Zone 1")
+@bot.message_handler(func=lambda message: message.text == "GYM")
 def handle_zone_1(message):
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM environment WHERE zoneID=1")
@@ -63,21 +63,21 @@ def handle_zone_1(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in Zone 1 is {int(user_reading)}",
+                         f"🔊Noise in GYM is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in Zone 1 is {int(user_reading)}",
+                         f"🌡Temperature in GYM is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in Zone 1 is {int(user_reading)}",
+                         f"💡Light in GYM is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
-@bot.message_handler(func=lambda message: message.text == "Zone 2")
+@bot.message_handler(func=lambda message: message.text == "CANTEEN")
 def handle_zone_2(message):
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM environment WHERE zoneID=2")
@@ -87,21 +87,21 @@ def handle_zone_2(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in Zone 2 is {int(user_reading)}",
+                         f"🔊Noise in CANTEEN is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in Zone 2 is {int(user_reading)}",
+                         f"🌡Temperature in CANTEEN is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in Zone 2 is {int(user_reading)}",
+                         f"💡Light in CANTEEN is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
-@bot.message_handler(func=lambda message: message.text == "Zone 3")
+@bot.message_handler(func=lambda message: message.text == "LIBRARY")
 def handle_zone_3(message):
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM environment WHERE zoneID=3")
@@ -111,17 +111,41 @@ def handle_zone_3(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in Zone 3 is {int(user_reading)}",
+                         f"🔊Noise in LIBRARY is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in Zone 3 is {int(user_reading)}",
+                         f"🌡Temperature in LIBRARY is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in Zone 3 is {int(user_reading)}",
+                         f"💡Light in LIBRARY is {int(user_reading)}",
+                         reply_markup=telebot.types.ReplyKeyboardRemove())
+
+
+@bot.message_handler(func=lambda message: message.text == "LIVING ROOM")
+def handle_zone_4(message):
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT * FROM environment WHERE zoneID=4")
+    result = cursor.fetchall()
+    cursor.close()
+    retrieved_data = result[-1]
+    if reading == "noise":
+        user_reading = retrieved_data[3]
+        bot.send_message(message.chat.id,
+                         f"🔊Noise in LIVING ROOM is {int(user_reading)}",
+                         reply_markup=telebot.types.ReplyKeyboardRemove())
+    elif reading == "temperature":
+        user_reading = retrieved_data[2]
+        bot.send_message(message.chat.id,
+                         f"🌡Temperature in LIVING ROOM is {int(user_reading)}",
+                         reply_markup=telebot.types.ReplyKeyboardRemove())
+    elif reading == "light":
+        user_reading = retrieved_data[4]
+        bot.send_message(message.chat.id,
+                         f"💡Light in LIVING ROOM is {int(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
@@ -131,10 +155,11 @@ def handle_zone_3(message):
 def handle_response(message):
     global reading
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    zone1 = telebot.types.KeyboardButton("Zone 1")
-    zone2 = telebot.types.KeyboardButton("Zone 2")
-    zone3 = telebot.types.KeyboardButton("Zone 3")
-    markup.add(zone1, zone2, zone3)
+    zone1 = telebot.types.KeyboardButton("GYM")
+    zone2 = telebot.types.KeyboardButton("CANTEEN")
+    zone3 = telebot.types.KeyboardButton("LIBRARY")
+    zone4 = telebot.types.KeyboardButton("LIVING ROOM")
+    markup.add(zone1, zone2, zone3, zone4)
     readings = get_data_from_db()
     if "noise" in message.text.lower():
         reading = "noise"
