@@ -3,6 +3,7 @@ let currentType;
 let arrayed = []; //Same as data except in array form
 let currentDisplay = []; //All entries being currently displayed
 let prevCol; //Tracks column that records are ordered by
+let prevN;
 let order; //Tracks if ascending or descending order
 
 function resetTable(newType, headingNames) {
@@ -123,13 +124,14 @@ function sortRecords(n) { //Allows user to sort records by clicking on the headi
     }
     if (prevCol === chosenCol && order === "asc") { //If column clicked on is already the one ordering by ascending, order by descending
         chosenHeading.textContent = chosenCol + "↑";
-        currentDisplay = arrayed.sort((x, y) => y[n].localeCompare(x[n]));
+        currentDisplay = currentDisplay.sort((x, y) => y[n].localeCompare(x[n]));
         order = "dsc"
     }
     else { //All other cases order by ascending
         chosenHeading.textContent = chosenCol + "↓";
-        currentDisplay = arrayed.sort((x, y) => x[n].localeCompare(y[n]));
+        currentDisplay = currentDisplay.sort((x, y) => x[n].localeCompare(y[n]));
         prevCol = chosenCol;
+        prevN = n;
         order = "asc";
     }
     currentDisplay.forEach((elem) => { //Display ordered data
@@ -141,4 +143,37 @@ function sortRecords(n) { //Allows user to sort records by clicking on the headi
         })
         table.appendChild(record);
     })
+}
+
+function search() { //Only search by name
+    var searchTerm = document.getElementById("name").value.toLowerCase();
+    var table = document.getElementById("table");
+    var entries = table.childElementCount;
+    currentDisplay = [];
+    for (var i = 1; i < entries; i++) { //Clear all entries
+        table.removeChild(table.children[1]);
+    }
+    arrayed.forEach(elem => { //Search through array and check if either first names or last name contains search term, use lowercase to match as many possible (so not case sensitive)
+        if (elem[1].toLowerCase().includes(searchTerm) || elem[2].toLowerCase().includes(searchTerm)) {
+            currentDisplay.push(elem);
+        }
+    })
+    currentDisplay.forEach(elem => { //Display search results
+        var record = document.createElement("tr");
+        elem.forEach((val) => {
+            var attr = document.createElement("td");
+            attr.textContent = val;
+            record.appendChild(attr);
+        })
+        table.appendChild(record);
+    })
+    if (prevCol != null) { //Workaround to keep order after search
+        if (order === "asc") {
+            order = "dsc";
+        }
+        else {
+            order = "asc";
+        }
+        sortRecords(prevN);
+    }
 }
