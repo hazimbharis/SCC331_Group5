@@ -29,6 +29,14 @@ def get_data_from_db():
     return retrieved_data[-1]
 
 
+def check_warning_periodic():
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT * FROM warnings")
+    result = cursor.fetchall()
+    cursor.close()
+    print(result)
+
+
 def send_periodic_message():
     readings = get_data_from_db()
     message_text = (
@@ -180,6 +188,7 @@ def handle_response(message):
                      "temperature")
 
 
+schedule.every(1).minutes.do(check_warning_periodic)
 schedule.every(60).minutes.do(send_periodic_message)
 schedule_thread = threading.Thread(target=schedule_thread)
 schedule_thread.start()
