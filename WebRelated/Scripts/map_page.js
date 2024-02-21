@@ -258,4 +258,4 @@ updateMovementInfo();
 showAlerts()
 setInterval(checkAlerts, 500);
 updateDoorInfo();
-//setInterval(updateMovementInfo, 2000);
+setInterval(updateMovementInfo, 2000);
