@@ -17,15 +17,21 @@ let livingRoomDoor = document.getElementById('living-room-door');
 
 
 let formattedData = [];
-
+let data = [];
 // Door
-const data = [{doorID: 1, locked: 0, closed: 1, alarm: 0}, {
-  doorID: 2, locked: 0, closed: 1, alarm: 0
-}, {doorID: 3, locked: 0, closed: 1, alarm: 0}, {
-  doorID: 4, locked: 0, closed: 1, alarm: 0
-},]; // dummy data => fetched from API
 
-let openIcon = document.createElement('i');
+
+async function updateDoorInfo(){//Door api end point to fetch door state from MySql database
+  await $.get('http://localhost:5000/api/door', (newData) => {
+    data = newData.map((item) => ({
+      doorID: item.doorID,
+      locked: item.locked,
+      closed: item.closed,
+      alarm: item.alarm,
+    }));
+    console.log(data);
+  });
+  let openIcon = document.createElement('i');
 openIcon.classList.add('fa-solid', 'fa-door-open', 'fa-3x');
 openIcon.style.color = '#e3d8d8';
 
@@ -91,6 +97,18 @@ data.forEach((el) => {
     }
   }
 });
+}
+
+
+
+/*
+  data = [{doorID: 1, locked: 0, closed: 1, alarm: 0}, {
+  doorID: 2, locked: 0, closed: 1, alarm: 0
+}, {doorID: 3, locked: 0, closed: 1, alarm: 0}, {
+  doorID: 4, locked: 0, closed: 1, alarm: 0
+},]; // dummy data => fetched from API*/
+
+
 
 // Door
 
@@ -100,16 +118,17 @@ function clearPrisoners() {
 }
 
 
-function updateMovementInfo() {
-  // $.get('http://localhost:5000/api/position', (newData) => {
-  //   formattedData = newData.map((item) => ({
-  //     id: item.prisonerID,
-  //     zone: item.zoneID.toString(),
-  //     type: item.type,
-  //   }));
-  //
-  //   console.log(formattedData);
-  // });
+async function updateMovementInfo() {
+   await $.get('http://localhost:5000/api/NewUIPositions', (newData) => {
+     formattedData = newData.map((item) => ({
+       type: item.type,
+       zone: item.zoneID,
+       id: item.prisonerID,
+       name: item.firstNames + ' ' + item.lastName,
+     }));
+  
+     console.log(formattedData);
+  });
   // Clear existing prisoners
   clearPrisoners();
 
@@ -118,7 +137,7 @@ function updateMovementInfo() {
   canteenCount = 0;
   libraryCount = 0;
   livingRoomCount = 0;
-
+/*
   formattedData = [{
     type: "P", zone: 1, id: "A1234CV", name: "Asdu3basd",
   }, {
@@ -128,7 +147,7 @@ function updateMovementInfo() {
   }, {
     type: "V", zone: 3, id: "A1234CV", name: "Buhfuwus"
   },]
-
+*/
   formattedData.forEach((element) => {
     // Create a div element
     let prisoner = document.createElement('div');
@@ -206,4 +225,5 @@ function updateMovementInfo() {
 }
 
 updateMovementInfo();
-// setInterval(updateMovementInfo, 500);
+updateDoorInfo();
+//setInterval(updateMovementInfo, 2000);

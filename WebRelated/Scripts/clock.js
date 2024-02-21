@@ -7,8 +7,15 @@ prisoner.classList.add('prisoner');
 // Create an icon element with Font Awesome classes
 let iconElement = document.createElement('i');
 iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
+document.getElementById('population-GM').style.font = "bold 20px/30px fixed-width, sans-serif";
+document.getElementById('population-LB').style.font = "bold 20px/30px fixed-width, sans-serif";
+document.getElementById('population-LR').style.font = "bold 20px/30px fixed-width, sans-serif";
+document.getElementById('population-CT').style.font = "bold 20px/30px fixed-width, sans-serif";
 
-
+let gymPopulation = document.getElementById('population-GM').textContent;
+let canteenPopulation = document.getElementById('population-CT').textContent;
+let libraryPopulation = document.getElementById('population-LB').textContent;
+let livingRoomPopulation = document.getElementById('population-LR').textContent;
 
 let gym = document.getElementById('prison1');
 let canteen = document.getElementById('prison2');
@@ -36,7 +43,7 @@ function clearPrisoners() {
     document.querySelectorAll('.prisoner').forEach((el) => el.remove());
   }
 function getMovementData(){
-    $.get('http://localhost:5000/api/MovementTime', (newData) => {
+    $.get('http://localhost:5000/api/MovementTime', (newData) => {// API endpoint conection for retrieving Movement Time Data
         //console.log(newData);
         movementData = newData.map((item) => ({
           prisonerID: item.prisonerID,
@@ -67,15 +74,15 @@ function pauseClock() {
 function renderUsers() {
     clearPrisoners();
     let renderedPrisoners = new Set(); // Keep track of rendered prisoners
-
+    let gymPop = 0;
+    let libraryPop = 0;
+    let canteenPop = 0;
+    let livingRoomPop = 0;
     for (let x = movementDataIndex + 1; x < movementData.length; x++) {
         if (movementData[x]) {
             if (!renderedPrisoners.has(movementData[x].prisonerID)) { // Check if prisoner has already been rendered
                 let iconElement = document.createElement('i');
                 iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
-
-
-
                 switch (movementData[x].type) {//Contains differnt user types
                     case 'P':// Prisoner
                         iconElement.style.color = '#fe7300';
@@ -89,8 +96,6 @@ function renderUsers() {
                     default:
                         console.log("Type not recognised");
                 }
-
-
                 let prisoner = document.createElement('div');
                 prisoner.classList.add('prisoner');
                 let paragraphElement = document.createElement('p');
@@ -106,15 +111,13 @@ function renderUsers() {
                 }else{
                     paragraphElement.style.color = '#e3d8d8';                  
                 }
-                prisoner.onclick = function() {
+                prisoner.onclick = function() {// Create personal URL for the user so thair movement data can be used in User Histroy page
                     // Construct the URL with query parameters
                     console.log("TEST");
                     let url = '../pages/userHistory.html';
                     url += '?prisonerID=' + encodeURIComponent(movementData[x].prisonerID);
-                    url += '&firstName=' + encodeURIComponent(movementData[x].firstName);
-                    url += '&lastName=' + encodeURIComponent(movementData[x].lastName);
-
                     // Redirect to constructed URL
+                    
                     window.location.href = url;
                 };
 
@@ -140,15 +143,19 @@ function renderUsers() {
                 switch (movementData[x].zoneID) {// Determines which zone to put the user in
                     case 1:
                         gym.appendChild(prisoner);
+                        gymPop ++;
                         break;
                     case 2:
                         canteen.appendChild(prisoner);
+                        canteenPop++;
                         break;
                     case 3:
                         library.appendChild(prisoner);
+                        libraryPop++;
                         break;
                     case 4:
                         livingRoom.appendChild(prisoner);
+                        livingRoomPop++;
                         break;
                     default:
                         console.log("Zone ID not recognised");
@@ -162,6 +169,17 @@ function renderUsers() {
             console.log(`Element at index ${x} is undefined`);
         }
     }
+    gymPopulation = gymPop;
+    canteenPopulation = canteenPop;
+    livingRoomPopulation = livingRoomPop;
+    libraryPopulation = libraryPop;
+
+    
+    // Display population in corresponding HTML elements
+    document.getElementById('population-GM').textContent = 'Gym: ' + gymPop;
+    document.getElementById('population-CT').textContent = 'Canteen: ' + canteenPop;
+    document.getElementById('population-LB').textContent = 'Library: ' + libraryPop;
+    document.getElementById('population-LR').textContent = 'Living Room: ' + livingRoomPop;
 }
 
 
