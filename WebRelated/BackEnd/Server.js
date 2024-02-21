@@ -31,6 +31,42 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+//API endpoint to reterive timestamps from new UI user positions
+app.get('/api/NewUIPositions', (req, res) => {//'2024-02-05 15:30:45.123' - format of timestamp to be added
+  const query = `
+  WITH LatestMovements AS (
+    SELECT 
+        m.prisonerID,
+        m.zoneID,
+        m.timeStamp,
+        ROW_NUMBER() OVER(PARTITION BY m.prisonerID ORDER BY m.timeStamp DESC) AS rn
+    FROM 
+        movement m
+  )
+  SELECT 
+    u.type,
+      lm.zoneID,
+      lm.prisonerID,
+      u.firstNames,
+      u.lastName
+  FROM 
+      LatestMovements lm
+  INNER JOIN 
+      users u ON lm.prisonerID = u.id
+  WHERE 
+      lm.rn = 1;
+  `;
+  db.query(query, (err, results) => {
+    console.log("test");
+    if(err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({error: 'Database error' });
+    }else{
+      //console.log(results);
+      res.json(results);
+    }
+  });
+});
 /**
  * CREATE TABLE your_table_name (
     id INT AUTO_INCREMENT PRIMARY KEY,

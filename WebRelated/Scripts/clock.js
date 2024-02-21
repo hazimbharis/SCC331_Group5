@@ -7,8 +7,15 @@ prisoner.classList.add('prisoner');
 // Create an icon element with Font Awesome classes
 let iconElement = document.createElement('i');
 iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
+document.getElementById('population-GM').style.font = "bold 20px/30px fixed-width, sans-serif";
+document.getElementById('population-LB').style.font = "bold 20px/30px fixed-width, sans-serif";
+document.getElementById('population-LR').style.font = "bold 20px/30px fixed-width, sans-serif";
+document.getElementById('population-CT').style.font = "bold 20px/30px fixed-width, sans-serif";
 
-
+let gymPopulation = document.getElementById('population-GM').textContent;
+let canteenPopulation = document.getElementById('population-CT').textContent;
+let libraryPopulation = document.getElementById('population-LB').textContent;
+let livingRoomPopulation = document.getElementById('population-LR').textContent;
 
 let gym = document.getElementById('prison1');
 let canteen = document.getElementById('prison2');
@@ -36,7 +43,7 @@ function clearPrisoners() {
     document.querySelectorAll('.prisoner').forEach((el) => el.remove());
   }
 function getMovementData(){
-    $.get('http://localhost:5000/api/MovementTime', (newData) => {
+    $.get('http://localhost:5000/api/MovementTime', (newData) => {// API endpoint conection for retrieving Movement Time Data
         //console.log(newData);
         movementData = newData.map((item) => ({
           prisonerID: item.prisonerID,
@@ -48,7 +55,6 @@ function getMovementData(){
           medicalConditions: item.medicalConditions,
         }));
       });
-
     //console.log(movementData);
 }
 function toggleDropdown() {
@@ -68,60 +74,55 @@ function pauseClock() {
 function renderUsers() {
     clearPrisoners();
     let renderedPrisoners = new Set(); // Keep track of rendered prisoners
-
+    let gymPop = 0;
+    let libraryPop = 0;
+    let canteenPop = 0;
+    let livingRoomPop = 0;
     for (let x = movementDataIndex + 1; x < movementData.length; x++) {
         if (movementData[x]) {
             if (!renderedPrisoners.has(movementData[x].prisonerID)) { // Check if prisoner has already been rendered
                 let iconElement = document.createElement('i');
                 iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
-
-
-
-                switch (movementData[x].type) {
-                    case 'P':
+                switch (movementData[x].type) {//Contains differnt user types
+                    case 'P':// Prisoner
                         iconElement.style.color = '#fe7300';
                         break;
-                    case 'V':
+                    case 'V':// Visitor
                         iconElement.style.color = "White";
                         break;
-                    case 'S':
+                    case 'S':// Staff
                         iconElement.style.color = "Blue";
                         break;
                     default:
                         console.log("Type not recognised");
                 }
-
-
                 let prisoner = document.createElement('div');
                 prisoner.classList.add('prisoner');
                 let paragraphElement = document.createElement('p');
                 paragraphElement.classList.add('prisoner-id');
-                if(x ===  movementDataIndex + 1){
-                    paragraphElement.style.color = 'yellow';
+                if(x ===  movementDataIndex + 1){// movementDataIndex + 1 represents the last movement
+                    paragraphElement.style.color = 'yellow';// It is then styled differently to show this visually
                     paragraphElement.style.fontSize = '18px';
                     //iconElement.style.border = '1px solid black'
                     //iconElement.style.boxShadow = '0px 0px 10px 0px rgba(0, 0, 0, 0.5)';
-                    iconElement.style.boxShadow =  '0 0 10px rgba(255, 255, 255, 1)';
+                    iconElement.style.boxShadow =  '0 0 10px rgba(255, 255, 255, 1)';//Creates a glow effect
                     iconElement.style.backgroundColor = 'rgba(255, 255, 255, 0.4)'
                     iconElement.style.borderRadius = '20px';
                 }else{
-                    paragraphElement.style.color = '#e3d8d8';                    
+                    paragraphElement.style.color = '#e3d8d8';                  
                 }
-                prisoner.onclick = function() {
+                prisoner.onclick = function() {// Create personal URL for the user so thair movement data can be used in User Histroy page
                     // Construct the URL with query parameters
                     console.log("TEST");
                     let url = '../pages/userHistory.html';
                     url += '?prisonerID=' + encodeURIComponent(movementData[x].prisonerID);
-                    url += '&firstName=' + encodeURIComponent(movementData[x].firstName);
-                    url += '&lastName=' + encodeURIComponent(movementData[x].lastName);
-                    // Add more parameters as needed
-
-                    // Redirect to the constructed URL
+                    // Redirect to constructed URL
+                    
                     window.location.href = url;
                 };
 
 
-                paragraphElement.textContent = movementData[x].prisonerID;
+                paragraphElement.textContent = movementData[x].prisonerID;// Stores prisoner ID in a hover box
                 prisoner.appendChild(paragraphElement);
 
                 let hoverOver = document.createElement('div')// hover functionality
@@ -130,27 +131,31 @@ function renderUsers() {
                 hoverOver.style.marginTop = '50px'
                 hoverOver.style.position = 'absolute';
 
-                
+                //Ternary operator to translate the role character to the full name 
                 let role = movementData[x].type === "P" ? "\n Role: Prisoner" : movementData[x].type === "V" ? "\n Role: Visitor" : "\n Role: Prison Officer";
                 let hoverCont = "Name: " + movementData[x].firstName + " " + movementData[x].lastName + role;
-                if (movementData[x].medicalConditions != null) {
+                if (movementData[x].medicalConditions != null) {// If user has medical conditions display in hover box
                     hoverCont = hoverCont + "\r\nMedical conditions: " + movementData[x].medicalConditions
                 }
                 hoverOver.textContent = hoverCont;
 
                 prisoner.appendChild(hoverOver);
-                switch (movementData[x].zoneID) {
+                switch (movementData[x].zoneID) {// Determines which zone to put the user in
                     case 1:
                         gym.appendChild(prisoner);
+                        gymPop ++;
                         break;
                     case 2:
                         canteen.appendChild(prisoner);
+                        canteenPop++;
                         break;
                     case 3:
                         library.appendChild(prisoner);
+                        libraryPop++;
                         break;
                     case 4:
                         livingRoom.appendChild(prisoner);
+                        livingRoomPop++;
                         break;
                     default:
                         console.log("Zone ID not recognised");
@@ -164,6 +169,17 @@ function renderUsers() {
             console.log(`Element at index ${x} is undefined`);
         }
     }
+    gymPopulation = gymPop;
+    canteenPopulation = canteenPop;
+    livingRoomPopulation = livingRoomPop;
+    libraryPopulation = libraryPop;
+
+    
+    // Display population in corresponding HTML elements
+    document.getElementById('population-GM').textContent = 'Gym: ' + gymPop;
+    document.getElementById('population-CT').textContent = 'Canteen: ' + canteenPop;
+    document.getElementById('population-LB').textContent = 'Library: ' + libraryPop;
+    document.getElementById('population-LR').textContent = 'Living Room: ' + livingRoomPop;
 }
 
 
