@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class DatabaseApplication {
 	// Login variables
 
-	private static final String PASSWORD = "pass1234";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static final String USER = "root";
 	private static Connection connection;
@@ -122,7 +122,7 @@ public class DatabaseApplication {
 	}
 
 		//http://localhost:8080/addPrisoner?id=AAAAAAA&zone=1
-	@GetMapping("/addPrisoner2")
+	@GetMapping("/movementTime")
 	private void addPrisoner2(@RequestParam(value = "id")String id, @RequestParam(value = "zone") int zone) throws SQLException {
 
 		/*
@@ -136,41 +136,21 @@ public class DatabaseApplication {
 
 		// if 0, adds new prisoner entry
 		// if 1, changes value of existing prisoner entry
-		int check = 0;
 		String insertDataSQL;
-		ResultSet result;
 
-		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.movement WHERE movement.prisonerID = '"+id+"'";
-		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
-			result = statement.executeQuery();
-			while (result.next()) {
-				check = result.getInt(1);
-			}
-
-			if (check == 0) {
-				insertDataSQL="INSERT INTO movement (prisonerID,zoneID, timeStamp) VALUES (?,?,?)";
-				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
-					statement1.setString(1, String.valueOf(id));
-					statement1.setString(2, String.valueOf(zone));
-					LocalDateTime myDateObj = LocalDateTime.now();
-					DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss:ms");
-					String formattedDate = myDateObj.format(myFormatObj);
-					System.out.println("After formatting: " + formattedDate);
-					statement1.setString(3, formattedDate);
-					statement1.executeUpdate();
-				}
-			} else if (check == 1) {
-				LocalDateTime myDateObj = LocalDateTime.now();
-				DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss:ms");
-				String formattedDate = myDateObj.format(myFormatObj);
-				System.out.println("After formatting: " + formattedDate);
-				insertDataSQL="UPDATE movement SET zoneID = " + zone + ", timeStamp = " + formattedDate + "WHERE prisonerID = '" + id + "'";
-				try (PreparedStatement statement2 = connection.prepareStatement(insertDataSQL)) {
-					statement2.executeUpdate();
-				}
-			}
+		insertDataSQL="INSERT INTO movement (prisonerID,zoneID, timeStamp) VALUES (?,?,?)";
+		try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
+			statement1.setString(1, String.valueOf(id));
+			statement1.setString(2, String.valueOf(zone));
+			LocalDateTime myDateObj = LocalDateTime.now();
+			DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.ms");
+			String formattedDate = myDateObj.format(myFormatObj);
+			System.out.println("After formatting: " + formattedDate);
+			statement1.setString(3, formattedDate);
+			statement1.executeUpdate();
 		}
 	}
+
 	//http://localhost:8080/addDoor?door=1&locked=false&closed=false&alarm=false
 	@GetMapping("/addDoor")
 	private void addDoor(@RequestParam(value = "door") int door,
