@@ -31,7 +31,7 @@ async function updateDoorInfo(){//Door api end point to fetch door state from My
       closed: item.closed,
       alarm: item.alarm,
     }));
-    console.log(data);
+    //console.log(data);
   });
   let openIcon = document.createElement('i');
 openIcon.classList.add('fa-solid', 'fa-door-open', 'fa-3x');
@@ -122,7 +122,8 @@ function clearPrisoners() {
 function checkAlerts() { 
   //checks each interval if alerts exist
   $.get('http://localhost:5000/api/warnings', function(data){
-    if(data === '')
+  console.log(data.length)  
+  if(!data.length)
     {
       return
     }
@@ -172,11 +173,11 @@ async function updateMovementInfo() {
      formattedData = newData.map((item) => ({
        type: item.type,
        zone: item.zoneID,
-       id: item.prisonerID,
+       id: item.prisonerID, 
        name: item.firstNames + ' ' + item.lastName,
      }));
   
-     console.log(formattedData);
+     //console.log(formattedData);
   });
   // Clear existing prisoners
   clearPrisoners();
