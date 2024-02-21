@@ -244,7 +244,7 @@ public class SerialMonitor {
             else {
                 status = "open";
             }
-            if (status.equals(prevDoorValues[did]) == false) {
+            if (status.equals(prevDoorValues[did - 1]) == false) {
                 URL dHURL = new URL(url + "/addDoorHistory?door=" + did + "&status=" + status);
                 HttpURLConnection conn = (HttpURLConnection) dHURL.openConnection();
                 conn.setRequestMethod("GET");
@@ -255,7 +255,7 @@ public class SerialMonitor {
                     System.out.println(resCode);
                 }
                 connection.disconnect();
-                prevDoorValues[did] = status;
+                prevDoorValues[did - 1] = status;
             }
 
         } catch (Exception e) {
@@ -274,7 +274,7 @@ public class SerialMonitor {
                 System.out.println(responseCode);
             }
             connection.disconnect();
-            if (prevZoneValues[zid][0] != temp || prevZoneValues[zid][1] != noise || prevZoneValues[zid][2] != light) { //Add new zone history entry if any value has changed from its previous value
+            if (prevZoneValues[zid - 1][0] != temp || prevZoneValues[zid - 1][1] != noise || prevZoneValues[zid - 1][2] != light) { //Add new zone history entry if any value has changed from its previous value
                 URL zHURL = new URL(url + "/addZoneHistory?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
                 HttpURLConnection conn = (HttpURLConnection) zHURL.openConnection();
                 conn.setRequestMethod("GET");
@@ -285,9 +285,9 @@ public class SerialMonitor {
                     System.out.println(resCode);
                 }
                 connection.disconnect();
-                prevZoneValues[zid][0] = temp;
-                prevZoneValues[zid][1] = noise;
-                prevZoneValues[zid][2] = light;
+                prevZoneValues[zid - 1][0] = temp;
+                prevZoneValues[zid - 1][1] = noise;
+                prevZoneValues[zid - 1][2] = light;
             }
 
         } catch (Exception e) {
