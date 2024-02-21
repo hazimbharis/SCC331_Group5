@@ -8,9 +8,11 @@
                 return decodeURIComponent(pair[1]);
             }
         }
-        console.error('Query variable %s not found', variable);
+        console.error('Value not found: ', variable);
     }
-
+    let x = getQueryVariable('prisonerID');
+    var headerElement = document.getElementById("page-title");
+    headerElement.innerHTML += x;
 
   // Data for the pie chart
   var data = {
