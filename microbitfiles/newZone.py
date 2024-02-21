@@ -7,7 +7,7 @@ import random
 opt = opt3001()
 radio.on()
 
-zoneID = 1
+zoneID = 3
 temp = 0
 noise = 0
 light = 0.0
@@ -17,9 +17,9 @@ while True:
     temp = temperature()
     noise = microphone.sound_level()
     light = opt.read_lux_float()
-    radio.send('Zone1')
+    radio.send('Zone3')
     radio.config(channel = 31, power = 7)
-    #print("003:," + str(zoneID) + "," + str(temp) + "," + str(noise) + "," + str(light) + ",")
+    print("003:," + str(zoneID) + "," + str(temp) + "," + str(noise) + "," + str(light) + ",")
     radio.send("003:," + str(zoneID) + "," + str(temp) + "," + str(noise) + "," + str(light) + ",")
     sleep(random.randint(50, 150)) 
     
