@@ -2,6 +2,7 @@ from microbit import *
 import music
 import time
 import radio
+import speech
 
 name = 1 #Can be used as id for each door, maybe change to placeholder at start so it can be assigned
 state = "stationary" #Track the door's status, motion means door is moving, stationary means door is not moving
@@ -93,6 +94,7 @@ while True:
 
     if message is not None:
         if message == "FORCELOCK":
+            speech.say("LOCKED", speed=250, pitch=250, throat=100, mouth=200)
             closed = 1
             lock = 1
             alarm = 1
