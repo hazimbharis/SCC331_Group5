@@ -1,6 +1,8 @@
 # User: A1234BC
 from microbit import *
 import radio
+import music
+import speech
 import time
 
 
@@ -9,6 +11,8 @@ counter1 = counter2 = counter3 = counter4 = 0
 rssi_strongest = 0
 last_zone = None # to save previous zone
 user_type = 2 # 0 = prisoner, 1 = visitor, 2 = guard
+help_mode = 1
+fill = Image("99999:" + "99999:" + "99999:" + "99999:" + "99999")
 radio.on()
 radio.config(channel = 10, power = 7)
 
@@ -21,8 +25,18 @@ zone_rssi = {
 
 while True:
     if (button_a.was_pressed()): #Activate HELP MODE
-        music.pitch(100, duration = -1, wait = False)
-        radio.send("004:,HELP,")
+        help_mode = 1
+        while(help_mode):
+            # music.pitch(100, duration = -1, wait = False)
+            speech.say("HELP", speed=150, pitch=100, throat=100, mouth=200)
+            radio.send("004:,HELP,")
+            display.show(fill, wait = False)
+
+            if (button_a.was_pressed()):
+                help_mode = 0
+
+            sleep(300)
+            display.clear()
 
     ping = radio.receive_full()
     if ping:
