@@ -31,10 +31,15 @@ def get_data_from_db():
 
 def check_warning_periodic():
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM warnings")
+    cursor.execute("SELECT * FROM warnings")
     result = cursor.fetchall()
     cursor.close()
-    print(result)
+    systemWarnings = ["Guard needs help in ", "Temperature too high in ", "Temperature too low in ",
+                      "Noise too high in ", "Lights too low in "]
+    zones = ["GYM", "CANTEEN", "LIBRARY", "LIVING ROOM"]
+    for item in result:
+        msg = f"⚠️{systemWarnings[item[1] - 1] + zones[item[0] - 1]}"
+        bot.send_message(chat_id, msg)
 
 
 def send_periodic_message():
@@ -56,7 +61,7 @@ def schedule_thread():
 def send_welcome(message):
     global chat_id
     chat_id = message.chat.id
-    bot.reply_to(message, "Welcome to Smart Lab Bot!",
+    bot.reply_to(message, "Welcome to Smart Lancaster Farm Prison Bot!",
                  reply_markup=telebot.types.ReplyKeyboardRemove())
     get_data_from_db()
 
