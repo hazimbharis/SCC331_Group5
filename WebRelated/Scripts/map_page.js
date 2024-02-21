@@ -122,12 +122,9 @@ async function showAlerts() {
       zoneID: item.zoneID,
       warningID: item.warningID,
     }));
-  
-    console.log(warningData);
   });
 
   alertShown = true
-  console.log(warningData)
   
   for (const warning of warningData) {
     await Swal.fire({
@@ -137,7 +134,7 @@ async function showAlerts() {
       background: "#e3d8d8",
       confirmButtonColor: "#44414f"
     }).then((value) => { 
-       $.get('http://localhost:5000/api/deletewarning/'+warning.zoneID+'/'+warning.warningID)
+      $.get('http://localhost:5000/api/deletewarning/'+warning.zoneID+'/'+warning.warningID)
 
     }) 
   }

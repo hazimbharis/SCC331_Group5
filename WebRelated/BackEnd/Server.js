@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'pass1234',
+  password: 'MyNewPass',
   database: 'microbits'
 });
 
@@ -137,7 +137,7 @@ app.get('/api/library', (req, res) => {
     } 
   });
 });
-//API endpoint, to get env data from library
+//API endpoint, to get warning data from library
 app.get('/api/warnings', (req, res) => {
   const query = `
     SELECT * FROM warnings
@@ -153,18 +153,19 @@ app.get('/api/warnings', (req, res) => {
   });
 });
 //API endpoint, to get env data from library
-app.delete('/api/deletewarning/:zid/:wid', (req, res) => {
+app.get('/api/deletewarning/:zid/:wid', (req, res) => {
   const zid = req.params.zid
   const wid = req.params.wid
 
 
   //const query = `DELETE FROM warnings WHERE zoneID = ? AND warningID = ?`, [zid], [wid]
 
-  db.query('DELETE FROM warnings WHERE zoneID = ? AND warningID = ?', zid, wid, (err, results) => {
+  db.query('DELETE FROM warnings WHERE zoneID = ? AND warningID = ?', [zid, wid], (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
       res.status(500).json({ error: 'Database error' });
     } else {
+      res.send("deleted")
       //res.json(results); // Send the results as an object
     } 
   });
