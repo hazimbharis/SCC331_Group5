@@ -50,3 +50,9 @@ td {
 tr:nth-child(even) {
     background-color: #eeeeee;
 }
+
+.search {
+    position: absolute;
+    right: 0%;
+    margin: 5px;
+}
