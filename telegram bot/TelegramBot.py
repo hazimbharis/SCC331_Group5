@@ -3,20 +3,26 @@ import time
 import telebot
 import sqlite3
 import schedule
+import mysql.connector
 
 # Connect to the bot
 token = "6929891453:AAH6Fu6CzgMVoFyPAAOobpVgAEsL-RbNkGE"
 bot = telebot.TeleBot(token)
 chat_id = "YOUR_CHAT_ID"
 reading = ""
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="MyNewPass",
+    database="microbits"
+)
 
 
 # Retrieve data from db
 def get_data_from_db():
-    conn = sqlite3.connect('local.db')
     cursor = conn.cursor()
     retrieved_data = []
-    cursor.execute("SELECT * FROM zoneReadings")
+    cursor.execute("SELECT * FROM environment")
     result = cursor.fetchall()
     for row in result:
         retrieved_data.append(row)
@@ -49,9 +55,8 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: message.text == "Zone 1")
 def handle_zone_1(message):
-    conn = sqlite3.connect('local.db')
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM zoneReadings WHERE zoneName='zone1'")
+    cursor.execute(f"SELECT * FROM environment WHERE zoneID=1")
     result = cursor.fetchall()
     cursor.close()
     retrieved_data = result[-1]
@@ -74,9 +79,8 @@ def handle_zone_1(message):
 
 @bot.message_handler(func=lambda message: message.text == "Zone 2")
 def handle_zone_2(message):
-    conn = sqlite3.connect('local.db')
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM zoneReadings WHERE zoneName='zone2'")
+    cursor.execute(f"SELECT * FROM environment WHERE zoneID=2")
     result = cursor.fetchall()
     cursor.close()
     retrieved_data = result[-1]
@@ -99,9 +103,8 @@ def handle_zone_2(message):
 
 @bot.message_handler(func=lambda message: message.text == "Zone 3")
 def handle_zone_3(message):
-    conn = sqlite3.connect('local.db')
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM zoneReadings WHERE zoneName='zone3'")
+    cursor.execute(f"SELECT * FROM environment WHERE zoneID=3")
     result = cursor.fetchall()
     cursor.close()
     retrieved_data = result[-1]
