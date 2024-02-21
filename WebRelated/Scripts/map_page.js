@@ -206,4 +206,4 @@ function updateMovementInfo() {
 }
 
 updateMovementInfo();
-// setInterval(updateMovementInfo, 500);
+setInterval(updateMovementInfo, 500);
