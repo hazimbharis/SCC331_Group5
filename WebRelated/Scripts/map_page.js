@@ -121,6 +121,12 @@ function clearPrisoners() {
 
 function checkAlerts() { 
   //checks each interval if alerts exist
+  $.get('http://localhost:5000/api/warnings', function(data){
+    if(data === '')
+    {
+      return
+    }
+  })
 
   if (!alertShown)
     showAlerts()
