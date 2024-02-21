@@ -146,6 +146,9 @@ function sortRecords(n) { //Allows user to sort records by clicking on the headi
 }
 
 function search() { //Only search by name
+    if (arrayed.length === 0) { //If there are no entries, no need to search
+        return;
+    }
     var searchTerm = document.getElementById("name").value.toLowerCase();
     var table = document.getElementById("table");
     var entries = table.childElementCount;
