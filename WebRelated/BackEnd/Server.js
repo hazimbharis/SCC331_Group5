@@ -31,6 +31,30 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+app.get('/api/UserHistory/:pid', (req, res) => {
+  const pid = req.params.pid;
+  const query = `
+    SELECT zoneID,
+           SUM(UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time)) AS time_spent
+    FROM (
+      SELECT prisonerID, zoneID,
+             LEAD(timeStamp) OVER (ORDER BY timeStamp) AS end_time,
+             timeStamp AS start_time
+      FROM movement
+      WHERE prisonerID = ?
+    ) AS subquery
+    GROUP BY zoneID;
+  `;
+  db.query(query, [pid], (err, results) => { // Using parameterized query
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 //API endpoint to reterive timestamps from new UI user positions
 app.get('/api/NewUIPositions', (req, res) => {//'2024-02-05 15:30:45.123' - format of timestamp to be added
   const query = `
@@ -74,6 +98,22 @@ app.get('/api/NewUIPositions', (req, res) => {//'2024-02-05 15:30:45.123' - form
 );
 
  */
+app.get('/api/UserHistoryData/:uid', (req, res) => {
+  const uid = req.params.uid; // 
+  const query = `
+    SELECT * FROM users
+    WHERE id = ?;
+  `;
+  db.query(query, [uid], (err, results) => {
+    console.log("test");
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
 
 //API endpoint to reterive timestamps from movement table
 app.get('/api/MovementTime', (req, res) => {//'2024-02-05 15:30:45.123' - format of timestamp to be added
