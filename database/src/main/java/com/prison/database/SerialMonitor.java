@@ -166,12 +166,12 @@ public class SerialMonitor {
                             setEnvironment(zoneID, temp, noise, light);
 
                             //temp check
-                            if (temp > 100) setWarning(zoneID, 2);
+                            if (temp > 41) setWarning(zoneID, 2);
                             if (temp < 0) setWarning(zoneID, 3);
                             //noise check
-                            if (noise > 100) setWarning(zoneID, 4);
+                            if (noise > 50) setWarning(zoneID, 4);
                             //light check
-                            if (noise > 100) setWarning(zoneID, 4);
+                            if (light < 0) setWarning(zoneID, 5);
 
                         }
                         case "004"-> { // help signal from guard microbit
