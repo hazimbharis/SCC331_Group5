@@ -224,9 +224,7 @@ public class DatabaseApplication {
 
 	@GetMapping("/addWarning")
 	private void addWarning(@RequestParam(value = "zone") int zone,
-								@RequestParam(value= "warning")int warning,
-								@RequestParam(value= "noise")int noise,
-								@RequestParam(value= "light")int light) throws SQLException {
+								@RequestParam(value= "warning")int warning) throws SQLException {
 		int check = 0;
 		String insertDataSQL;
 		ResultSet result;

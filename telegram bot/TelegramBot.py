@@ -45,8 +45,8 @@ def check_warning_periodic():
 def send_periodic_message():
     readings = get_data_from_db()
     message_text = (
-        f"Current readings: \n 🔊 Noise: {int(readings[3])} \n 💡 Light: {int(readings[4])} \n "
-        f"🌡 Temperature: {int(readings[2])}")
+        f"Current readings: \n 🔊 Noise: {float(readings[3])} \n 💡 Light: {float(readings[4])} \n "
+        f"🌡 Temperature: {float(readings[2])}")
     bot.send_message(chat_id, message_text)
 
 
@@ -76,17 +76,17 @@ def handle_zone_1(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in GYM is {int(user_reading)}",
+                         f"🔊Noise in GYM is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in GYM is {int(user_reading)}",
+                         f"🌡Temperature in GYM is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in GYM is {int(user_reading)}",
+                         f"💡Light in GYM is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
@@ -100,17 +100,17 @@ def handle_zone_2(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in CANTEEN is {int(user_reading)}",
+                         f"🔊Noise in CANTEEN is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in CANTEEN is {int(user_reading)}",
+                         f"🌡Temperature in CANTEEN is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in CANTEEN is {int(user_reading)}",
+                         f"💡Light in CANTEEN is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
@@ -124,17 +124,17 @@ def handle_zone_3(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in LIBRARY is {int(user_reading)}",
+                         f"🔊Noise in LIBRARY is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in LIBRARY is {int(user_reading)}",
+                         f"🌡Temperature in LIBRARY is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in LIBRARY is {int(user_reading)}",
+                         f"💡Light in LIBRARY is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
@@ -148,17 +148,17 @@ def handle_zone_4(message):
     if reading == "noise":
         user_reading = retrieved_data[3]
         bot.send_message(message.chat.id,
-                         f"🔊Noise in LIVING ROOM is {int(user_reading)}",
+                         f"🔊Noise in LIVING ROOM is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "temperature":
         user_reading = retrieved_data[2]
         bot.send_message(message.chat.id,
-                         f"🌡Temperature in LIVING ROOM is {int(user_reading)}",
+                         f"🌡Temperature in LIVING ROOM is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
     elif reading == "light":
         user_reading = retrieved_data[4]
         bot.send_message(message.chat.id,
-                         f"💡Light in LIVING ROOM is {int(user_reading)}",
+                         f"💡Light in LIVING ROOM is {float(user_reading)}",
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
@@ -194,7 +194,7 @@ def handle_response(message):
 
 
 schedule.every(1).minutes.do(check_warning_periodic)
-schedule.every(60).minutes.do(send_periodic_message)
+schedule.every(1).minutes.do(send_periodic_message)
 schedule_thread = threading.Thread(target=schedule_thread)
 schedule_thread.start()
 

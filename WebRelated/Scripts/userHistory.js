@@ -41,7 +41,12 @@ function initializePage() {
         var info3 = document.getElementById("info3");
         var info4 = document.getElementById("info4");
         var info5 = document.getElementById("info5");
-        info1.innerHTML += userInfo[0].firstName + " " + userInfo[0].lastName;
+        if(userInfo[0].lastName != undefined){
+            info1.innerHTML += userInfo[0].firstName + " " + userInfo[0].lastName;            
+        }else{
+            info1.innerHTML += userInfo[0].firstName;
+        }
+
         info2.innerHTML += userInfo[0].dob;
         info3.innerHTML += userInfo[0].gender;
         switch(userInfo[0].type){
