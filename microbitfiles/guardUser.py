@@ -9,12 +9,12 @@ import time
 sum_rssi1 = sum_rssi2 = sum_rssi3 = sum_rssi4 = 0
 counter1 = counter2 = counter3 = counter4 = 0
 rssi_strongest = 1
-last_zone = None # to save previous zone
+last_zone = 0 # to save previous zone
 user_type = 2 # 0 = prisoner, 1 = visitor, 2 = guard
 help_mode = 1
 fill = Image("99999:" + "99999:" + "99999:" + "99999:" + "99999")
 radio.on()
-radio.config(channel = 31, power = 7)
+radio.config(channel = 10, power = 7)
 
 zone_rssi = {
     1 : None,
@@ -29,14 +29,17 @@ while True:
         while(help_mode):
             # music.pitch(100, duration = -1, wait = False)
             # speech.say("HELP", speed=150, pitch=100, throat=100, mouth=200)
+            radio.config(channel = 31, power = 7)
             radio.send("004:,"+str(rssi_strongest)+",")
             display.show(fill, wait = False)
 
             if (button_a.was_pressed()):
                 help_mode = 0
+                radio.config(channel = 10, power = 7)
 
             sleep(300)
             display.clear()
+
 
     ping = radio.receive_full()
     if ping:
@@ -109,7 +112,8 @@ while True:
         if rssi_strongest != last_zone:
             
             radio.config(channel = 31, power = 7)
-            radio.send("001:,A1234BC," + str(rssi_strongest))  # sends
+            print("001:,FESU0740," + str(rssi_strongest) + ",")
+            radio.send("001:,FESU0740," + str(rssi_strongest) + ",")  # sends
             radio.config(channel = 10) #we still need to test this
             last_zone = rssi_strongest
         # SEND IT TO MAIN HUB OR PRINT HERE
