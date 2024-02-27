@@ -24,11 +24,11 @@ Joseph - Historical Data & Playback (5.1)\
 
 
 Tasks:\
-Hazim - Creating new databse and updating old schema
-Saeed - Creating new front end to match htoel domain
-Harry - Making histroic data downloadable / printable
-Tega - Updating current app functionality to support hotel along with old prison functionality
-Joseph - Creating Super user login page + helping design multiple rooms system
+Hazim - Creating new databse and updating old schema\
+Saeed - Creating new front end to match htoel domain\
+Harry - Making histroic data downloadable / printable\
+Tega - Updating current app functionality to support hotel along with old prison functionality\
+Joseph - Creating Super user login page + helping design multiple rooms system\
 
 Tasks:
 
