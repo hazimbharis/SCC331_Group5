@@ -30,6 +30,3 @@ Harry - Making histroic data downloadable / printable\
 Tega - Updating current app functionality to support hotel along with old prison functionality\
 Joseph - Creating Super user login page + helping design multiple rooms system
 
-Tasks:
-
-- Make Super user page
