@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Reports</title>
+    <script
+            src="https://kit.fontawesome.com/e0b1d3493e.js"
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="stylesheet" href="../Stylesheets/Reports.css"/>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body style="background-color: #e3d8d8">
+
+<h1 style="position: relative; top: 10px; text-align: center" id="heading"><b>Reports</b></h1>
+<div class="board">
+    <div class="menu">
+        <label class="label">Enter start date:</label>
+        <input type="date" class="date" id="startDate"></input>
+        <label class="label">Enter end date:</label>
+        <input type="date" class="date" id="endDate"></input>
+        <button class="submit" onclick="generate()">Generate</button>
+        <hr>
+        <label class="label" id="feedback"></label>
+    </div>
+    <div class="report">
+        <label class="label" id="feedback"></label>
+        <div id="graph"></div>
+    </div>
+</div>
+<a href="Home.html" style="position: absolute; left: 20px; top: 20px; color: #44414f !important; cursor:pointer;">
+    <i class="fa-solid fa-house fa-3x"></i>
+</a>
+<script src="../Scripts/Reports.js"></script>
+<script
+        integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+></script>
+</body>
+</html>
