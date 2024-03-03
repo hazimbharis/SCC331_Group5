@@ -13,6 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link rel="stylesheet" href="../Stylesheets/Reports.css"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body style="background-color: #e3d8d8">
 
@@ -24,12 +27,19 @@
         <label class="label">Enter end date:</label>
         <input type="date" class="date" id="endDate"></input>
         <button class="submit" onclick="generate()">Generate</button>
+        <button class="submit" onclick="download()" id="download">Download</button>
         <hr>
         <label class="label" id="feedback"></label>
     </div>
-    <div class="report">
-        <label class="label" id="feedback"></label>
-        <div id="graph"></div>
+    <div class="report" id="report">
+        <h2 style="position: relative; text-align: center;" id="rHeading">Report of prison</h2>
+        <label class="rLabel" id="sDate">Start date:</label><br>
+        <label class="rLabel" id="eDate">End date:</label><br><br>
+        <label class="rLabel" id="noOfUsers">Number of users:</label><br>
+        <label class="rLabel" id="meanUsers">Mean number of users:</label><br>
+        <label class="rLabel" id="minUsers">Mininum number of users:</label><br>
+        <label class="rLabel" id="maxUsers">Maximum number of users:</label><br>
+        <div id="usersGraph"></div>
     </div>
 </div>
 <a href="Home.html" style="position: absolute; left: 20px; top: 20px; color: #44414f !important; cursor:pointer;">
