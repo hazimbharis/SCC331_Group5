@@ -6,6 +6,9 @@ document.getElementById("startDate").setAttribute("max", today[0]);
 document.getElementById("endDate").setAttribute("max", today[0]);
 let sDate
 let eDate
+let uTData
+let dCData
+let mCData
 
 function generate() {
     valid = true;
@@ -55,12 +58,76 @@ function generate() {
 
 function createReport() {
     $.get('http://localhost:5000/api/countUsers/' + sDate + '/' + eDate , (newData) => {
-        console.log(newData)
         document.getElementById("noOfUsers").textContent = "Number of users: " + newData.noOfUsers;
         document.getElementById("meanUsers").textContent = "Mean number of users: " + newData.mean;
         document.getElementById("minUsers").textContent = "Minimum number of users: " + newData.min + " on " + newData.minDate.split("T")[0];
         document.getElementById("maxUsers").textContent = "Maximum number of users: " + newData.max + " on " + newData.maxDate.split("T")[0];
     })
+    $.get('http://localhost:5000/api/userTypes/' + sDate + '/' + eDate , (newData) => {
+        uTData = newData
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(userTypesChart);
+    })
+    $.get('http://localhost:5000/api/dayCount/' + sDate + '/' + eDate , (newData) => {
+        dCData = newData
+        google.charts.load("current", {packages:["corechart", "line"]});
+        google.charts.setOnLoadCallback(dayCountChart);
+    })
+    $.get('http://localhost:5000/api/movementCount/' + sDate + '/' + eDate , (newData) => {
+        mCData = newData
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(movementCountChart);
+    })
+}
+
+function userTypesChart() {
+    var cData = new google.visualization.DataTable(); //Use to DataTable class of Google charts to store data
+    cData.addColumn("string", "User type");
+    cData.addColumn("number", "Count");
+    uTData.forEach((entry) => {
+        cData.addRows([[entry.type, entry.count]])
+    })
+    var options = {
+        title: "User types"
+      };
+    var uTChart = new google.visualization.PieChart(document.getElementById("userTypes"));
+    uTChart.draw(cData, options);
+    uTChartI = uTChart.getImageURI()
+}
+
+function dayCountChart() {
+    var cData = new google.visualization.DataTable();
+    cData.addColumn("datetime", "User type");
+    cData.addColumn("number", "Number of users");
+    dCData.forEach((entry) => {
+        d = entry.Date.split("T")[0].split("-"); //Format date correctly
+        cData.addRows([[new Date(d[0], d[1] - 1, d[2]), entry.noOfUsers]]) //Date month starts at 0
+    })
+    var options = {
+        title: "Number of users per day",
+        tooltip: {
+            textStyle: {
+                fontName: "Verdana",
+                fontSize: 12,
+            }
+        }
+      };
+    var dCChart = new google.visualization.LineChart(document.getElementById("dayCount"));
+    dCChart.draw(cData, options);
+}
+
+function movementCountChart() {
+    var cData = new google.visualization.DataTable();
+    cData.addColumn("string", "ZoneID");
+    cData.addColumn("number", "Count");
+    mCData.forEach((entry) => {
+        cData.addRows([[String(entry.zoneID), entry.count]])
+    })
+    var options = {
+        title: "Zone movement count"
+      };
+    var mCChart = new google.visualization.PieChart(document.getElementById("movementCount"));
+    mCChart.draw(cData, options);
 }
 
 function download() {
@@ -71,6 +138,7 @@ function download() {
     var rep = document.querySelector('#report');
     pdf.html(rep, {
         callback: function(doc) {
+            doc.addImage(uTChartI, 'png', 400, 100, 300, 300);
             doc.save("report.pdf");
         },
         x: 10,

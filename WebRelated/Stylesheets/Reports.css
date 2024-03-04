@@ -23,7 +23,6 @@
     position: relative;
     justify-content: space-evenly;
     background-color: white;
-    height: 500px;
     width: 1200px;
     border: 5px solid #44414f;
     border-radius: 5px;
@@ -62,3 +61,28 @@ hr {
     background-color: #686576;
 }
 
+.rLabel {
+    color: black;
+    padding: 5px;
+}
+
+#download {
+    position: absolute;
+    right: 0%;
+}
+
+#userTypes {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    right: 40%;
+    top: 100px;
+}
+
+#movementCount {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    right: 0%;
+    top: 100px;
+}
