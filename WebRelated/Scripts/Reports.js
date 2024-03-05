@@ -9,6 +9,8 @@ let eDate
 let uTData
 let dCData
 let mCData
+let zoneCount
+let zDData
 
 function generate() {
     valid = true;
@@ -78,6 +80,32 @@ function createReport() {
         google.charts.load("current", {packages:["corechart"]});
         google.charts.setOnLoadCallback(movementCountChart);
     })
+    $.get('http://localhost:5000/api/envMeans/' + sDate + '/' + eDate , (newData) => {
+        document.getElementById("mTemp").textContent = "Mean temperature: " + newData.mTemp + "°C";
+        document.getElementById("mLight").textContent = "Mean light level: " + newData.mLight + "lx";
+        document.getElementById("mSound").textContent = "Mean sound level: " + newData.mNoise +  "dB";
+    })
+    $.get('http://localhost:5000/api/envMeans/' + sDate + '/' + eDate , (newData) => {
+        document.getElementById("mTemp").textContent = "Mean temperature: " + newData.mTemp + "°C";
+        document.getElementById("mLight").textContent = "Mean light level: " + newData.mLight + "lx";
+        document.getElementById("mSound").textContent = "Mean sound level: " + newData.mNoise +  "dB";
+    })
+    $.get('http://localhost:5000/api/zoneCount/' + sDate + '/' + eDate , (newData) => {
+        zoneCount = newData.noOfZones;
+        document.getElementById("noOfZones").textContent = "Number of zones:" + zoneCount;
+        $.get('http://localhost:5000/api/zoneDayData/' + sDate + '/' + eDate , (newData) => {
+            zDData = newData;
+            google.charts.load("current", {packages:["corechart", "line"]});
+            google.charts.setOnLoadCallback(tempMeansChart);
+            google.charts.load("current", {packages:["corechart", "line"]});
+            google.charts.setOnLoadCallback(lightMeansChart);
+            google.charts.load("current", {packages:["corechart", "line"]});
+            google.charts.setOnLoadCallback(soundMeansChart);
+        })
+    })
+    $.get('http://localhost:5000/api/doorCount/' + sDate + '/' + eDate , (newData) => {
+        document.getElementById("noOfDoors").textContent = "Number of doors: " + newData.noOfDoors;
+    })
 }
 
 function userTypesChart() {
@@ -85,14 +113,14 @@ function userTypesChart() {
     cData.addColumn("string", "User type");
     cData.addColumn("number", "Count");
     uTData.forEach((entry) => {
-        cData.addRows([[entry.type, entry.count]])
+        cData.addRows([[entry.type, entry.count]]);
     })
     var options = {
-        title: "User types"
-      };
+        title: "User types",
+    };
     var uTChart = new google.visualization.PieChart(document.getElementById("userTypes"));
     uTChart.draw(cData, options);
-    uTChartI = uTChart.getImageURI()
+    uTChartI = uTChart.getImageURI();
 }
 
 function dayCountChart() {
@@ -101,7 +129,7 @@ function dayCountChart() {
     cData.addColumn("number", "Number of users");
     dCData.forEach((entry) => {
         d = entry.Date.split("T")[0].split("-"); //Format date correctly
-        cData.addRows([[new Date(d[0], d[1] - 1, d[2]), entry.noOfUsers]]) //Date month starts at 0
+        cData.addRows([[new Date(d[0], d[1] - 1, d[2]), entry.noOfUsers]]); //Date month starts at 0
     })
     var options = {
         title: "Number of users per day",
@@ -110,8 +138,23 @@ function dayCountChart() {
                 fontName: "Verdana",
                 fontSize: 12,
             }
-        }
-      };
+        },
+        hAxis: {
+            title: "Date",
+            titleTextStyle: {
+              bold: true,
+              italic: false
+            }
+        },
+        vAxis: {
+            title: "No. of users",
+            titleTextStyle: {
+              bold: true,
+              italic: false
+            }
+        },
+        height: 350
+    };
     var dCChart = new google.visualization.LineChart(document.getElementById("dayCount"));
     dCChart.draw(cData, options);
 }
@@ -125,23 +168,91 @@ function movementCountChart() {
     })
     var options = {
         title: "Zone movement count"
-      };
+    };
     var mCChart = new google.visualization.PieChart(document.getElementById("movementCount"));
     mCChart.draw(cData, options);
 }
 
-function download() {
-    var pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px', 
-        format: [1200, 1200]}); //Create pdf with specified size in pixels
-    var rep = document.querySelector('#report');
-    pdf.html(rep, {
-        callback: function(doc) {
-            doc.addImage(uTChartI, 'png', 400, 100, 300, 300);
-            doc.save("report.pdf");
+
+function meansChart(type, title, yTitle) {
+    var cData = new google.visualization.DataTable();
+    cData.addColumn("datetime", "Date")
+    for (var i = 1; i <= zoneCount; i++) { //Assumption zoneIDs are from 1 onwards and no numbers are skipped
+        cData.addColumn("number", String(i));
+    }
+    var temp = new Array(zoneCount + 1); //+1 is for the date column
+    for (var i = 0; i <= zoneCount; i++) { //Initialise with nulls in case some zone data is missing for day
+        temp[i] = null;
+    }
+    var prevDate; //Used to track whether a date entry is finished
+    zDData.forEach((entry) => {
+        d = entry.date.split("T")[0].split("-");
+        if (prevDate !== entry.date) {
+            cData.addRows([temp]); //If record has a different day than previous record, means data for previous day is finished and can be added to graph
+            temp = new Array(zoneCount + 1);
+            for (var i = 0; i <= zoneCount; i++) {
+                temp[i] = null;
+            }
+            temp[0] = new Date(d[0], d[1] - 1, d[2]);
+        }
+        temp[entry.zoneID] = entry[type];
+        prevDate = entry.date;
+    })
+    cData.addRows([temp]); //Add last day entry
+    var options = {
+        title: title,
+        tooltip: {
+            textStyle: {
+                fontName: "Verdana",
+                fontSize: 12,
+            }
         },
-        x: 10,
-        y: 10
-    });         
+        hAxis: {
+            title: "Date",
+            titleTextStyle: {
+              bold: true,
+              italic: false
+            }
+        },
+        vAxis: {
+            title: yTitle,
+            titleTextStyle: {
+              bold: true,
+              italic: false
+            }
+        },
+        height: 350
+    };
+    return [cData, options];
+}
+
+function tempMeansChart() {
+    var chData = meansChart("temp", "Mean temperature for zones", "Degrees (°C)");
+    var tMChart = new google.visualization.LineChart(document.getElementById("temp"));
+    tMChart.draw(chData[0], chData[1]);
+}
+
+function lightMeansChart() {
+    var chData = meansChart("light", "Mean light level for zones", "Lux (lx)");
+    var tMChart = new google.visualization.LineChart(document.getElementById("light"));
+    tMChart.draw(chData[0], chData[1]);
+}
+
+function soundMeansChart() {
+    var chData = meansChart("noise", "Mean sound level for zones", "Decibels (dB)");
+    var tMChart = new google.visualization.LineChart(document.getElementById("sound"));
+    tMChart.draw(chData[0], chData[1]);
+}
+
+function download() {
+    var pdf = new jsPDF(); //Create pdf with specified size in pixels
+    // var rep = document.querySelector('#report');
+    // pdf.html(rep, {
+    //     callback: function(doc) {
+            pdf.addImage(uTChartI, 'png', 10, 10, 50, 50);
+            pdf.save("report.pdf");
+        // },
+        // x: 10,
+        // y: 10
+    // });         
 }
