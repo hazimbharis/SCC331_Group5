@@ -4,7 +4,7 @@ Smart Prison
 
 **Scrum masters**\
 ~~Sprint 4 - Hazim~~\
-Sprint 5 - Saeed\
+~~Sprint 5 - Saeed~~\
 Sprint 6 - Tega
 
 Team tasks:\
