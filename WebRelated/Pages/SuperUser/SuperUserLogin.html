@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link rel="stylesheet" type="text/css" href="../../Stylesheets/Signup.css">
+    <link rel="stylesheet" type="text/css" href="../../Stylesheets/SignNavBar.css">
+</head>
+<body >
+    <nav class="navbar">
+        <div class="container">
+            <a href="SuperUserLogin.html">Login</a>
+            <a href="SuperUserSignUp.html">Sign-up</a>
+
+        </div>
+    </nav>
+    <div class="form-container">
+        <h2 id ="Sign-up">Sign in</h2>
+        <form class="form-box" onsubmit="return false;">
+
+      
+
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" required>
+      
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+              
+            <button type="button" onclick="processLogin()">Login</button>
+            <span class ="error-box"></span>
+
+            <div id= "Message-Container-SignUp" class="Message-Container">NOTHING TO REPORT</div>
+        
+           <!--
+            <span class="psw">Forgot <a href="#">password?</a></span>            
+           -->
+
+
+        </form>
+      </div>
+
+</body>
+<script>
+    function processLogin(){
+        if(true){
+            var email = document.getElementById('email').value;
+            var pword = document.getElementById('pword').value;
+            var errorBox = document.querySelector('.error-box');
+
+            errorBox.textContent = 'jfjf';
+
+            console.log("Email: " + email);
+            console.log("Password: " + pword);
+
+            const {passed, message} = checkDetails(email, pword);
+            console.log(passed);
+            console.log(message);
+
+        }
+
+    }
+    function checkDetails(email, pword){
+        if (email.length < 10){
+            return {
+                passed: false,
+                message: "Username or Password Incorrect",
+            }
+        }
+    }
+</script>
+</html>
