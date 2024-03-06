@@ -23,6 +23,45 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+app.post('/api/CheckCredentials', (req, res) => {
+  const input = req.body.credentials;
+  console.log(input);
+  // Check if email and password are provided
+  const query = 'SELECT * FROM User WHERE email = ?';
+  db.query(query, [input.email], (err, results) => {
+      if (err) {
+          console.error('Database query error:', err.message);
+          return res.status(500).json({ error: 'Database error' });
+      }
+      if (results.length === 0) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+      const storedPassword = results[0].password;
+      if (input.password !== storedPassword) {
+          return res.status(401).json({ error: 'Invalid email or password' });
+      }
+      res.json({ message: 'Login successful', user: results[0] });
+  });
+});
+app.post('/api/updateUserSecretKey/:email', (req, res) => {
+  const email = req.params.email;
+  const secretKey = req.body.secretKey;
+  console.log("GOTHERERERER");
+  // Update the user table to add the secret key
+  const query = 'UPDATE User SET SecretKey = ? WHERE email = ? AND SecretKey IS NULL';
+  db.query(query, [secretKey, email], (err, result) => {
+    if (err) {
+      console.error('Database query error:', err.message);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (result.affectedRows === 0) {
+      console.log("ALREADY SET");
+      return res.status(400).json({ error: 'Secret key is already set' });
+    }
+    res.status(200).json({ message: 'Secret key updated successfully' });
+  });
+});
+
 // API endpoint to add a new user
 app.post('/api/users', (req, res) => {
   console.log("hello");
@@ -61,7 +100,7 @@ app.get('/api/getOrganisationID/:organisationKey', (req, res) => {
   });
 });
 
-//API Endpoint to get organisationKEY
+//API Endpoint to validate organisationKEY
 app.get('/api/validateOrganisationKey/:organisationKey', (req, res) => {
   const organisationKey = req.params.organisationKey;
   console.log(organisationKey);

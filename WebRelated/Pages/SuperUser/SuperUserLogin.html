@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-
+    <script src="https://kit.fontawesome.com/e0b1d3493e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../../Stylesheets/Signup.css">
     <link rel="stylesheet" type="text/css" href="../../Stylesheets/SignNavBar.css">
 </head>
 <body >
     <nav class="navbar">
         <div class="containerNav">
-            <a href="SuperUserLogin.html">Login</a>
-            <a href="SuperUserSignUp.html">Sign-up</a>
-            <a href="MFASetup.html">MFA Setup</a>
+            <a href="SuperUserSignUp.html">1. Sign-up</a>
+            <i class="fa-solid fa-arrow-right next-arrow"></i>
+            <a href="MFASetup.html">2. MFA Setup</a>
+            <i class="fa-solid fa-arrow-right next-arrow"></i>
+            <a href="SuperUserLogin.html">3. Login</a>
         </div>
     </nav>
     <div class="form-container">
@@ -28,10 +30,13 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
               
+            <label for="MFAKey">MFA Key</label>
+            <input type="password" id="MFAKey" name="MFAKey" required>
+              
             <button type="button" onclick="processLogin()">Login</button>
             <span class ="error-box"></span>
 
-            <div id= "Message-Container-SignUp" class="Message-Container">NOTHING TO REPORT</div>
+            <div id= "Message-Container-SignUp" class="Message-Container"></div>
         
            <!--
             <span class="psw">Forgot <a href="#">password?</a></span>            

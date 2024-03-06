@@ -79,3 +79,7 @@ button[type="submit"]:hover {
     width: 400px; /* Adjust QR code width */
     height: 400px; /* Adjust QR code height */
 }
+.Instruction-Container{
+    margin-top: 80px;
+    text-align: center;
+}

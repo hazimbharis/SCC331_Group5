@@ -1,5 +1,5 @@
 .navbar {
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.5);
     position: fixed;
     width: 100%;
     top: 0;
@@ -10,7 +10,7 @@
 .containerNav {
     max-width: 960px;
     margin: 0 auto;
-    padding: 10px 0px; 
+    padding: 20px 0px; 
     display: flex;
     justify-content: center;
     
@@ -25,4 +25,9 @@
 
 .navbar a:hover {
     color: #ddd;
+}
+.next-arrow{
+    font-size: 20px;
+    width: 20px;
+    color: white;  
 }
