@@ -11,6 +11,7 @@ let dCData
 let mCData
 let zoneCount
 let zDData
+let dHData
 
 function generate() {
     valid = true;
@@ -93,7 +94,9 @@ function createReport() {
     $.get('http://localhost:5000/api/zoneCount/' + sDate + '/' + eDate , (newData) => {
         zoneCount = newData.noOfZones;
         document.getElementById("noOfZones").textContent = "Number of zones:" + zoneCount;
-        $.get('http://localhost:5000/api/zoneDayData/' + sDate + '/' + eDate , (newData) => {
+        if (zoneCount > 0)
+        {
+            $.get('http://localhost:5000/api/zoneDayData/' + sDate + '/' + eDate , (newData) => {
             zDData = newData;
             google.charts.load("current", {packages:["corechart", "line"]});
             google.charts.setOnLoadCallback(tempMeansChart);
@@ -101,10 +104,16 @@ function createReport() {
             google.charts.setOnLoadCallback(lightMeansChart);
             google.charts.load("current", {packages:["corechart", "line"]});
             google.charts.setOnLoadCallback(soundMeansChart);
-        })
+            })
+        }
     })
     $.get('http://localhost:5000/api/doorCount/' + sDate + '/' + eDate , (newData) => {
         document.getElementById("noOfDoors").textContent = "Number of doors: " + newData.noOfDoors;
+    })
+    $.get('http://localhost:5000/api/dHistory/' + sDate + '/' + eDate , (newData) => {
+        dHData = newData;
+        google.charts.load("current", {packages:["bar"]});
+        google.charts.setOnLoadCallback(doorHistoryChart);
     })
 }
 
@@ -244,12 +253,98 @@ function soundMeansChart() {
     tMChart.draw(chData[0], chData[1]);
 }
 
+function doorHistoryChart() {
+    var cData = new google.visualization.DataTable();
+    cData.addColumn("string", "DoorID");
+    cData.addColumn("number", "Open");
+    cData.addColumn("number", "Closed");
+    cData.addColumn("number", "Locked");
+    cData.addColumn("number", "Alarm");
+    var temp;
+    var prevDate;
+    var forDate;
+    var prevID;
+    var prevStatus;
+    var fEDate = eDate.split("-");
+    fEDate = new Date(fEDate[0], fEDate[1] - 1, fEDate[2], 23, 59, 59);
+    dHData.forEach((entry) => {
+        if (prevID !== entry.doorID) {
+            if (temp != undefined) {
+                ms = (fEDate.getTime() - prevDate.getTime()) / 60000;
+                if (prevStatus === "open") {
+                    temp[1] = temp[1] + ms;
+                }
+                else if(prevStatus === "closed") {
+                    temp[2] = temp[2] + ms;
+                }
+                else if(prevStatus === "locked") {
+                    temp[3] = temp[3] + ms;
+                }
+                else if(prevStatus === "alarm") {
+                    temp[4] = temp[4] + ms;
+                }
+                cData.addRows([temp]);
+            }
+            temp = new Array(5);
+            for (var i = 1; i < 5; i++) {
+                temp[i] = 0;
+            }
+            temp[0] = String(entry.doorID);
+        }
+        d = entry.date.split("T")[0].split("-");
+        t = entry.time.split(":");
+        forDate = new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2]);
+        if (prevStatus !== entry.status && prevID === entry.doorID) {
+            ms = (forDate.getTime() - prevDate.getTime()) / 600000;
+            if (prevStatus === "open") {
+                temp[1] = temp[1] + ms;
+            }
+            else if(prevStatus === "closed") {
+                temp[2] = temp[2] + ms;
+            }
+            else if(prevStatus === "locked") {
+                temp[3] = temp[3] + ms;
+            }
+            else if(prevStatus === "alarm") {
+                temp[4] = temp[4] + ms;
+            }
+        }
+        prevID = entry.doorID;
+        prevStatus = entry.status;
+        prevDate = forDate;
+    })
+    if (prevDate != null) {
+        ms = (fEDate.getTime() - prevDate.getTime()) / 60000;
+        if (prevStatus === "open") {
+            temp[1] = temp[1] + ms;
+        }
+        else if(prevStatus === "closed") {
+            temp[2] = temp[2] + ms;
+        }
+        else if(prevStatus === "locked") {
+            temp[3] = temp[3] + ms;
+        }
+        else if(prevStatus === "alarm") {
+            temp[4] = temp[4] + ms;
+        }
+        cData.addRows([temp]);
+    }
+    var options = {
+        chart: {
+        title: "Door status for timeframe",
+        },
+        height: 350
+    };
+    var dHChart = new google.charts.Bar(document.getElementById("doorHistory"));
+    dHChart.draw(cData, google.charts.Bar.convertOptions(options));
+}
+
 function download() {
     var pdf = new jsPDF(); //Create pdf with specified size in pixels
     // var rep = document.querySelector('#report');
     // pdf.html(rep, {
     //     callback: function(doc) {
-            pdf.addImage(uTChartI, 'png', 10, 10, 50, 50);
+            pdf.addImage(uTChartI, "png", 10, 10, 50, 50);
             pdf.save("report.pdf");
         // },
         // x: 10,

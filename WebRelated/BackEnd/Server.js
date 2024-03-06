@@ -748,6 +748,22 @@ app.get('/api/doorCount/:sDate/:eDate', (req, res) => {
   });
 })
 
+//Get door history in timeframe
+app.get('/api/dHistory/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT *
+  FROM doorhistory
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
