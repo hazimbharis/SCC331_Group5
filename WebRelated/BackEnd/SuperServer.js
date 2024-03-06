@@ -23,6 +23,43 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+// API endpoint to add a new user
+app.post('/api/users', (req, res) => {
+  console.log("hello");
+  const input = req.body.newUser;
+  // Insert a new user
+  const query = 'INSERT INTO User (email, password, OrganisationID) VALUES (?, ?, ?)';
+  db.query(query, [input.email, input.password, input.organisationID], (err, result) => {
+    if (err) {
+      if (err.code === 'ER_DUP_ENTRY') { // Check if the error code indicates a duplicate entry
+        console.error('Duplicate entry:', err.message);
+        res.status(400).json({ result: "Failed", error: "Duplicate entry for email: " + input.email });
+      } else {
+        console.error('Database query error:', err.message);
+        res.status(500).json({ result: "Failed", error: err.message });
+      }
+    } else {
+      console.log('User added successfully:', input.email);
+      res.status(201).json({ result: "Success" });
+    }
+  });
+});
+
+//API endpoint to get organisation ID
+app.get('/api/getOrganisationID/:organisationKey', (req, res) => {
+  const organisationKey = req.params.organisationKey;
+  console.log("The Key" + organisationKey);
+  // Perform database query to check if organisationKey exists
+  const query = 'SELECT id FROM Organisation WHERE OrganisationKey = ?';
+  db.query(query, [organisationKey], (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        res.json(results);
+      }
+  });
+});
 
 //API Endpoint to get organisationKEY
 app.get('/api/validateOrganisationKey/:organisationKey', (req, res) => {

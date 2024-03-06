@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel='stylesheet' href="../../Stylesheets/MFA.css"></link>
+    <link rel='stylesheet' href="../../Stylesheets/SignNavBar.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/otplib/otplib-browser.js"></script>
+    <title>MFA Setup</title>
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="containerNav">
+            <a href="SuperUserLogin.html">Login</a>
+            <a href="SuperUserSignUp.html">Sign-up</a>
+            <a href="MFASetup.html">MFA Setup</a>
+        </div>
+    </nav>
+
+    <div class="container" id = "form-container-box">
+        <div class="form-container">
+            <h2 id="Sign-up">MFA Setup</h2>
+            <form id="form-box">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="button" onclick="genQRCode()">Generate QR Code</button>
+                <div id="Message-Container-SignUp" class="Message-Container"></div>
+            </form>
+        </div>
+    </div>
+    <div id="qr-code-container">
+        <div id="qr-code"></div>
+    </div>
+    <script>
+        function genQRCode() {
+            // Clear the form box content
+            var formBox = document.getElementById('form-container-box');
+            formBox.innerHTML = '';
+            formBox.style.height = "30vh";
+            // Generate a secret key
+            const secretKey = otplib.authenticator.generateSecret();
+
+            // Generate a QR code for the secret key
+            const otpauthURL = otplib.authenticator.keyuri('joetyework@outlook.com', 'Super User', secretKey);
+            const qr = qrcode(0, 'M');
+            qr.addData(otpauthURL);
+            qr.make();
+            const qrCodeElement = document.getElementById('qr-code');
+            qrCodeElement.innerHTML = qr.createImgTag(16, 0); // Adjust size here
+            console.log(secretKey);        
+        }
+    </script>
+</body>
+</html>

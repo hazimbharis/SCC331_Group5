@@ -1,48 +1,43 @@
 var messageBox = document.getElementById('Message-Container-SignUp');
 
 
-function submitForm() {
+async function submitForm() {
     messageBox.style.color = 'red';
 
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const organisationKEY = document.getElementById('organisationKey').value;
 
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    var organisationKEY = document.getElementById('organisationKey').value;
-    
     console.log("Username: " + email);
     console.log("Password: " + password);
-    console.log("Organization: " + organisationKEY);
+    console.log("Organization Key: " + organisationKEY);
 
-    //alert("Signup Successful (check console for details)");
-    //window.location.href = 'SuperUserLogin.html';
-
-    if (validateCredentials(email, password)){
-        $.get('http://localhost:5000/api/validateOrganisationKey/' + organisationKEY)
-        .done(function(response) {
-            console.log(response);
-            if (response.message === 'Organisation key is valid') {
-                console.log('Organisation key is valid.');
-                messageBox.style.color = 'green';
-                messageBox.innerHTML = 'Account Creation Successful!';
-                addNewUser(email, password, organisationKEY);
-    
-            } else {
-                console.log('Organisation key is invalid');
-                messageBox.innerHTML = 'Invalid organisation key';
-            }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            if (jqXHR.status === 404) {
-                console.log('Organisation key does not exist.');
-                messageBox.innerHTML = 'Organisation key does not exist';
-            } else {
-                console.error('Error validating organisation key:', textStatus, errorThrown);
-                messageBox.innerHTML = 'Error validating organisation key';
-            }
-        });
+    // Validate credentials
+    if (!validateCredentials(email, password)) {
+        return; // Exit early if credentials are invalid
     }
- 
+
+    try {
+        // Validate organisation key
+        const response = await $.get('http://localhost:5000/api/validateOrganisationKey/' + organisationKEY);
+        if (response.message !== 'Organisation key is valid') {
+            console.log('Organisation key is invalid');
+            messageBox.innerHTML = 'Invalid organisation key';
+            return; // Exit if organisation key is invalid
+        }
+
+        // Get organisation ID
+        const orgID = await getOrganisationID(organisationKEY);
+        console.log("ORG ID IS THIS: " + orgID);
+
+        // Add new user
+        await addNewUser(email, password, organisationKEY, orgID);
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        messageBox.innerHTML = 'Error submitting form';
+    }
 }
+
 function validateCredentials(email, password) {
     const desiredPasswordLength = 8;
     // Check if email and password are empty
@@ -64,7 +59,51 @@ function validateCredentials(email, password) {
     }
     return true
 } 
-
-function addNewUser(email, pWord, organisationKEY){
-
+async function getOrganisationID(organisationKEY){
+    
+    try {
+        const response = await $.get('http://localhost:5000/api/getOrganisationID/' + organisationKEY);
+        const idValue = response[0].id;
+        console.log("organisationID:", response);
+        console.log("ORG ID: " + idValue);
+        return idValue;
+    } catch (error) {
+        console.error('Error getting organisation ID:', error);
+        throw error; // Rethrow the error to handle it in the caller
+    }
 }
+function addNewUser(email, pWord, organisationKEY, orgID) {
+    fetch('http://localhost:5000/api/users', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            newUser: {
+                email: email,
+                password: pWord,
+                organisationID: orgID,
+            }
+        })
+    })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        // Check the result received from the server
+        if (data.result === "Success") {
+            messageBox.style.color = 'green';
+            messageBox.innerHTML = "Sign Up successful: " + orgID;
+        } else if (data.result === "Failed") {
+            messageBox.style.color = 'red';
+            if (data.error.includes('Duplicate entry')) {
+                messageBox.innerHTML = "User with this email already exists";
+            } else {
+                messageBox.innerHTML = "User could not be added at this time";
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error adding user:', error);
+        messageBox.innerHTML = "Error adding user: " + error.message;
+    });
+}
+
