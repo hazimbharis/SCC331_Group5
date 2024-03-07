@@ -60,7 +60,7 @@ button[type="submit"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Adjust as needed */
+    height: 100vh;
 }
 .form-container {
     width: 300px;
@@ -71,13 +71,13 @@ button[type="submit"]:hover {
 }
 #qr-code-container {
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    justify-content: center;
+    align-items: center;
 }
 
 #qr-code img {
-    width: 400px; /* Adjust QR code width */
-    height: 400px; /* Adjust QR code height */
+    width: 400px;
+    height: 400px;
 }
 .Instruction-Container{
     margin-top: 80px;

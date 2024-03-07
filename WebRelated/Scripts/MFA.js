@@ -63,7 +63,7 @@ async function genQRCode() {
     const secretKey = otplib.authenticator.generateSecret();
 
     // Generate a QR code for the secret key
-    const otpauthURL = otplib.authenticator.keyuri('joetyework@outlook.com', 'Super User', secretKey);
+    const otpauthURL = otplib.authenticator.keyuri(email, 'Super User', secretKey);
     const qr = qrcode(0, 'M');
     qr.addData(otpauthURL);
     qr.make();
@@ -98,18 +98,18 @@ function checkcredentials(e, p) {
                 messageBox.style.color = 'green';
                 messageBox.innerHTML = data.message;
                 console.log(data); // Display the response data
-                resolve(true); // Resolve the promise with true
+                resolve(true);
             } else {
                 messageBox.style.color = 'red';
                 messageBox.innerHTML = "Login Failed";
-                resolve(false); // Resolve the promise with false
+                resolve(false);
             }
         })
         .catch(error => {
             messageBox.style.color = 'red';
             messageBox.innerHTML = "Login Failed";
             console.error('There was a problem with the fetch operation:', error);
-            reject(error); // Reject the promise with the error
+            reject(error);
         });  
     });
 }

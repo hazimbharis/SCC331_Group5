@@ -23,6 +23,21 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+//API endpoint to get MFA Key
+app.get('/api/GetMFAKey/:email', (req, res) => {
+  const email = req.params.email;
+
+  // Perform database query to check if organisationKey exists
+  const query = 'SELECT SecretKey FROM user WHERE email = ?';
+  db.query(query, [email], (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        res.json(results);
+      }
+  });
+});
 app.post('/api/CheckCredentials', (req, res) => {
   const input = req.body.credentials;
   console.log(input);

@@ -6,7 +6,6 @@
     z-index: 1000;
 
 }
-
 .containerNav {
     max-width: 960px;
     margin: 0 auto;
@@ -15,7 +14,6 @@
     justify-content: center;
     
 }
-
 .navbar a {
     color: white;
     text-decoration: none;

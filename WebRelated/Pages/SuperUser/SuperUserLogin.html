@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <script src="https://kit.fontawesome.com/e0b1d3493e.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../../Stylesheets/Signup.css">
     <link rel="stylesheet" type="text/css" href="../../Stylesheets/SignNavBar.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/otplib/otplib-browser.js"></script>
 </head>
 <body >
     <nav class="navbar">
@@ -30,49 +33,132 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
               
-            <label for="MFAKey">MFA Key</label>
-            <input type="password" id="MFAKey" name="MFAKey" required>
+            <label for="MFAKey">MFA Token</label>
+            <input type="password" id="MFAToken" name="MFAToken" required>
               
             <button type="button" onclick="processLogin()">Login</button>
             <span class ="error-box"></span>
 
-            <div id= "Message-Container-SignUp" class="Message-Container"></div>
+            <div id= "Message-Container-Signin" class="Message-Container"></div>
         
            <!--
             <span class="psw">Forgot <a href="#">password?</a></span>            
            -->
-
-
         </form>
       </div>
 
 </body>
 <script>
-    function processLogin(){
+    var messageBox = document.getElementById('Message-Container-Signin');
+    async function processLogin(){
         if(true){
             var email = document.getElementById('email').value;
-            var pword = document.getElementById('pword').value;
-            var errorBox = document.querySelector('.error-box');
-
-            errorBox.textContent = 'jfjf';
+            var pword = document.getElementById('password').value;
+            var token = document.getElementById('MFAToken').value;
 
             console.log("Email: " + email);
             console.log("Password: " + pword);
+            console.log("Token: " + token);
+            
+            const credentialsValid = await checkcredentials(email, pword);
+            if (!credentialsValid){return;}
+            const returnInfo = await checkToken(email);
+            if(!returnInfo.tokenValid){return;}
+            const isValid = await verifyTOTP(returnInfo.theKey, token);
+            if(isValid){
 
-            const {passed, message} = checkDetails(email, pword);
-            console.log(passed);
-            console.log(message);
+                messageBox.style.color = 'Green';
+                messageBox.innerHTML = "Success!";
 
-        }
+                //location.replace("../Home.html");
+                const loadingIcon = document.createElement('div');
+                loadingIcon.classList.add('loading-icon');
 
-    }
-    function checkDetails(email, pword){
-        if (email.length < 10){
-            return {
-                passed: false,
-                message: "Username or Password Incorrect",
+                // Add styles to the loading icon
+                loadingIcon.style.border = '4px solid #f3f3f3'; /* Light grey */
+                loadingIcon.style.borderTop = '4px solid #3498db'; /* Blue */
+                loadingIcon.style.borderRadius = '50%';
+                loadingIcon.style.width = '40px';
+                loadingIcon.style.height = '40px';
+                loadingIcon.style.animation = 'spin 1s linear infinite'; /* Spin animation */
+                loadingIcon.style.justifySelf = 'center';
+                loadingIcon.style.position = 'relative';
+                loadingIcon.style.left = '42%';
+                
+                // Append the loading icon to the body
+                messageBox.appendChild(loadingIcon);
+
+
+                setTimeout(function() {
+                window.location.href = "../Home.html";}, 1500);
+
+            }else{
+                messageBox.style.color = 'Red';
+                messageBox.innerHTML = "TOTP Incorrect";     
             }
+
         }
+    }
+    async function verifyTOTP(secretKey, totpCode) {
+        const isValid = await otplib.authenticator.check(totpCode, secretKey);
+        return isValid;
+    }
+    async function checkToken(email){
+        try {
+        const response = await $.get('http://localhost:5000/api/GetMFAKey/' + email);
+        const secretKey = response[0].SecretKey;
+        if (secretKey === null){
+            throw "Not found";
+        }
+        console.log("secretKey:", response);
+        console.log("secretKey: " + secretKey);
+        return {tokenValid: true, theKey: secretKey};
+        
+    } catch (error) {
+        console.error('Error getting secret key:', error);
+        messageBox.style.color = 'red';
+        messageBox.innerHTML = "Didn't get MFA key";
+        throw error; // Rethrow the error to handle it in the caller
+        return {tokenValid: false, theKey: null};
+    }
+    }
+    function checkcredentials(e, p){
+        return new Promise((resolve, reject) => {
+        fetch('http://localhost:5000/api/CheckCredentials', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                credentials: {
+                    email: e,
+                    password: p,
+                }
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message === "Login successful") {
+                console.log(data); // Display the response data
+                resolve(true);
+            } else {
+                messageBox.style.color = 'red';
+                messageBox.innerHTML = "Login Failed";
+                resolve(false);
+            }
+        })
+        .catch(error => {
+            messageBox.style.color = 'red';
+            messageBox.innerHTML = "Login Failed";
+            console.error('There was a problem with the fetch operation:', error);
+            reject(error);
+        });  
+    });
     }
 </script>
 </html>
