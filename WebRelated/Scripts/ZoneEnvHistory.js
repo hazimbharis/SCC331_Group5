@@ -3,6 +3,7 @@ let selectedDate;
 var todayFull = new Date();
 const today = todayFull.toISOString().split("T");
 let databaseData = []
+let data
 
 document.getElementById("date").setAttribute("max", today[0]); //Set the max date in the date input box they can select to today
 
@@ -42,7 +43,7 @@ function drawGraph() {
 }
 
 function draw() {
-    var data = new google.visualization.DataTable(); //Use to DataTable class of Google charts to store data
+    data = new google.visualization.DataTable(); //Use to DataTable class of Google charts to store data
     data.addColumn("timeofday", "Time"); //Add the data columns needed
     data.addColumn("number", "Gym");
     data.addColumn("number", "Canteen");
@@ -119,7 +120,7 @@ function drawDoors() { //Door history visualisation uses a different type of gra
 }
 
 function drawD() {
-    var data = new google.visualization.DataTable();
+    data = new google.visualization.DataTable();
     data.addColumn({type: "string", id: "doorName"});
     data.addColumn({type: "string", id: "doorName"});
     data.addColumn({type: "string", role: "style"}); //This column is used for bar styling
@@ -252,4 +253,12 @@ function date() {
             drawGraph();
         }
     }
+}
+
+function download() {
+    var d2CSV = google.visualization.dataTableToCsv(data);
+    //Need to add headings to data
+    var blob = new Blob([d2CSV], {type: "text/csv;charset=utf-8;"});
+    var link = URL.createObjectURL(blob);
+    window.open(link);
 }

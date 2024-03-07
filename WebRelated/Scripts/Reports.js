@@ -112,7 +112,7 @@ function createReport() {
     })
     $.get('http://localhost:5000/api/dHistory/' + sDate + '/' + eDate , (newData) => {
         dHData = newData;
-        google.charts.load("current", {packages:["bar"]});
+        google.charts.load("current", {packages:["corechart", "bar"]});
         google.charts.setOnLoadCallback(doorHistoryChart);
     })
 }
@@ -129,7 +129,7 @@ function userTypesChart() {
     };
     var uTChart = new google.visualization.PieChart(document.getElementById("userTypes"));
     uTChart.draw(cData, options);
-    uTChartI = uTChart.getImageURI();
+    uTChartI = uTChart.getImageURI(); //Get image version for PDF
 }
 
 function dayCountChart() {
@@ -166,6 +166,7 @@ function dayCountChart() {
     };
     var dCChart = new google.visualization.LineChart(document.getElementById("dayCount"));
     dCChart.draw(cData, options);
+    dCChartI = dCChart.getImageURI();
 }
 
 function movementCountChart() {
@@ -180,6 +181,7 @@ function movementCountChart() {
     };
     var mCChart = new google.visualization.PieChart(document.getElementById("movementCount"));
     mCChart.draw(cData, options);
+    mCChartI = mCChart.getImageURI();
 }
 
 
@@ -239,18 +241,21 @@ function tempMeansChart() {
     var chData = meansChart("temp", "Mean temperature for zones", "Degrees (°C)");
     var tMChart = new google.visualization.LineChart(document.getElementById("temp"));
     tMChart.draw(chData[0], chData[1]);
+    tMChartI = tMChart.getImageURI();
 }
 
 function lightMeansChart() {
     var chData = meansChart("light", "Mean light level for zones", "Lux (lx)");
-    var tMChart = new google.visualization.LineChart(document.getElementById("light"));
-    tMChart.draw(chData[0], chData[1]);
+    var lMChart = new google.visualization.LineChart(document.getElementById("light"));
+    lMChart.draw(chData[0], chData[1]);
+    lMChartI = lMChart.getImageURI();
 }
 
 function soundMeansChart() {
     var chData = meansChart("noise", "Mean sound level for zones", "Decibels (dB)");
-    var tMChart = new google.visualization.LineChart(document.getElementById("sound"));
-    tMChart.draw(chData[0], chData[1]);
+    var sMChart = new google.visualization.LineChart(document.getElementById("sound"));
+    sMChart.draw(chData[0], chData[1]);
+    sMChartI = sMChart.getImageURI();
 }
 
 function doorHistoryChart() {
@@ -268,9 +273,9 @@ function doorHistoryChart() {
     var fEDate = eDate.split("-");
     fEDate = new Date(fEDate[0], fEDate[1] - 1, fEDate[2], 23, 59, 59);
     dHData.forEach((entry) => {
-        if (prevID !== entry.doorID) {
+        if (prevID !== entry.doorID) { //If current doorID for this entry is different to the last, means previous one is ready for adding, data ordered by ID
             if (temp != undefined) {
-                ms = (fEDate.getTime() - prevDate.getTime()) / 60000;
+                ms = (fEDate.getTime() - prevDate.getTime()) / 3600000; //Calculate time difference in hours until 23:59:59 of chosen end date to get time from last entry to end period, getTime() gets milliseconds since epoch, / 3600000 converts to hours
                 if (prevStatus === "open") {
                     temp[1] = temp[1] + ms;
                 }
@@ -291,12 +296,12 @@ function doorHistoryChart() {
             }
             temp[0] = String(entry.doorID);
         }
-        d = entry.date.split("T")[0].split("-");
+        d = entry.date.split("T")[0].split("-"); //Format date and time
         t = entry.time.split(":");
         forDate = new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2]);
         if (prevStatus !== entry.status && prevID === entry.doorID) {
-            ms = (forDate.getTime() - prevDate.getTime()) / 600000;
-            if (prevStatus === "open") {
+            ms = (forDate.getTime() - prevDate.getTime()) / 3600000; //Get time difference between status change and previous status to get time spent in previous status
+            if (prevStatus === "open") { //Add to corresponding column depending on status, add to status total
                 temp[1] = temp[1] + ms;
             }
             else if(prevStatus === "closed") {
@@ -313,8 +318,8 @@ function doorHistoryChart() {
         prevStatus = entry.status;
         prevDate = forDate;
     })
-    if (prevDate != null) {
-        ms = (fEDate.getTime() - prevDate.getTime()) / 60000;
+    if (prevDate != null) { //Add final entry data
+        ms = (fEDate.getTime() - prevDate.getTime()) / 3600000;
         if (prevStatus === "open") {
             temp[1] = temp[1] + ms;
         }
@@ -330,24 +335,63 @@ function doorHistoryChart() {
         cData.addRows([temp]);
     }
     var options = {
-        chart: {
         title: "Door status for timeframe",
+        height: 350,
+        vAxis: {
+            title: "Time spent (hours)",
+            titleTextStyle: {
+              bold: true,
+              italic: false
+            }
         },
-        height: 350
-    };
-    var dHChart = new google.charts.Bar(document.getElementById("doorHistory"));
-    dHChart.draw(cData, google.charts.Bar.convertOptions(options));
+        hAxis: {
+            title: "doorID",
+            titleTextStyle: {
+              bold: true,
+              italic: false
+            }
+        },
+        tooltip: {
+            textStyle: {
+                fontName: "Verdana",
+                fontSize: 12,
+                color: "black"
+            }
+        }
+    }
+    dHChart = new google.visualization.ColumnChart(document.getElementById("doorHistory"));
+    dHChart.draw(cData, options);
+    dHChartI = dHChart.getImageURI();
 }
 
 function download() {
-    var pdf = new jsPDF(); //Create pdf with specified size in pixels
-    // var rep = document.querySelector('#report');
-    // pdf.html(rep, {
-    //     callback: function(doc) {
-            pdf.addImage(uTChartI, "png", 10, 10, 50, 50);
-            pdf.save("report.pdf");
-        // },
-        // x: 10,
-        // y: 10
-    // });         
-}
+    var pdf = new jsPDF(); //Create pdf, default A4 size
+    var elements = ["sDate", "eDate", "noOfUsers", "meanUsers", "minUsers", "maxUsers", "noOfZones", "mTemp", "mLight", "mSound"];
+    var elementsY = [20, 25, 35, 40, 45, 50, 135, 140, 145, 150];
+    var ims = [uTChartI, mCChartI, dCChartI, tMChartI, lMChartI, sMChartI];
+    var imsX = [100, 150, 10, 10, 10, 10];
+    var imsY = [20, 20, 55, 155, 10, 90];
+    var imsXS = [50, 50, 200, 200, 200, 200];
+    var imsYS = [50, 50, 75, 75, 75, 75];
+    pdf.setFont("Helvetica", "bold");
+    pdf.setFontSize(15);
+    pdf.text(document.getElementById("rHeading").textContent, 105, 10, "center"); //Add text at position x, y
+    pdf.setFont("Helvetica", "");
+    pdf.setFontSize(10);
+    for (var i = 0; i < elements.length; i++) {
+        pdf.text(document.getElementById(elements[i]).textContent, 10, elementsY[i]);
+    }
+    for (var i = 0; i < ims.length - 2; i++) {
+        pdf.addImage(ims[i], "png", imsX[i], imsY[i], imsXS[i], imsYS[i]); //Add image at position x, y with sizeX, sizeY
+    }
+    pdf.addPage();
+    for (var i = 0; i < elements.length; i++) {
+        pdf.text(document.getElementById(elements[i]).textContent, 10, elementsY[i]);
+    }
+    for (var i = ims.length - 2; i < ims.length; i++) {
+        pdf.addImage(ims[i], "png", imsX[i], imsY[i], imsXS[i], imsYS[i]); //Add image at position x, y with sizeX, sizeY
+    }
+    pdf.text(document.getElementById("noOfDoors").textContent, 10, 170);
+    pdf.addImage(dHChartI, 10, 175, 200, 75);
+    pdf.save("report.pdf");
+}         
