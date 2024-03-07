@@ -47,29 +47,39 @@ button[type="submit"] {
     border-radius: 4px;
     cursor: pointer;
 }
+
 button[type="button"]:hover,
 button[type="submit"]:hover {
     background-color: #45a049;
 }
+
+#Sign-up {
+    text-align: center;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 .form-container {
     width: 300px;
-    margin: auto;
-    margin-top: 25vh;
     padding: 20px;
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+#qr-code-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-
-
-
+#qr-code img {
+    width: 400px;
+    height: 400px;
+}
+.Instruction-Container{
+    margin-top: 80px;
+    text-align: center;
+}
