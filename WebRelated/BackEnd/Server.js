@@ -701,9 +701,9 @@ app.get('/api/envMeans/:sDate/:eDate', (req, res) => {
 //Get number of zones
 app.get('/api/zoneCount/:sDate/:eDate', (req, res) => {
   const query = `
-  SELECT COUNT(DISTINCT zoneID) as "noOfZones" 
+  SELECT MAX(DISTINCT zoneID) as "noOfZones" 
   FROM zonehistory
-  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`; //Use max as system assumes all IDs are sequential (non skipped)
   db.query(query, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
@@ -735,7 +735,7 @@ app.get('/api/zoneDayData/:sDate/:eDate', (req, res) => {
 //Get number of doors
 app.get('/api/doorCount/:sDate/:eDate', (req, res) => {
   const query = `
-  SELECT COUNT(DISTINCT doorID) as "noOfDoors"
+  SELECT MAX(DISTINCT doorID) as "noOfDoors"
   FROM doorhistory
   WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
   db.query(query, (err, results) => {

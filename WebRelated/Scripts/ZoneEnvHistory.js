@@ -257,8 +257,12 @@ function date() {
 
 function download() {
     var d2CSV = google.visualization.dataTableToCsv(data);
-    //Need to add headings to data
-    var blob = new Blob([d2CSV], {type: "text/csv;charset=utf-8;"});
-    var link = URL.createObjectURL(blob);
+    var colHeadings = [];
+    for (var i = 0; i < data.getNumberOfColumns(); i++) { //Get column names
+        colHeadings.push(data.getColumnLabel(i));
+    }
+    d2CSV = colHeadings.join(",") + "\r\n" + d2CSV; //Add columns to start of CSV file
+    var blob = new Blob([d2CSV], {type: "text/csv;charset=utf-8;"}); //Create new CSV file with contents of d2CSV
+    var link = URL.createObjectURL(blob); //Create URL to download file
     window.open(link);
 }
