@@ -6,10 +6,10 @@ const today = date.toISOString().split("T");
 document.getElementById("dOB").setAttribute("max", today[0]); //Set the max date that can be selected in date of birth to today
 
 function processAdd() {
-    let feedback = document.getElementById("feedback");
-    let valid = true;
-    let fName = document.getElementById("fName").value;
-    let errors = []
+    var feedback = document.getElementById("feedback");
+    var valid = true;
+    var fName = document.getElementById("fName").value;
+    var errors = []
     document.getElementById("feedback").textContent = ""; //Reset feedback box
     if (fName.length == 0 || fName.length > 50) { //Need validation on this side in case frontend is tampered with
         valid = false;
@@ -19,7 +19,7 @@ function processAdd() {
     else {
         document.getElementById("fName").style.borderColor = "#44414f"; //Set border back to normal if input becomes valid again
     }
-    let lName = document.getElementById("lName").value;
+    var lName = document.getElementById("lName").value;
     if (lName.length == 0 || lName.length > 50) {
         valid = false;
         errors.push("Last name must be between 1 and 50 characters");
@@ -28,7 +28,7 @@ function processAdd() {
     else {
         document.getElementById("lName").style.borderColor = "#44414f";
     }
-    let dOB = document.getElementById("dOB").value;
+    var dOB = document.getElementById("dOB").value;
     if (dOB.length == 0) {
         valid = false;
         errors.push("Date be provided");
@@ -36,7 +36,7 @@ function processAdd() {
     }
     else
     {
-        let dOBD = new Date(dOB);
+        var dOBD = new Date(dOB);
         if (dOBD.getTime() > date.getTime()) { //Make sure date selected is on/before today by comparing the milliseconds since epoch
             valid = false;
             errors.push("Date must be before today");
@@ -46,7 +46,7 @@ function processAdd() {
             document.getElementById("dOB").style.borderColor = "#44414f";
         }
     }
-    let gender = document.getElementById("gender").value;
+    var gender = document.getElementById("gender").value;
     if (gender.length == 0 || gender.length > 10) {
         valid = false;
         errors.push("Gender must be between 1 and 10 characters");
@@ -55,7 +55,7 @@ function processAdd() {
     else {
         document.getElementById("gender").style.borderColor = "#44414f";
     }
-    let medCon = document.getElementById("medCon").value;
+    var medCon = document.getElementById("medCon").value;
     if (medCon.length > 100) {
         valid = false;
         errors.push("Medical conditions cannot be over 100 characters");
@@ -67,7 +67,7 @@ function processAdd() {
 
     //Prisoners
     if (type == "P") {
-        let convs = document.getElementById("convictions").value;
+        var convs = document.getElementById("convictions").value;
         if (convs.length == 0 || convs.length > 100) {
             valid = false;
             errors.push("Convictions cannot be over 100 characters");
@@ -76,7 +76,7 @@ function processAdd() {
         else {
             document.getElementById("convictions").style.borderColor = "#44414f";
         }
-        let startDate = document.getElementById("startDate").value;
+        var startDate = document.getElementById("startDate").value;
         if (startDate.length == 0) {
             valid = false;
             errors.push("Start date must be provided");
@@ -85,7 +85,7 @@ function processAdd() {
         else {
             document.getElementById("startDate").style.borderColor = "#44414f";
         }
-        let endDate = document.getElementById("endDate").value;
+        var endDate = document.getElementById("endDate").value;
         if (endDate.length == 0) {
             valid = false;
             errors.push("End date must be provided");
@@ -95,8 +95,8 @@ function processAdd() {
             document.getElementById("endDate").style.borderColor = "#44414f";
         }
         if (startDate.length > 0 && endDate.length > 0) { //Make sure start date is before end date
-            let sDate = new Date(startDate);
-            let eDate = new Date(endDate);
+            var sDate = new Date(startDate);
+            var eDate = new Date(endDate);
             if (sDate.getTime() > eDate.getTime()) {
                 valid = false;
                 document.getElementById("startDate").style.borderColor = "red";
@@ -144,7 +144,7 @@ function processAdd() {
     //Staff
     else if (type == "S")
     {
-        let role = document.getElementById("role").value;
+        var role = document.getElementById("role").value;
         if (role.length == 0 || role.length > 20) {
             valid = false;
             errors.push("Role must be between 1 and 20 characters");
@@ -189,7 +189,7 @@ function processAdd() {
     //Visitors
     else if (type == "V")
     {
-        let pNo = document.getElementById("pNo").value;
+        var pNo = document.getElementById("pNo").value;
         if (isNaN(pNo) == true) { //Make sure phone number is actually a number
             valid = false;
             errors.push("Phone number must only contain numbers");

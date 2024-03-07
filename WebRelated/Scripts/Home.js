@@ -26,9 +26,9 @@ function fetchPopulationData() {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
-          temperature.innerHTML = values[0].temp
-          noise.innerHTML = values[0].noise
-          light.innerHTML = values[0].light  
+          temperature.innerHTML = values[0].temp + "°C"
+          noise.innerHTML = values[0].noise + "dB"
+          light.innerHTML = values[0].light + "lx"
       });
       break
     case 1:
@@ -37,9 +37,9 @@ function fetchPopulationData() {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
-          temperature.innerHTML = values[0].temp
-          noise.innerHTML = values[0].noise
-          light.innerHTML = values[0].light
+          temperature.innerHTML = values[0].temp + "°C"
+          noise.innerHTML = values[0].noise + "dB"
+          light.innerHTML = values[0].light + "lx"
       });
       break
     case 2:
@@ -48,9 +48,9 @@ function fetchPopulationData() {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
-          temperature.innerHTML = values[0].temp
-          noise.innerHTML = values[0].noise
-          light.innerHTML = values[0].light
+          temperature.innerHTML = values[0].temp + "°C"
+          noise.innerHTML = values[0].noise + "dB"
+          light.innerHTML = values[0].light + "lx"
           return
       });
       break
@@ -60,9 +60,9 @@ function fetchPopulationData() {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
-          temperature.innerHTML = values[0].temp
-          noise.innerHTML = values[0].noise
-          light.innerHTML = values[0].light
+          temperature.innerHTML = values[0].temp + "°C"
+          noise.innerHTML = values[0].noise + "dB"
+          light.innerHTML = values[0].light + "lx"
           return
       });
       break

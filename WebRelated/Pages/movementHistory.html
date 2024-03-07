@@ -1,139 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Smart Prison System</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
-      src="https://kit.fontawesome.com/e0b1d3493e.js"
-      crossorigin="anonymous"
+            src="https://kit.fontawesome.com/e0b1d3493e.js"
+            crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="../Stylesheets/movementHistroy.css" />
-  </head>
-  <body style="background-color: #e3d8d8">
-
-      <div class="content-wrapper">
-        <!--
-        <div onclick="toggleDropdown()" id = "Drop-down-icon">
-          <i  class="fa-solid fa-bars"></i>
-        </div>          
-        -->
-
-      </div>
-      
-      <h1>Prison Movement History</h1> 
-
-  <!--      <div class="Drop-down-content">     
-          
-        
-      
-        <div style="
-        justify-content: center;            
-        display: flex;
-        align-items: center;
-        padding-left: 8px;
-        padding-right: 8px;
-        border: 1px solid rgba(0,0,0,1);
-        border-radius: 10px, 10px, 10px, 10px;
-        height: 70vh; /* 100% of the viewport height */
-        flex-direction: column;
-        box-shadow: 5px 10px #888888;
-        ">
-        <div onclick="playClock()">
-         <i class="fa-solid fa-play" id="Drop-down-icon-play"  style="color: green;"></i>           
-        </div>
-        <div onclick="prevEvent()">
-          <i class="fa-solid fa-backward" id="Drop-down-icon-backward"></i>       
-        </div>
-        <div onclick="scrollToHeight(1200)">
-         <i class="fa-solid fa-computer" id="Drop-down-icon-video"></i>          
-        </div>
-
-         <div onclick="nextEvent()">
-          <i class="fa-solid fa-forward" id="Drop-down-icon-forward" ></i>        
-         </div>
-         <div onclick="pauseClock()">
-          <i class="fa-solid fa-pause" id="Drop-down-icon-pause"  style="color: red;"></i>           
-         </div>
-        </div>
-      </div>
+    <link rel="stylesheet" href="../Stylesheets/movementHistroy.css"/>
+</head>
+<body style="background-color: #e3d8d8">
+<a href="Home.html" style="position: absolute; left: 20px; top: 20px; color: #44414f !important; cursor:pointer;">
+    <i class="fa-solid fa-house fa-3x"></i>
+</a>
+<div class="content-wrapper">
+    <!--
+    <div onclick="toggleDropdown()" id = "Drop-down-icon">
+      <i  class="fa-solid fa-bars"></i>
+    </div>
     -->
 
+</div>
 
-    <div id="prisons">
-      <div class="prison" id="prison1">
-        <div id="gym-door"></div>
-        <i class="fa-solid fa-dumbbell fa-4x"></i>
-        <div class="title" id = "population-GM">Gym: 0</div>
-      </div>
-      <div class="prison" id="prison2">
-        <div id="canteen-door"></div>
-        <i class="fa-solid fa-utensils fa-4x"></i>
-        <div class="title" id = "population-CT">Canteen: 0</div>
-      </div>
-      <div class="prison" id="prison3">
-        <div id="library-door"></div>
-        <i class="fa-solid fa-book-open fa-4x"></i>
-        <div class="title" id = "population-LB">Library: 0</div>
-      </div>
-      <div class="prison" id="prison4">
-        <div id="living-room-door"></div>
-        <i class="fa-solid fa-tv fa-4x"></i>
-        <div class="title" id = "population-LR">Living room: 0</div>
-      </div>
-    </div>
+<h1>Prison Movement History</h1>
 
-    <div style="position: absolute; left: 50px; top: 40vh;">
-      <a class="link" href="../Pages/Home.html">
-        <i
-          style="color: #686576 !important"
-          class="fa-solid fa-left-long fa-4x"
-        ></i>
-      </a>
-    </div>
-    <div style="position: absolute; right: 50px; top: 40vh;">
-      <a class="link" href="../Pages/Temperature.html">
-        <i
-          style="color: #686576 !important"
-          class="fa-solid fa-right-long fa-4x"
-        ></i>
-      </a>
-    </div>
-    <fieldset class="legend">
-      <legend>Legend</legend>
-      <div class="colleg" style="background-color: #fe7300;"></div>
-      <label class = "leglab">Prisoner</label><br>
-      <div class="colleg" style="background-color: blue;"></div>
-      <label class = "leglab">Staff</label><br>
-      <div class="colleg" style="background-color: white;"></div>
-      <label class = "leglab">Visitor</label>
-    </fieldset>
-    <div class ="control-bar"><!--Control bar containg clock and play back/forward arrow buttons-->
+<!--      <div class="Drop-down-content">
+
+
+
+      <div style="
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      padding-right: 8px;
+      border: 1px solid rgba(0,0,0,1);
+      border-radius: 10px, 10px, 10px, 10px;
+      height: 70vh; /* 100% of the viewport height */
+      flex-direction: column;
+      box-shadow: 5px 10px #888888;
+      ">
+      <div onclick="playClock()">
+       <i class="fa-solid fa-play" id="Drop-down-icon-play"  style="color: green;"></i>
+      </div>
       <div onclick="prevEvent()">
-        <i class="fa-solid fa-backward" id="Drop-down-icon-backward"></i>       
+        <i class="fa-solid fa-backward" id="Drop-down-icon-backward"></i>
       </div>
-      <div style="z-index: 3;" class="clock">
-        <h2 id="clock-text">00:00:00</h2>
+      <div onclick="scrollToHeight(1200)">
+       <i class="fa-solid fa-computer" id="Drop-down-icon-video"></i>
       </div>
 
        <div onclick="nextEvent()">
-        <i class="fa-solid fa-forward" id="Drop-down-icon-forward" ></i>        
+        <i class="fa-solid fa-forward" id="Drop-down-icon-forward" ></i>
        </div>
- </div>
+       <div onclick="pauseClock()">
+        <i class="fa-solid fa-pause" id="Drop-down-icon-pause"  style="color: red;"></i>
+       </div>
+      </div>
+    </div>
+  -->
+
+
+<div id="prisons">
+    <div class="prison" id="prison1">
+        <div id="gym-door"></div>
+        <i class="fa-solid fa-dumbbell fa-4x"></i>
+        <div class="title" id="population-GM">Gym: 0</div>
+    </div>
+    <div class="prison" id="prison2">
+        <div id="canteen-door"></div>
+        <i class="fa-solid fa-utensils fa-4x"></i>
+        <div class="title" id="population-CT">Canteen: 0</div>
+    </div>
+    <div class="prison" id="prison3">
+        <div id="library-door"></div>
+        <i class="fa-solid fa-book-open fa-4x"></i>
+        <div class="title" id="population-LB">Library: 0</div>
+    </div>
+    <div class="prison" id="prison4">
+        <div id="living-room-door"></div>
+        <i class="fa-solid fa-tv fa-4x"></i>
+        <div class="title" id="population-LR">Living room: 0</div>
+    </div>
+</div>
+
+<fieldset class="legend">
+    <legend>Legend</legend>
+    <div class="colleg" style="background-color: #fe7300;"></div>
+    <label class="leglab">Prisoner</label><br>
+    <div class="colleg" style="background-color: blue;"></div>
+    <label class="leglab">Staff</label><br>
+    <div class="colleg" style="background-color: white;"></div>
+    <label class="leglab">Visitor</label>
+</fieldset>
+<div class="control-bar"><!--Control bar containg clock and play back/forward arrow buttons-->
+    <div onclick="prevEvent()">
+        <i class="fa-solid fa-backward" id="Drop-down-icon-backward"></i>
+    </div>
+    <div style="z-index: 3;" class="clock">
+        <h2 id="clock-text">00:00:00</h2>
+    </div>
+
+    <div onclick="nextEvent()">
+        <i class="fa-solid fa-forward" id="Drop-down-icon-forward"></i>
+    </div>
+</div>
 
 <!--
       <h1 style="margin-top: 4%;">Prison Update Terminal</h1>
     <div id="Log-container">
       <div id="Terminal"></div>
-    </div>      
+    </div>
 
     <div onclick="scrollToHeight(0)" style="position: absolute; right: 50px; top: 190%;">
 
@@ -145,17 +131,18 @@
         ></i>
       </a>
     </div>
-    <div class="title" style="color: black;">Super Coders - SCC331 Group 5</div>   
+    <div class="title" style="color: black;">Super Coders - SCC331 Group 5</div>
 -->
 
-   
-    <script>
 
-    </script>
-    <script integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous"referrerpolicy="no-referrer"></script>
-    
-    <script src="../Scripts/clock.js"></script>
-    <script type="module" src="../Scripts/log.js"></script>
+<script>
 
-  </body>
+</script>
+<script integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="../Scripts/clock.js"></script>
+<script type="module" src="../Scripts/log.js"></script>
+
+</body>
 </html>

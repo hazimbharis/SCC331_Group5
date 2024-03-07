@@ -1,6 +1,6 @@
 let currentType;
 let selectedDate;
-const todayFull = new Date();
+var todayFull = new Date();
 const today = todayFull.toISOString().split("T");
 let databaseData = []
 
@@ -83,7 +83,7 @@ function draw() {
             }
         },
         height: 350,
-        colors: ["red", "blue", "green", "purple"],
+        colors: ["red", "blue", "green", "#ffdd00"],
         tooltip: {
             textStyle: {
                 fontName: "Verdana",
@@ -128,7 +128,14 @@ function drawD() {
     for (var i = 0; i < databaseData.length; i++) {
         var endTime;
         if ((i + 1) >= databaseData.length || databaseData[i + 1].id !== databaseData[i].id) { //If end of entries or next entry does not have the same zoneID, the end time is 23:59:59 for this entry
-            endTime = new Date(0, 0, 0, 23, 59, 59); //Date format is (year, month, day, hour, minute, second), ignore year, month and day as that is not important due to selected date
+            if (today[0] === selectedDate) { //If day selected is today, end of entry is the current time
+                todayFull = new Date();
+                var now = todayFull.toISOString().split("T")[1].split(".")[0].split(":"); //Get current time by splitting the fulltime string gotten by creating a new date instance
+                endTime = new Date(0, 0, 0, now[0], now[1], now[2]);
+            }
+            else {
+                endTime = new Date(0, 0, 0, 23, 59, 59); //Date format is (year, month, day, hour, minute, second), ignore year, month and day as that is not important due to selected date
+            }
         }
         else {
             endTime = databaseData[i + 1].time; //A timeline entry must have an end time, therefore the end date of an entry is the start time of the next entry

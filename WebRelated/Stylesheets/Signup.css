@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('../Images/background2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    background-attachment: fixed;
+    margin: 0px;
+}
+.Message-Container{
+    text-align: center;
+    color: red;
+    padding: 10px;
+
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 22px; 
+    border-radius: 4px;
+}
+.input-container {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    display: inline-block;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="button"],
+button[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="button"]:hover,
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.form-container {
+    width: 300px;
+    margin: auto;
+    margin-top: 25vh;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#Sign-up {
+    text-align: center;
+}

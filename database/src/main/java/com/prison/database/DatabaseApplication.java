@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class DatabaseApplication {
 	// Login variables
 
-	private static final String PASSWORD = "MyNewPass";
+	private static final String PASSWORD = "pass1234";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static String currentDatabase = "Microbits";
 	private static final String USER = "root";
@@ -78,6 +78,11 @@ public class DatabaseApplication {
 	}
 
 	//http://localhost:8080/addPrisoner?id=AAAAAAA&zone=1
+	/*
+	 * 
+
+	 
+	 */
 	@GetMapping("/addPrisoner")
 	private void addPrisoner(@RequestParam(value = "id")String id, @RequestParam(value = "zone") int zone) throws SQLException {
 
@@ -89,7 +94,6 @@ public class DatabaseApplication {
 		 * if true, set value of current id
 		 * if false, create new row
 		 */
-
 		// if 0, adds new prisoner entry
 		// if 1, changes value of existing prisoner entry
 		int check = 0;
@@ -102,7 +106,6 @@ public class DatabaseApplication {
 			while (result.next()) {
 				check = result.getInt(1);
 			}
-
 			if (check == 0) {
 				insertDataSQL="INSERT INTO movement (prisonerID,zoneID) VALUES (?,?)";
 				try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
@@ -116,6 +119,36 @@ public class DatabaseApplication {
 					statement2.executeUpdate();
 				}
 			}
+		}
+	}
+
+		//http://localhost:8080/addPrisoner?id=AAAAAAA&zone=1
+	@GetMapping("/movementTime")
+	private void addPrisoner2(@RequestParam(value = "id")String id, @RequestParam(value = "zone") int zone) throws SQLException {
+
+		/*
+		 * parameters: prisoner id (varchar), zone id (int: 1-4)
+		 *
+		 * when insert, check if ID exists
+		 * -> "SELECT * FROM Microbits.movement WHERE movement.item = '"+item+"'";
+		 * if true, set value of current id
+		 * if false, create new row
+		 */
+
+		// if 0, adds new prisoner entry
+		// if 1, changes value of existing prisoner entry
+		String insertDataSQL;
+
+		insertDataSQL="INSERT INTO movement (prisonerID,zoneID, timeStamp) VALUES (?,?,?)";
+		try (PreparedStatement statement1 = connection.prepareStatement(insertDataSQL)) {
+			statement1.setString(1, String.valueOf(id));
+			statement1.setString(2, String.valueOf(zone));
+			LocalDateTime myDateObj = LocalDateTime.now();
+			DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.ms");
+			String formattedDate = myDateObj.format(myFormatObj);
+			System.out.println("After formatting: " + formattedDate);
+			statement1.setString(3, formattedDate);
+			statement1.executeUpdate();
 		}
 	}
 
@@ -192,9 +225,7 @@ public class DatabaseApplication {
 
 	@GetMapping("/addWarning")
 	private void addWarning(@RequestParam(value = "zone") int zone,
-								@RequestParam(value= "warning")int warning,
-								@RequestParam(value= "noise")int noise,
-								@RequestParam(value= "light")int light) throws SQLException {
+								@RequestParam(value= "warning")int warning) throws SQLException {
 		int check = 0;
 		String insertDataSQL;
 		ResultSet result;

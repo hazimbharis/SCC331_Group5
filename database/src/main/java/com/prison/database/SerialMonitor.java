@@ -160,12 +160,12 @@ public class SerialMonitor {
                             setEnvironment(zoneID, temp, noise, light);
 
                             //temp check
-                            if (temp > 100) setWarning(zoneID, 2);
+                            if (temp > 41) setWarning(zoneID, 2);
                             if (temp < 0) setWarning(zoneID, 3);
                             //noise check
-                            if (noise > 100) setWarning(zoneID, 4);
+                            if (noise > 50) setWarning(zoneID, 4);
                             //light check
-                            if (noise > 100) setWarning(zoneID, 4);
+                            if (light < 0) setWarning(zoneID, 5);
 
                         }
                         case "004"-> { // help signal from guard microbit
@@ -198,7 +198,7 @@ public class SerialMonitor {
 
     public void setPrisoner(String pid, int zid) {
         try {
-            URL getURL = new URL(url + "/addPrisoner?id=" + pid + "&zone=" + zid);
+            URL getURL = new URL(url + "/movementTime?id=" + pid + "&zone=" + zid);
             HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -238,7 +238,7 @@ public class SerialMonitor {
             else {
                 status = "open";
             }
-            if (status.equals(prevDoorValues[did]) == false) {
+            if (status.equals(prevDoorValues[did - 1]) == false) {
                 URL dHURL = new URL(url + "/addDoorHistory?door=" + did + "&status=" + status);
                 HttpURLConnection conn = (HttpURLConnection) dHURL.openConnection();
                 conn.setRequestMethod("GET");
@@ -249,7 +249,7 @@ public class SerialMonitor {
                     System.out.println(resCode);
                 }
                 connection.disconnect();
-                prevDoorValues[did] = status;
+                prevDoorValues[did - 1] = status;
             }
 
         } catch (Exception e) {
@@ -268,7 +268,7 @@ public class SerialMonitor {
                 System.out.println(responseCode);
             }
             connection.disconnect();
-            if (prevZoneValues[zid][0] != temp || prevZoneValues[zid][1] != noise || prevZoneValues[zid][2] != light) { //Add new zone history entry if any value has changed from its previous value
+            if (prevZoneValues[zid - 1][0] != temp || prevZoneValues[zid - 1][1] != noise || prevZoneValues[zid - 1][2] != light) { //Add new zone history entry if any value has changed from its previous value
                 URL zHURL = new URL(url + "/addZoneHistory?zone=" + zid + "&temp=" + temp + "&noise=" + noise + "&light=" + light);
                 HttpURLConnection conn = (HttpURLConnection) zHURL.openConnection();
                 conn.setRequestMethod("GET");
@@ -279,9 +279,9 @@ public class SerialMonitor {
                     System.out.println(resCode);
                 }
                 connection.disconnect();
-                prevZoneValues[zid][0] = temp;
-                prevZoneValues[zid][1] = noise;
-                prevZoneValues[zid][2] = light;
+                prevZoneValues[zid - 1][0] = temp;
+                prevZoneValues[zid - 1][1] = noise;
+                prevZoneValues[zid - 1][2] = light;
             }
 
         } catch (Exception e) {

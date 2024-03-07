@@ -54,6 +54,7 @@ alarmIcon.style.color = 'red';
 
 data.forEach((el) => {
   if (el.doorID === 1) {
+    gymDoor.replaceChildren();
     if (el.alarm) {
       gymDoor.appendChild(alarmIcon.cloneNode(true));
     } else if (el.closed) {
@@ -65,6 +66,7 @@ data.forEach((el) => {
       gymDoor.appendChild(openIcon.cloneNode(true));
     }
   } else if (el.doorID === 2) {
+    canteenDoor.replaceChildren();
     if (el.alarm) {
       canteenDoor.appendChild(alarmIcon.cloneNode(true));
     } else if (el.closed) {
@@ -76,6 +78,7 @@ data.forEach((el) => {
       canteenDoor.appendChild(openIcon.cloneNode(true));
     }
   } else if (el.doorID === 3) {
+    libraryDoor.replaceChildren();
     if (el.alarm) {
       libraryDoor.appendChild(alarmIcon.cloneNode(true));
     } else if (el.closed) {
@@ -87,6 +90,7 @@ data.forEach((el) => {
       libraryDoor.appendChild(openIcon.cloneNode(true));
     }
   } else if (el.doorID === 4) {
+    livingRoomDoor.replaceChildren();
     if (el.alarm) {
       livingRoomDoor.appendChild(alarmIcon.cloneNode(true));
     } else if (el.closed) {
@@ -211,7 +215,7 @@ async function updateMovementInfo() {
       case "P":
         iconElement.style.color = "#fe7300";
         break;
-      case "G":
+      case "S":
         iconElement.style.color = "blue";
         break;
       case "V":
@@ -258,4 +262,5 @@ updateMovementInfo();
 showAlerts()
 setInterval(checkAlerts, 500);
 updateDoorInfo();
-//setInterval(updateMovementInfo, 2000);
+setInterval(updateMovementInfo, 2000);
+setInterval(updateDoorInfo, 2000);

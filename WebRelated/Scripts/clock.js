@@ -221,7 +221,7 @@ async function forwardBackEvent(rewind) {
         console.log("Minute:", minutes);
         console.log("Second:", seconds);
         console.log("Millisecond:", milliseconds);
-        clockText.textContent = day + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
+        clockText.textContent = day + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds;
 
         
         renderUsers();
@@ -281,7 +281,7 @@ function clockUpdater() {
         month = (month < 10) ? '0' + month: month;
         day = (day < 10) ? '0' + day : day;
     }
-    clockText.textContent  = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
+    clockText.textContent  = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds;
 
 }
 if (play) {

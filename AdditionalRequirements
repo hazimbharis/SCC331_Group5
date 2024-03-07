@@ -12,3 +12,7 @@ The colour schemes used should be appropriate
 The system should not collect more data than necessary
 It should be easy for a user to connect parts of the system together
 The system should respect users' privacy
+Unauthorised users should not affect the system
+Data visualisation should be appropriate for the data being represented
+The system should be robust
+It should be easy for users to interpret the data represented
