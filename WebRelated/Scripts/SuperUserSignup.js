@@ -19,7 +19,7 @@ async function submitForm() {
 
     try {
         // Validate organisation key
-        const response = await $.get('http://localhost:5000/api/validateOrganisationKey/' + organisationKEY);
+        const response = await $.get('http://localhost:5001/api/validateOrganisationKey/' + organisationKEY);
         if (response.message !== 'Organisation key is valid') {
             console.log('Organisation key is invalid');
             messageBox.innerHTML = 'Invalid organisation key';
@@ -62,7 +62,7 @@ function validateCredentials(email, password) {
 async function getOrganisationID(organisationKEY){
     
     try {
-        const response = await $.get('http://localhost:5000/api/getOrganisationID/' + organisationKEY);
+        const response = await $.get('http://localhost:5001/api/getOrganisationID/' + organisationKEY);
         const idValue = response[0].id;
         console.log("organisationID:", response);
         console.log("ORG ID: " + idValue);
@@ -73,7 +73,7 @@ async function getOrganisationID(organisationKEY){
     }
 }
 function addNewUser(email, pWord, organisationKEY, orgID) {
-    fetch('http://localhost:5000/api/users', {
+    fetch('http://localhost:5001/api/users', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

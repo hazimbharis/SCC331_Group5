@@ -39,7 +39,7 @@
             <button type="button" onclick="processLogin()">Login</button>
             <span class ="error-box"></span>
 
-            <div id= "Message-Container-Signin" class="Message-Container"></div>
+            <div style="font-family: Roboto, Helvetica, sans-serif; font-weight: 100;" id= "Message-Container-Signin" class="Message-Container"></div>
         
            <!--
             <span class="psw">Forgot <a href="#">password?</a></span>            
@@ -90,7 +90,7 @@
 
 
                 setTimeout(function() {
-                window.location.href = "../Home.html";}, 1500);
+                window.location.href = "../Home.html";}, 10000);
 
             }else{
                 messageBox.style.color = 'Red';
@@ -105,7 +105,7 @@
     }
     async function checkToken(email){
         try {
-        const response = await $.get('http://localhost:5000/api/GetMFAKey/' + email);
+        const response = await $.get('http://localhost:5001/api/GetMFAKey/' + email);
         const secretKey = response[0].SecretKey;
         if (secretKey === null){
             throw "Not found";
@@ -124,7 +124,7 @@
     }
     function checkcredentials(e, p){
         return new Promise((resolve, reject) => {
-        fetch('http://localhost:5000/api/CheckCredentials', {
+        fetch('http://localhost:5001/api/CheckCredentials', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
