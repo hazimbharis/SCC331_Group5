@@ -28,7 +28,7 @@ public class SuperUserDatabaseAppliction {
 	};*/
     private static final String[] tableQuery = {
 		"id INT AUTO_INCREMENT PRIMARY KEY, OrganisationName VARCHAR(100) NOT NULL, OrganisationKey VARCHAR(50) UNIQUE NOT NULL",//Organisation attributes
-		"id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50) UNIQUE NOT NULL, password VARCHAR(100) NOT NULL, email VARCHAR(100) UNIQUE NOT NULL, OrganisationId INT, FOREIGN KEY (OrganisationId) REFERENCES Organisation(id)",//User attributes
+		"id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(100) UNIQUE NOT NULL, password VARCHAR(100) NOT NULL, OrganisationId INT, SecretKey VARCHAR(100), FOREIGN KEY (OrganisationId) REFERENCES Organisation(id)",//User attributes
 		"id INT AUTO_INCREMENT PRIMARY KEY, systemName VARCHAR(100) NOT NULL, OrganisationId INT, FOREIGN KEY (OrganisationId) REFERENCES Organisation(id)"//Smart system attributes
 };
 	// Microbit variables

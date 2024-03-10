@@ -1,0 +1,6 @@
+--Creating Organisations--
+INSERT INTO Organisation (OrganisationName, OrganisationKey) VALUES 
+('NewSystem1', '54370963650923475763475630425'),
+('NewSystem2', '43320650347305677477834755866');
+
+Use Super forms to insert other info

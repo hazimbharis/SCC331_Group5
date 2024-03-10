@@ -8,12 +8,6 @@ body {
     background-attachment: fixed;
     margin: 0px;
 }
-#Sign-up{
-    font-size: 32;
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
-    
-}
 .Message-Container{
     text-align: center;
     color: red;
@@ -50,7 +44,7 @@ button[type="submit"] {
     font-size: large;
     width: 93%;
     background-color: rgba(255, 255, 255, 0);
-    color: Black;
+    color: black;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
@@ -58,31 +52,39 @@ button[type="submit"] {
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 button[type="button"]:hover,
 button[type="submit"]:hover {
-    /*background-color: #45a049;*/
     background-color: rgba(255, 255, 255, 0.5);
+}
+
+#Sign-up {
+    text-align: center;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 .form-container {
     width: 300px;
-    margin: auto;
-    margin-top: 25vh;
     padding: 20px;
-    /*background-color: white;*/
     background-color: rgba(255, 255, 255, 0);
     border-radius: 5px;
-    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);*/
+
+}
+#qr-code-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-
-
-
+#qr-code img {
+    width: 400px;
+    height: 400px;
+}
+.Instruction-Container{
+    margin-top: 80px;
+    text-align: center;
+}
