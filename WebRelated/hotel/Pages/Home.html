@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <script
+      src="https://kit.fontawesome.com/e0b1d3493e.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Stylesheets/Home.css" />
+  </head>
+  <body style="background-color: #e3d8d8">
+    <nav>
+      <div>
+        <i class="fa-solid fa-map-location-dot"></i>
+        <a href="hotel.html">Location</a>
+      </div>
+      <div>
+        <i class="fa-solid fa-box-archive"></i>
+        <a href="Records.html">Records</a>
+      </div>
+      <div>
+        <i class="fa-solid fa-file-zipper"></i>
+        <a href="movementHistory.html">Movement History</a>
+      </div>
+      <div>
+        <i class="fa-solid fa-chart-column"></i>
+        <a href="ZoneEnvHistory.html">Environment History</a>
+      </div>
+      <div>
+        <i class="fa-solid fa-address-card"></i>
+        <a href="Register.html">Register</a>
+      </div>
+    </nav>
+    <main>
+      <h1>Welcome to</h1>
+      <h1>Smart Hotel System</h1>
+    </main>
+    <footer class="items">
+      <div class="item">
+        <!-- Data from the API -->
+        <div style="display: flex; align-items: center">
+          <i class="fa-solid fa-temperature-low"></i>
+          <p class="item-title">Temperature:</p>
+        </div>
+        <p class="item-value" id="temperature">17°C</p>
+      </div>
+      <div class="item">
+        <!-- Data from the API -->
+        <div style="display: flex; align-items: center">
+          <i class="fa-solid fa-volume-high"></i>
+          <p class="item-title">Noise:</p>
+        </div>
+        <p class="item-value" id="noise">102.7dB</p>
+      </div>
+      <div class="item">
+        <!-- Data from the API -->
+        <div style="display: flex; align-items: center">
+          <i class="fa-solid fa-lightbulb"></i>
+          <p class="item-title">Light:</p>
+        </div>
+        <p class="item-value" id="light">22.1lx</p>
+      </div>
+      <div id="select-div">
+        <div class="dropdown">
+          <input
+            class="text-box"
+            id="chosen-zone"
+            type="text"
+            placeholder="Reception"
+            readonly
+          />
+          <div class="options">
+            <div onclick="show('Reception')">Reception</div>
+            <div onclick="show('Restaurant')">Restaurant</div>
+            <div onclick="show('Living Room')">Living Room</div>
+            <div onclick="show('Library')">Library</div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="../Scripts/Home.js"></script>
+    <script
+      integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </body>
+</html>
