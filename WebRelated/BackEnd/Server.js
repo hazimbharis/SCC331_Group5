@@ -523,6 +523,247 @@ app.get('/api/visitors', (req, res) => {
   });
 })
 
+//Get user count in timeframe, as well as mean, max and min
+app.get('/api/countUsers/:sDate/:eDate', (req, res) => {
+  var data = {}
+  const usersNum = new Promise((resolve, reject) => {
+    const query = `
+    SELECT COUNT(DISTINCT prisonerID) as "noOfUsers"
+    FROM movement
+    WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"`; //Distinct needed to not count same user more than once
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        data.noOfUsers = results[0].noOfUsers
+        resolve(0);
+      } 
+    });
+  })
+  const mean = new Promise((resolve, reject) => {
+    const query = `
+    SELECT AVG(noOfUsers) as "mean"
+    FROM 
+      (SELECT DATE(timeStamp), COUNT(DISTINCT prisonerID) as "noOfUsers"
+      FROM movement
+      WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"
+      GROUP BY DATE(timestamp)) as movements`; //Assumes there is data for every single day, group by day to count number of users for each individual day
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        data.mean = results[0].mean
+        resolve(0);
+      } 
+    });
+  })
+  const minMax = new Promise((resolve, reject) => {
+    const query = `
+    SELECT MAX(noOfUsers) as "max", MIN(noOfUsers) as "min"
+    FROM
+      (SELECT DATE(timeStamp) as "date" , COUNT(DISTINCT prisonerID) as "noOfUsers"
+      FROM movement
+      WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"
+      GROUP BY DATE(timestamp)) as movements`;
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        if (results[0].max != undefined && results[0].min != undefined) { //If no data, server will crash due to MySQL error with undefined
+          const maxDate = new Promise((resolve, reject) => { //Get max date by fetching the record where the noOfUsers is the same as the maximum
+            const query = `
+            SELECT Date as "date"
+            FROM
+              (SELECT DATE(timeStamp) as "Date", COUNT(DISTINCT prisonerID) as "noOfUsers"
+              FROM movement 
+              WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999" 
+              GROUP BY DATE(timestamp)) as movements WHERE noOfUsers = ` + results[0].max;
+            db.query(query, (err, results) => {
+              if (err) {
+                console.error('Database query error: ' + err.message);
+                res.status(500).json({ error: 'Database error' });
+              } else {
+                data.maxDate = results[0].date
+                resolve(0);
+              } 
+            });
+          })
+          const minDate = new Promise((resolve, reject) => {
+            const query = `
+            SELECT Date as "date"
+            FROM
+              (SELECT DATE(timeStamp) as "Date", COUNT(DISTINCT prisonerID) as "noOfUsers"
+              FROM movement 
+              WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999" 
+              GROUP BY DATE(timestamp)) as movements WHERE noOfUsers = ` + results[0].min;
+            db.query(query, (err, results) => {
+              if (err) {
+                console.error('Database query error: ' + err.message);
+                res.status(500).json({ error: 'Database error' });
+              } else {
+                data.minDate = results[0].date
+                resolve(0);
+              } 
+            });
+          })
+          data.max = results[0].max;
+          data.min = results[0].min;
+          Promise.all([maxDate, minDate]).then((ress) => {
+            resolve(0);
+          })
+        }
+        else {
+          data.max = 0; //In case period selected with no data
+          data.min = 0;
+          data.minDate = "0000-00-00";
+          data.maxDate = "0000-00-00";
+          resolve(0);
+        }
+      } 
+    });
+  })
+  Promise.all([usersNum, mean, minMax]).then((ress) => { //Only send data once all data is ready via promises
+    res.json(data);
+  })
+})
+
+//Get user types data in timeframe
+app.get('/api/userTypes/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT type, COUNT(type) as "count"
+  FROM
+    (SELECT DISTINCT id, type FROM users, movement
+    WHERE users.id = movement.prisonerID AND timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999") as us
+  GROUP BY type`; //Count number of user types by grouping them together
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+//Get number of users on each day in timeframe
+app.get('/api/dayCount/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT DATE(timeStamp) as "Date", COUNT(DISTINCT prisonerID) as "noOfUsers"
+  FROM movement
+  WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"
+  GROUP BY Date`; //Count number of users per day by counting instances of each date and grouping them
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+//Get number of movements for each zone in timeframe
+app.get('/api/movementCount/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT zoneID, COUNT(prisonerID) as "count"
+  FROM movement
+  WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"
+  GROUP BY zoneID`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+//Get mean of environment data in timeframe
+app.get('/api/envMeans/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT AVG(temp) as mTemp, AVG(noise) as mNoise, AVG(light) as mLight
+  FROM zonehistory
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0]);
+    } 
+  });
+})
+
+//Get number of zones
+app.get('/api/zoneCount/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT MAX(DISTINCT zoneID) as "noOfZones" 
+  FROM zonehistory
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`; //Use max as system assumes all IDs are sequential (non skipped)
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0]);
+    } 
+  });
+})
+
+//Get mean environment data for each day
+app.get('/api/zoneDayData/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT zoneID, date, AVG(temp) as temp, AVG(noise) as noise, AVG(light) as light
+  FROM zonehistory
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `" 
+  GROUP BY zoneID, date
+  ORDER BY date`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+//Get number of doors
+app.get('/api/doorCount/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT MAX(DISTINCT doorID) as "noOfDoors"
+  FROM doorhistory
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results[0]);
+    } 
+  });
+})
+
+//Get door history in timeframe
+app.get('/api/dHistory/:sDate/:eDate', (req, res) => {
+  const query = `
+  SELECT *
+  FROM doorhistory
+  WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
