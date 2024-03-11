@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'pass1234',
+  password: 'MyNewPass',
   database: 'superusers'
 });
 
@@ -28,7 +28,7 @@ app.get('/api/GetMFAKey/:email', (req, res) => {
   const email = req.params.email;
 
   // Perform database query to check if organisationKey exists
-  const query = 'SELECT SecretKey FROM user WHERE email = ?';
+  const query = 'SELECT SecretKey, OrganisationId FROM user WHERE email = ?';
   db.query(query, [email], (err, results) => {
       if (err) {
         console.error('Database query error: ' + err.message);
@@ -133,6 +133,22 @@ app.get('/api/validateOrganisationKey/:organisationKey', (req, res) => {
           res.status(200).json({ message: 'Organisation key is valid' });
       } else {
           res.status(404).json({ error: 'Organisation key does not exist' });
+      }
+  });
+});
+
+//API endpoint to get organisation system name
+app.get('/api/getOrganisationName/:organisationID', (req, res) => {
+  const organisationID = req.params.organisationID;
+  console.log("The Key: " + organisationID);
+  // Perform database query to check if organisationKey exists
+  const query = 'SELECT OrganisationName FROM Organisation WHERE id = ?';
+  db.query(query, [organisationID], (err, results) => {
+      if (err) {
+        console.error('Database query error: ' + err.message);
+        res.status(500).json({ error: 'Database error' });
+      } else {
+        res.json(results);
       }
   });
 });

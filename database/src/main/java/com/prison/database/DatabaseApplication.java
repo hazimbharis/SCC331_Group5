@@ -2,6 +2,7 @@ package com.prison.database;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,13 +13,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
+@CrossOrigin (origins = "http://localhost:8000")
 @RestController
 public class DatabaseApplication {
 	// Login variables
 
-	private static final String PASSWORD = "pass1234";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
-	private static String currentDatabase = "Microbits";
+	private static String currentDatabase = "hotel";
 	private static final String USER = "root";
 	private static Connection connection;
 
@@ -348,11 +350,12 @@ public class DatabaseApplication {
 	}
 
 	@GetMapping("/changeURL")
-	private String changeURL(@RequestParam(value = "url")String newUrl) throws SQLException {
+	private void changeURL(@RequestParam(value = "url")String newUrl) throws SQLException {
 		currentDatabase = newUrl;
 		URL = "jdbc:mysql://localhost:3306/" + currentDatabase + "?useSSL=FALSE&allowPublicKeyRetrieval=True";
 		connection = DriverManager.getConnection(URL,USER,PASSWORD);
-		return "Domain successfully changed!";
+		System.out.println("changed url");
+		//return "Domain successfully changed!";
 	}
 
 	@GetMapping("/setup")
