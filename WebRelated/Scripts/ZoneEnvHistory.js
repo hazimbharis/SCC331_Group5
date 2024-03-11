@@ -3,55 +3,63 @@ let selectedDate;
 var todayFull = new Date();
 const today = todayFull.toISOString().split("T");
 let databaseData = []
+let data
+let count
 
 document.getElementById("date").setAttribute("max", today[0]); //Set the max date in the date input box they can select to today
 
 function drawGraph() {
     //API call to get the zone history data for the day selected
-    $.get('http://localhost:5000/api/zoneHistory/' + selectedDate, (newData) => {
-        if (currentType === "temp") { //Get the appropriate data depending on the user's selection of environment type
-            databaseData = newData.map((row) => ({
-                id: row.zoneID,
-                val: row.temp,
-                time: row.time
-            }))
-        }
-        else if (currentType === "noise") {
-            databaseData = newData.map((row) => ({
-              id: row.zoneID,
-              val: row.noise,
-              time: row.time
-            }))
-        }
-        else if (currentType === "light") {
-            databaseData = newData.map((row) => ({
-              id: row.zoneID,
-              val: row.light,
-              time: row.time
-            }))
-        }
-        if (databaseData.length === 0) {
-            document.getElementById("feedback").textContent = "No data for selected day"; //If no data for day selected, feedback to user
-        }
-        else {
-          document.getElementById("feedback").textContent = selectedDate;
-        }
-        google.charts.load("current", {packages: ["corechart", "line"]}); //Specify line graph
-        google.charts.setOnLoadCallback(draw);
+    $.get('http://localhost:5000/api/zoneCount/' + selectedDate + '/' + selectedDate, (newData) => {
+        count = newData.noOfZones;
+        $.get('http://localhost:5000/api/zoneHistory/' + selectedDate, (newData) => {
+            if (currentType === "temp") { //Get the appropriate data depending on the user's selection of environment type
+                databaseData = newData.map((row) => ({
+                    id: row.zoneID,
+                    val: row.temp,
+                    time: row.time
+                }))
+            }
+            else if (currentType === "noise") {
+                databaseData = newData.map((row) => ({
+                    id: row.zoneID,
+                    val: row.noise,
+                    time: row.time
+                }))
+            }
+            else if (currentType === "light") {
+                databaseData = newData.map((row) => ({
+                    id: row.zoneID,
+                    val: row.light,
+                    time: row.time
+                }))
+            }
+            if (databaseData.length === 0) {
+                document.getElementById("feedback").textContent = "No data for selected day"; //If no data for day selected, feedback to user
+            }
+            else {
+                document.getElementById("feedback").textContent = selectedDate;
+                google.charts.load("current", {packages: ["corechart", "line"]}); //Specify line graph
+                google.charts.setOnLoadCallback(draw);
+            }
+        })
     })
 }
 
 function draw() {
-    var data = new google.visualization.DataTable(); //Use to DataTable class of Google charts to store data
-    data.addColumn("timeofday", "Time"); //Add the data columns needed
-    data.addColumn("number", "Gym");
-    data.addColumn("number", "Canteen");
-    data.addColumn("number", "Living room");
-    data.addColumn("number", "Library")
+    data = new google.visualization.DataTable(); //Use to DataTable class of Google charts to store data
+    data.addColumn("timeofday", "Time"); //Add the data columns needed, first column always time, else each column represents a zone
+    for (var i = 1 ; i <= count; i++) {
+        data.addColumn("number", String(i))
+    }
 
     databaseData.forEach((entry) => { //For each data entry, convert to correct format for table
         var forTime = entry.time.split(":");
-        var convEntry = [[parseInt(forTime[0]), parseInt(forTime[1]), parseInt(forTime[2])], null, null, null, null];
+        var convEntry = new Array(count + 1);
+        for (var i = 0; i < count + 1; i++) { //Initialise array with nulls
+            convEntry[i] = null;
+        }
+        convEntry[0] = [parseInt(forTime[0]), parseInt(forTime[1]), parseInt(forTime[2])];
         convEntry[entry.id] = entry.val; //Only need to add to the right column for each entry
         data.addRows([convEntry]); //Add data to the line graph
     })
@@ -119,12 +127,12 @@ function drawDoors() { //Door history visualisation uses a different type of gra
 }
 
 function drawD() {
-    var data = new google.visualization.DataTable();
-    data.addColumn({type: "string", id: "doorName"});
-    data.addColumn({type: "string", id: "doorName"});
+    data = new google.visualization.DataTable();
+    data.addColumn("string", "doorName");
+    data.addColumn("string", "doorName");
     data.addColumn({type: "string", role: "style"}); //This column is used for bar styling
-    data.addColumn({type: "date", id: "start"});
-    data.addColumn({type: "date", id: "end"});
+    data.addColumn("date", "start");
+    data.addColumn("date", "end");
     for (var i = 0; i < databaseData.length; i++) {
         var endTime;
         if ((i + 1) >= databaseData.length || databaseData[i + 1].id !== databaseData[i].id) { //If end of entries or next entry does not have the same zoneID, the end time is 23:59:59 for this entry
@@ -243,6 +251,9 @@ function date() {
         document.getElementById("feedback").textContent = "Please select a date";
         selectedDate = null;
     }
+    else if (currentType == null) {
+        document.getElementById("feedback").textContent = "Please select a data type"
+    }
     else if (currentType != null && selectedDate !== "") { //Draw graph if date and type is inputted
         document.getElementById("feedback").textContent = "";
         if (currentType === "doors") {
@@ -252,4 +263,28 @@ function date() {
             drawGraph();
         }
     }
+}
+
+function download() {
+    if (currentType === "doors") {
+        var noOfRows = data.getNumberOfRows(); //Fix for outputting times instead of dates in timeline
+        data.addColumn("timeofday", "startTime");
+        data.addColumn("timeofday", "endTime");
+        for (var i = 0; i < noOfRows; i++) { //Convert dates to times
+            data.setCell(i, 5, [data.getValue(i, 3).getHours(), data.getValue(i, 3).getMinutes(), data.getValue(i, 3).getSeconds()]);
+            data.setCell(i, 6, [data.getValue(i, 4).getHours(), data.getValue(i, 4).getMinutes(), data.getValue(i, 4).getSeconds()]);
+        }
+        data.removeColumn(2); //Remove style column from CSV
+        data.removeColumn(2); //Remove start date, same index as removing a column shifts the rest up
+        data.removeColumn(2); //Remove end date
+    }
+    var d2CSV = google.visualization.dataTableToCsv(data);
+    var colHeadings = [];
+    for (var i = 0; i < data.getNumberOfColumns(); i++) { //Get column names
+        colHeadings.push(data.getColumnLabel(i));
+    }
+    d2CSV = colHeadings.join(",") + "\r\n" + d2CSV; //Add columns to start of CSV file
+    var blob = new Blob([d2CSV], {type: "text/csv;charset=utf-8;"}); //Create new CSV file with contents of d2CSV
+    var link = URL.createObjectURL(blob); //Create URL to download file
+    window.open(link);
 }

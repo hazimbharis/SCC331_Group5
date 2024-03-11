@@ -83,3 +83,8 @@ hr {
     position: absolute;
     width: 100%;
 }
+
+#download {
+    position: absolute;
+    right: 0%;
+}

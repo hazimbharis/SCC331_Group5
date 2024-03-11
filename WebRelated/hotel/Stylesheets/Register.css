@@ -1,0 +1,106 @@
+* {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+h1 {
+  margin: 0;
+  text-align: center;
+}
+
+.button {
+  padding: 15px 30px;
+  font-size: 20px;
+  color: #986f38;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #386098;
+  color: #fff;
+}
+
+.form {
+  border: none;
+  outline: none;
+  color: #386098;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+.formLabels {
+  margin: 2px;
+  color: #e3d8d8;
+}
+
+.types {
+  position: absolute;
+  top: 100px;
+}
+
+.formContainer {
+  position: absolute;
+  background-color: #386098;
+  border: none;
+  padding: 30px;
+  border-radius: 10px;
+  top: 180px;
+  width: 1200px;
+}
+
+#first {
+  padding-left: 5px;
+  padding-right: 5px;
+  line-height: 250%;
+  /* border-bottom: 5px solid #44414f; */
+}
+
+#second {
+  margin-top: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+  line-height: 250%;
+  /* border-bottom: 5px solid #44414f; */
+}
+
+#third {
+  margin-top: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 20px;
+  line-height: 250%;
+}
+
+#medCon {
+  width: 500px;
+}
+
+#submit {
+  height: 50px;
+  width: 170px;
+  background-color: #fff;
+  color: #386098;
+  cursor: pointer;
+}
+
+#submit:hover {
+  background-color: #386098;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+#endDate {
+  left: 0%;
+}
+
+#msg {
+  line-height: 100%;
+}
