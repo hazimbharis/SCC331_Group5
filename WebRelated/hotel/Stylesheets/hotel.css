@@ -47,7 +47,6 @@ main #hospital-building #right-side {
     width: 230px;
     height: 600px;
     background-color: #B4B4B8;
-    cursor: pointer;
     display: flex;
     justify-content: space-evenly;
     padding-top: 80px;
@@ -66,7 +65,6 @@ main #hospital-building #middle {
     width: 230px;
     height: 370px;
     background-color: #B4B4B8;
-    cursor: pointer;
     display: flex;
     justify-content: space-evenly;
     padding-top: 60px;
@@ -313,4 +311,21 @@ main #hospital-building #middle-right-bush-bottom i {
     display: block;
 }
 
-/*# sourceMappingURL=home.css.map */
+.counter {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    color: #124076;
+    font-weight: bold;
+}
+
+.helicopter-sign {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
