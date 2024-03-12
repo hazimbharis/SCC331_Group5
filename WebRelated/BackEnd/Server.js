@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'pass1234',
+  password: 'MyNewPass',
   database: 'microbits'
 });
 
@@ -31,6 +31,13 @@ db.connect(err => {
     console.log('Connected to the database');
   }
 });
+
+app.get('/api/ChangeDatabase/:database', (req, res) => {
+  const database = req.params.database;
+  db.database = database;
+  res.json("Changed URL!");
+});
+
 app.get('/api/UserHistory/:pid', (req, res) => {
   const pid = req.params.pid;
   const query = `
