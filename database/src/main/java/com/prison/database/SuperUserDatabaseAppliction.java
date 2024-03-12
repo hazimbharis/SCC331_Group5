@@ -10,12 +10,12 @@ import java.net.MalformedURLException;
 import java.sql.*;
 
 
-@SpringBootApplication
-@RestController
+//@SpringBootApplication
+//@RestController
 public class SuperUserDatabaseAppliction {
 	// Login variables
 
-	private static final String PASSWORD = "pass1234";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static final String USER = "root";
 	private static Connection connection;

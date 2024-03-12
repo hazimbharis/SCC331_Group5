@@ -92,6 +92,32 @@
                 }
 
 
+                    if (orgName.OrganisationName.valueOf() == 'HotelSystem') {
+                        const nextResponse = await $.get('http://localhost:5000/api/changeDatabase/hotel');
+                        console.log(nextResponse);
+                        const http = new XMLHttpRequest();
+                        const url = 'http://localhost:8080/changeURL?url=hotel';
+                        http.open("GET", url);
+                        http.send();
+                        setTimeout(function() {
+                        window.location.href = "../hotel/Home.html";}, 10000);
+                    } else if (orgName.OrganisationName.valueOf() == 'PrisonSystem') {
+                        const nextResponse = await $.get('http://localhost:5000/api/changeDatabase/microbits');
+                        console.log(nextResponse);
+                        const http = new XMLHttpRequest();
+                        const url = 'http://localhost:8080/api/changeURL?url=microbits';
+                        http.open("GET", url);
+                        http.send();
+                        setTimeout(function() {
+                        window.location.href = "../Home.html";}, 10000);
+                    }
+                    } catch (error) {
+                        console.error('Error getting secret key:', error);
+                        messageBox.style.color = 'red';
+                        messageBox.innerHTML = "Didn't get MFA key";
+                        throw error; // Rethrow the error to handle it in the caller
+                        return {tokenValid: false, theKey: null};
+                    }
             }else{
                 messageBox.style.color = 'Red';
                 messageBox.innerHTML = "TOTP Incorrect";     

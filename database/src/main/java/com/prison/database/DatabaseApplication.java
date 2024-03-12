@@ -2,6 +2,7 @@ package com.prison.database;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,12 +13,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
+@CrossOrigin (origins = "http://localhost:8000")
 @RestController
 public class DatabaseApplication {
 	// Login variables
 
-	private static final String PASSWORD = "pass1234";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
+	private static String currentDatabase = "hotel";
 	private static final String USER = "root";
 	private static Connection connection;
 
@@ -32,7 +35,7 @@ public class DatabaseApplication {
 			"id VARCHAR(20) PRIMARY KEY NOT NULL, phoneNo VARCHAR(11) NOT NULL, FOREIGN KEY (id) REFERENCES users(id)",
 			"prisonerID VARCHAR(100) NOT NULL, zoneID INT NOT NULL, timeStamp TIMESTAMP(3) NOT NULL, FOREIGN KEY (prisonerID) REFERENCES users(id)",
 			"id VARCHAR(100) PRIMARY KEY NOT NULL, zoneID INT NOT NULL, timeOfUse timestamp, FOREIGN KEY (id) REFERENCES users(id)",
-			"zoneID INT NOT NULL, warningID INT NOT NULL", // zone where warning occuring, type of warning: 1 guard assist, 2 temp, 3 temp, 4 noise, 5 light
+			"zoneID INT NOT NULL, warningID INT NOT NULL", // zone where warning occuring, type of warning: 1 assist, 2 temp, 3 temp, 4 noise, 5 light
 			"zoneID INT NOT NULL, temp INT NOT NULL, noise INT NOT NULL, light DOUBLE(7,2) NOT NULL, date DATE NOT NULL, time TIME NOT NULL, PRIMARY KEY(zoneID, date, time)",
 			"doorID INT NOT NULL, status VARCHAR(20) NOT NULL, date DATE NOT NULL, time TIME NOT NULL, FOREIGN KEY (doorID) REFERENCES lockstatus(doorID), PRIMARY KEY(doorID, date, time)"
 	};
@@ -45,8 +48,8 @@ public class DatabaseApplication {
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			Statement stmt = connection.createStatement();
-			stmt.execute("CREATE DATABASE IF NOT EXISTS Microbits");
-			URL = "jdbc:mysql://localhost:3306/Microbits?useSSL=FALSE&allowPublicKeyRetrieval=True";
+			stmt.execute("CREATE DATABASE IF NOT EXISTS " + currentDatabase);
+			URL = "jdbc:mysql://localhost:3306/" + currentDatabase + "?useSSL=FALSE&allowPublicKeyRetrieval=True";
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -66,7 +69,7 @@ public class DatabaseApplication {
 	}
 
 	private static void initialize() throws SQLException {
-		String reset = "DROP TABLE IF EXISTS Microbits.Realtime ";
+		String reset = "DROP TABLE IF EXISTS " + currentDatabase + ".Realtime ";
 		PreparedStatement stmt2 = connection.prepareStatement(reset);
 		stmt2.executeUpdate();
 		for(int i=0;i<tableNames.length;i++){
@@ -89,7 +92,7 @@ public class DatabaseApplication {
 		 * parameters: prisoner id (varchar), zone id (int: 1-4)
 		 *
 		 * when insert, check if ID exists
-		 * -> "SELECT * FROM Microbits.movement WHERE movement.item = '"+item+"'";
+		 * -> "SELECT * FROM " + currentDatabase + ".movement WHERE movement.item = '"+item+"'";
 		 * if true, set value of current id
 		 * if false, create new row
 		 */
@@ -99,7 +102,7 @@ public class DatabaseApplication {
 		String insertDataSQL;
 		ResultSet result;
 
-		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.movement WHERE movement.prisonerID = '"+id+"'";
+		String retrieveDataSQL = "SELECT COUNT(*) FROM " + currentDatabase + ".movement WHERE movement.prisonerID = '"+id+"'";
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
 			while (result.next()) {
@@ -161,7 +164,7 @@ public class DatabaseApplication {
 		String insertDataSQL;
 		ResultSet result;
 
-		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.lockstatus WHERE lockstatus.doorID = " + door;
+		String retrieveDataSQL = "SELECT COUNT(*) FROM " + currentDatabase + ".lockstatus WHERE lockstatus.doorID = " + door;
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
 			while (result.next()) {
@@ -196,7 +199,7 @@ public class DatabaseApplication {
 		String insertDataSQL;
 		ResultSet result;
 
-		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.environment WHERE environment.zoneID = " + zone;
+		String retrieveDataSQL = "SELECT COUNT(*) FROM " + currentDatabase + ".environment WHERE environment.zoneID = " + zone;
 
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
@@ -229,7 +232,7 @@ public class DatabaseApplication {
 		String insertDataSQL;
 		ResultSet result;
 
-		String retrieveDataSQL = "SELECT COUNT(*) FROM Microbits.warnings WHERE warnings.zoneID = " + zone + " AND warnings.warningID = " + warning;
+		String retrieveDataSQL = "SELECT COUNT(*) FROM " + currentDatabase + ".warnings WHERE warnings.zoneID = " + zone + " AND warnings.warningID = " + warning;
 		try (PreparedStatement statement = connection.prepareStatement(retrieveDataSQL)) {
 			result = statement.executeQuery();
 			while (result.next()) {
@@ -264,7 +267,7 @@ public class DatabaseApplication {
 		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 		String date = datetime.format(dateFormat);
 		String time = datetime.format(timeFormat);
-		String iStatement = "INSERT INTO Microbits.zonehistory (zoneID, temp, noise, light, date, time) VALUES (?, ?, ?, ? ,?, ?)";
+		String iStatement = "INSERT INTO " + currentDatabase + ".zonehistory (zoneID, temp, noise, light, date, time) VALUES (?, ?, ?, ? ,?, ?)";
 		try (PreparedStatement pStatement = connection.prepareStatement(iStatement)) {
 			pStatement.setInt(1, zone);
 			pStatement.setInt(2, temp);
@@ -286,7 +289,7 @@ public class DatabaseApplication {
 		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 		String date = datetime.format(dateFormat);
 		String time = datetime.format(timeFormat);
-		String iStatement = "INSERT INTO Microbits.doorhistory (doorID, status, date, time) VALUES (?, ?, ?, ?)";
+		String iStatement = "INSERT INTO " + currentDatabase + ".doorhistory (doorID, status, date, time) VALUES (?, ?, ?, ?)";
 		try (PreparedStatement pStatement = connection.prepareStatement(iStatement)) {
 			pStatement.setInt(1, door);
 			pStatement.setString(2, status);
@@ -301,7 +304,7 @@ public class DatabaseApplication {
 	//http://localhost:8080/getPrisoners?zone=1
 	@GetMapping("/getPrisoners")
 	private String getPrisoners(@RequestParam(value = "zone")int zone) throws  SQLException {
-		String make = "SELECT * FROM Microbits.movement WHERE zoneID = " +zone;
+		String make = "SELECT * FROM " + currentDatabase + ".movement WHERE zoneID = " +zone;
 		PreparedStatement stmt = connection.prepareStatement(make);
 		ResultSet result = stmt.executeQuery();
 		String output = "";
@@ -315,7 +318,7 @@ public class DatabaseApplication {
 	//http://localhost:8080/getDoors
 	@GetMapping("/getDoors")
 	private String getDoors() throws  SQLException {
-		String make = "SELECT * FROM Microbits.lockstatus";
+		String make = "SELECT * FROM " + currentDatabase + ".lockstatus";
 		PreparedStatement stmt = connection.prepareStatement(make);
 		ResultSet result = stmt.executeQuery();
 		String output = "";
@@ -332,7 +335,7 @@ public class DatabaseApplication {
 	//http://localhost:8080/getEnvironment?zone=1
 	@GetMapping("/getEnvironment")
 	private String getEnvironment(@RequestParam(value = "zone")int zone) throws  SQLException {
-		String make = "SELECT * FROM Microbits.environment WHERE zoneID = " +zone;
+		String make = "SELECT * FROM " + currentDatabase + ".environment WHERE zoneID = " +zone;
 		PreparedStatement stmt = connection.prepareStatement(make);
 		ResultSet result = stmt.executeQuery();
 		String output = "";
@@ -346,6 +349,15 @@ public class DatabaseApplication {
 		return output;
 	}
 
+	@GetMapping("/changeURL")
+	private void changeURL(@RequestParam(value = "url")String newUrl) throws SQLException {
+		currentDatabase = newUrl;
+		URL = "jdbc:mysql://localhost:3306/" + currentDatabase + "?useSSL=FALSE&allowPublicKeyRetrieval=True";
+		connection = DriverManager.getConnection(URL,USER,PASSWORD);
+		System.out.println("changed url");
+		//return "Domain successfully changed!";
+	}
+
 	@GetMapping("/setup")
 	private void webSetup() throws SQLException {
 		for (int i = 0; i < tableNames.length; i++) {
@@ -357,7 +369,7 @@ public class DatabaseApplication {
 	@GetMapping("/reset")
 	private String reset() throws SQLException {
 		for (int i = 0; i < tableNames.length; i++) {
-			String drop = "DROP TABLE IF EXISTS Microbits." + tableNames[i];
+			String drop = "DROP TABLE IF EXISTS " + currentDatabase + "." + tableNames[i];
 			PreparedStatement stmt = connection.prepareStatement(drop);
 			stmt.executeUpdate();
 		}
@@ -398,7 +410,7 @@ public class DatabaseApplication {
 
 	@GetMapping("/getZD")
 	private String getZD(@RequestParam(value = "zone")int zone) throws SQLException{
-		String make = "SELECT * FROM Microbits.zone"+zone;
+		String make = "SELECT * FROM " + currentDatabase + ".zone"+zone;
 		PreparedStatement stmt = connection.prepareStatement(make);
 		ResultSet result = stmt.executeQuery();
 		String output = "";
@@ -416,9 +428,9 @@ public class DatabaseApplication {
 	private String retrieveMotionData(@RequestParam(value = "item", defaultValue = "all")String item) throws SQLException {
 		String retrieveDataSQL;
 		if(item.equals("all")){
-			retrieveDataSQL= "SELECT * FROM Microbits.movement";
+			retrieveDataSQL= "SELECT * FROM " + currentDatabase + ".movement";
 		}else{
-			retrieveDataSQL = "SELECT * FROM Microbits.movement WHERE movement.item = '"+item+"'";
+			retrieveDataSQL = "SELECT * FROM " + currentDatabase + ".movement WHERE movement.item = '"+item+"'";
 		}
 
 		PreparedStatement statement = connection.prepareStatement(retrieveDataSQL);

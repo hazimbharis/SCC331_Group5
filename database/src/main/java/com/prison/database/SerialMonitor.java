@@ -24,12 +24,6 @@ public class SerialMonitor {
     private int doors = 4;
     private String[] prevDoorValues = new String[doors];
 
-    //unnecessary variables, will remove later
-    private int z1counter;
-    private int z2counter;
-    private int z3counter;
-    //private ArrayList<LocationTracker> trackers = new ArrayList<>();
-
 
     public SerialMonitor() throws MalformedURLException {
     }
@@ -329,56 +323,6 @@ public class SerialMonitor {
 //            connection.disconnect();
 //        } catch (Exception e) {
 //        }
-//    }
-
-    public void checkRT() {
-        try {
-            for (int zoneCount = 1; zoneCount < 4; zoneCount++) {
-                URL getURL = new URL(url + "/getRT?zone=" + zoneCount);
-                if (DEBUG) {
-                    System.out.println(getURL);
-                }
-                HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    String[] entries = response.toString().split("!");
-                    ArrayList<String[]> records = new ArrayList<String[]>();
-                    for (int a = 0; a < entries.length; a++) {
-                        records.add(entries[a].split(","));
-                    }
-                    in.close();
-                    if (!response.toString().equals("")) {
-                        if (Integer.valueOf(records.get(records.size() - 1)[0]) > 10) {
-                            URL update = new URL(url + "/updateRT?zone=" + zoneCount);
-                            HttpURLConnection conn = (HttpURLConnection) update.openConnection();
-                            conn.setRequestMethod("GET");
-                            conn.connect();
-                            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                if (zoneCount == 1) {
-                                    z1counter = 1;
-                                } else if (zoneCount == 2) {
-                                    z2counter = 1;
-                                } else if (zoneCount == 3) {
-                                    z3counter = 1;
-                                }
-                            }
-                            connection.disconnect();
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void stop() {
         microbit.closePort();

@@ -91,7 +91,6 @@ function draw() {
             }
         },
         height: 350,
-        colors: ["red", "blue", "green", "#ffdd00"],
         tooltip: {
             textStyle: {
                 fontName: "Verdana",
@@ -255,6 +254,7 @@ function date() {
         document.getElementById("feedback").textContent = "Please select a data type"
     }
     else if (currentType != null && selectedDate !== "") { //Draw graph if date and type is inputted
+        document.getElementById("download").style.visibility = "visible";
         document.getElementById("feedback").textContent = "";
         if (currentType === "doors") {
             drawDoors();
