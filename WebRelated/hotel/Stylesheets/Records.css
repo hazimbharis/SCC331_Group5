@@ -64,10 +64,12 @@ input#name {
 th {
   border: 1px solid black;
   text-align: left;
+  color: black;
 }
 
 td {
   border: 1px solid black;
+  color: black;
 }
 
 tr:nth-child(even) {

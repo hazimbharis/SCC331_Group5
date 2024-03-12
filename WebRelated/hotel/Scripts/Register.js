@@ -14,24 +14,27 @@ function processAdd() {
     if (fName.length == 0 || fName.length > 50) { //Need validation on this side in case frontend is tampered with
         valid = false;
         errors.push("First names must be between 1 and 50 characters"); //Add to the list of error messages
+        document.getElementById("fName").style.border = "solid";
         document.getElementById("fName").style.borderColor = "red"; //If an input is invalid, hightlight the invalid input element with a red border
     }
     else {
-        document.getElementById("fName").style.borderColor = "#44414f"; //Set border back to normal if input becomes valid again
+        document.getElementById("fName").style.border = "none"; //Set border back to normal if input becomes valid again
     }
     var lName = document.getElementById("lName").value;
     if (lName.length == 0 || lName.length > 50) {
         valid = false;
         errors.push("Last name must be between 1 and 50 characters");
+        document.getElementById("lName").style.border = "solid";
         document.getElementById("lName").style.borderColor = "red";
     }
     else {
-        document.getElementById("lName").style.borderColor = "#44414f";
+        document.getElementById("lName").style.border = "none";
     }
     var dOB = document.getElementById("dOB").value;
     if (dOB.length == 0) {
         valid = false;
         errors.push("Date be provided");
+        document.getElementById("dOB").style.border = "solid";
         document.getElementById("dOB").style.borderColor = "red";
     }
     else
@@ -40,29 +43,32 @@ function processAdd() {
         if (dOBD.getTime() > date.getTime()) { //Make sure date selected is on/before today by comparing the milliseconds since epoch
             valid = false;
             errors.push("Date must be before today");
+            document.getElementById("dOB").style.border = "solid";
             document.getElementById("dOB").style.borderColor = "red";
         }
         else {
-            document.getElementById("dOB").style.borderColor = "#44414f";
+            document.getElementById("dOB").style.border = "none";
         }
     }
     var gender = document.getElementById("gender").value;
     if (gender.length == 0 || gender.length > 10) {
         valid = false;
         errors.push("Gender must be between 1 and 10 characters");
+        document.getElementById("gender").style.border = "solid";
         document.getElementById("gender").style.borderColor = "red";
     }
     else {
-        document.getElementById("gender").style.borderColor = "#44414f";
+        document.getElementById("gender").style.border = "none";
     }
     var medCon = document.getElementById("medCon").value;
     if (medCon.length > 100) {
         valid = false;
         errors.push("Medical conditions cannot be over 100 characters");
+        document.getElementById("medCon").style.border = "solid";
         document.getElementById("medCon").style.borderColor = "red";
     }
     else {
-        document.getElementById("medCon").style.borderColor = "#44414f";
+        document.getElementById("medCon").style.border = "none";
     }
 
     //Prisoners
@@ -71,35 +77,40 @@ function processAdd() {
         if (convs.length == 0 || convs.length > 100) {
             valid = false;
             errors.push("Convictions cannot be over 100 characters");
+            document.getElementById("convictions").style.border = "solid";
             document.getElementById("convictions").style.borderColor = "red";
         }
         else {
-            document.getElementById("convictions").style.borderColor = "#44414f";
+            document.getElementById("convictions").style.border = "none";
         }
         var startDate = document.getElementById("startDate").value;
         if (startDate.length == 0) {
             valid = false;
             errors.push("Start date must be provided");
+            document.getElementById("startDate").style.border = "solid";
             document.getElementById("startDate").style.borderColor = "red";
         }
         else {
-            document.getElementById("startDate").style.borderColor = "#44414f";
+            document.getElementById("startDate").style.border = "none";
         }
         var endDate = document.getElementById("endDate").value;
         if (endDate.length == 0) {
             valid = false;
             errors.push("End date must be provided");
+            document.getElementById("endDate").style.border = "solid";
             document.getElementById("endDate").style.borderColor = "red";
         }
         else {
-            document.getElementById("endDate").style.borderColor = "#44414f";
+            document.getElementById("endDate").style.border = "none";
         }
         if (startDate.length > 0 && endDate.length > 0) { //Make sure start date is before end date
             var sDate = new Date(startDate);
             var eDate = new Date(endDate);
             if (sDate.getTime() > eDate.getTime()) {
                 valid = false;
+                document.getElementById("startDate").style.border = "solid";
                 document.getElementById("startDate").style.borderColor = "red";
+                document.getElementById("endDate").style.border = "solid";
                 document.getElementById("endDate").style.borderColor = "red";
                 errors.push("Start date must be before or on end date");
             }
@@ -148,10 +159,11 @@ function processAdd() {
         if (role.length == 0 || role.length > 20) {
             valid = false;
             errors.push("Role must be between 1 and 20 characters");
+            document.getElementById("role").style.border = "solid";
             document.getElementById("role").style.borderColor = "red";
         }
         else {
-            document.getElementById("role").style.borderColor = "#44414f";
+            document.getElementById("role").style.border = "none";
         }
         if (valid == true) {
             fetch('http://localhost:5000/api/addStaff', {
@@ -193,15 +205,17 @@ function processAdd() {
         if (isNaN(pNo) == true) { //Make sure phone number is actually a number
             valid = false;
             errors.push("Phone number must only contain numbers");
+            document.getElementById("pNo").style.border = "solid";
             document.getElementById("pNo").style.borderColor = "red";
         }
         else if (pNo.length != 11) {
             valid = false;
             errors.push("Phone number must be 11 characters");
+            document.getElementById("pNo").style.border = "solid";
             document.getElementById("pNo").style.borderColor = "red";
         }
         else {
-            document.getElementById("pNo").style.borderColor = "#44414f";
+            document.getElementById("pNo").style.border = "none";
         }
         if (valid == true) {
             fetch('http://localhost:5000/api/addVisitor', {

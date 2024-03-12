@@ -17,12 +17,13 @@
 }
 
 .button:hover {
-  background-color: #686576;
+  background-color: #cccccc;
 }
 
 .label {
   color: #fff;
   font-size: 20px;
+  margin: 5px;
 }
 
 .board {
@@ -31,7 +32,7 @@
   position: relative;
   justify-content: space-evenly;
   background-color: white;
-  height: 500px;
+  height: 600px;
   width: 1200px;
   border: 5px solid #44414f;
   border-radius: 5px;
@@ -56,10 +57,6 @@ hr {
   line-height: 250%;
 }
 
-.label {
-  margin: 5px;
-}
-
 .date {
   padding: 10px 15px;
   border-radius: 5px;
@@ -82,4 +79,9 @@ hr {
 #graph {
   position: absolute;
   width: 100%;
+}
+
+#download {
+  position: absolute;
+  right: 0%;
 }
