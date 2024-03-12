@@ -28,7 +28,7 @@ app.get('/api/GetMFAKey/:email', (req, res) => {
   const email = req.params.email;
 
   // Perform database query to check if organisationKey exists
-  const query = 'SELECT SecretKey FROM user WHERE email = ?';
+  const query = 'SELECT SecretKey, OrganisationId FROM user WHERE email = ?';
   db.query(query, [email], (err, results) => {
       if (err) {
         console.error('Database query error: ' + err.message);

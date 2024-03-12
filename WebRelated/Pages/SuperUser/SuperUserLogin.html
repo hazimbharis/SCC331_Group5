@@ -24,9 +24,6 @@
     <div class="form-container">
         <h2 id ="Sign-up">Sign in</h2>
         <form class="form-box" onsubmit="return false;">
-
-      
-
             <label for="email">Email</label>
             <input type="text" id="email" name="email" required>
       
@@ -40,7 +37,6 @@
             <span class ="error-box"></span>
 
             <div style="font-family: Roboto, Helvetica, sans-serif; font-weight: 100;" id= "Message-Container-Signin" class="Message-Container"></div>
-        
            <!--
             <span class="psw">Forgot <a href="#">password?</a></span>            
            -->
@@ -75,12 +71,12 @@
                 loadingIcon.classList.add('loading-icon');
 
                 // Add styles to the loading icon
-                loadingIcon.style.border = '4px solid #f3f3f3'; /* Light grey */
-                loadingIcon.style.borderTop = '4px solid #3498db'; /* Blue */
+                loadingIcon.style.border = '4px solid #f3f3f3'; // Light grey
+                loadingIcon.style.borderTop = '4px solid #3498db'; // Blue
                 loadingIcon.style.borderRadius = '50%';
                 loadingIcon.style.width = '40px';
                 loadingIcon.style.height = '40px';
-                loadingIcon.style.animation = 'spin 1s linear infinite'; /* Spin animation */
+                loadingIcon.style.animation = 'spin 1s linear infinite'; // Spin animation
                 loadingIcon.style.justifySelf = 'center';
                 loadingIcon.style.position = 'relative';
                 loadingIcon.style.left = '42%';
@@ -88,9 +84,13 @@
                 // Append the loading icon to the body
                 messageBox.appendChild(loadingIcon);
 
+                
+                if (returnInfo.type === 1){
+                    setTimeout(function() {window.location.href = "../PrisonHome.html";}, 1000);                           
+                }else if (returnInfo.type === 2){
+                    setTimeout(function() {window.location.href = "../../hotel/Pages/Home.html";}, 1000);                    
+                }
 
-                setTimeout(function() {
-                window.location.href = "../Home.html";}, 10000);
 
             }else{
                 messageBox.style.color = 'Red';
@@ -107,19 +107,21 @@
         try {
         const response = await $.get('http://localhost:5001/api/GetMFAKey/' + email);
         const secretKey = response[0].SecretKey;
+        const systemType = response[0].OrganisationId;
+        console.log("SystemType: " + systemType);
         if (secretKey === null){
             throw "Not found";
         }
         console.log("secretKey:", response);
         console.log("secretKey: " + secretKey);
-        return {tokenValid: true, theKey: secretKey};
+        return {tokenValid: true, theKey: secretKey, type: systemType};
         
     } catch (error) {
         console.error('Error getting secret key:', error);
         messageBox.style.color = 'red';
         messageBox.innerHTML = "Didn't get MFA key";
         throw error; // Rethrow the error to handle it in the caller
-        return {tokenValid: false, theKey: null};
+        return {tokenValid: false, theKey: null, type: systemType};
     }
     }
     function checkcredentials(e, p){

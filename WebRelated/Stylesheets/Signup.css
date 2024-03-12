@@ -4,15 +4,15 @@ body {
     background-image: url('../Images/background2.jpg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
     background-attachment: fixed;
     margin: 0px;
 }
+
 #Sign-up{
     font-size: 32;
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
-    
 }
 .Message-Container{
     text-align: center;
@@ -31,6 +31,7 @@ body {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="password"],
 select {
     width: calc(100% - 20px);

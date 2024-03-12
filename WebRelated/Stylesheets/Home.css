@@ -2,89 +2,196 @@
     box-sizing: border-box;
     font-weight: 500;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-
-}
-
-body {
+  }
+  
+  body {
     margin: 0;
-}
-
-nav {
     width: 100vw;
-    background-color: #44414f;
-    padding: 25px 0;
+    height: 100vh;
+    background-image: url('../Images/Prison1.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(2px);
+    z-index: -1;
+  }
+  
+  nav {
+    width: 100vw;
+    background-color: #fff;
+    padding-top: 25px;
+    padding-bottom: 10px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-}
-
-nav div {
+    opacity: 0.85;
+  }
+  
+  nav div {
     color: #000;
     text-decoration: none;
     padding: 10px 15px;
-    background-color: #e3d8d8;
-    border-radius: 5px;
     cursor: pointer;
-}
-
-nav i {
+  }
+  
+  nav i {
     color: #000 !important;
-}
-
-nav a {
+  }
+  
+  nav a {
     text-decoration: none;
     color: #000000;
-}
-
-.items {
-    margin-top: 100px;
+  }
+  
+  .items {
+    opacity: 0.9;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    width: 100vw;
     display: flex;
     justify-content: space-evenly;
-}
-
-.item {
-    position: relative;
+  }
+  
+  .item {
+    padding: 25px 0;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .item i {
+    color: #000 !important;
+    margin-right: 7px;
+  }
+  
+  .link > i {
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .link > i:hover {
+    transform: scale(1.5);
+  }
+  
+  #heading b {
+    font-weight: bold;
+  }
+  
+  #heading {
+    font-weight: bold;
+  }
+  
+  /* Dropdown Menu */
+  #select-div {
     display: flex;
     justify-content: center;
-    align-items: baseline;
-    width: 350px;
-    height: 350px;
-    border-radius: 20px;
-    background-color: #686576;
-}
-
-i {
-    color: #e3d8d8 !important;
-}
-
-.item-title {
-    margin-left: 10px;
-    font-size: 40px;
-    color: #e3d8d8;
-}
-
-.item-value {
+    align-items: center;
+    z-index: 99;
+  }
+  select {
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color: #427d9d;
+    color: white;
+  }
+  .options {
+    z-index: 1;
+  }
+  
+  .dropdown {
+    border-radius: 10px;
+    position: relative;
+    width: 300px;
+    height: 50px;
+  }
+  
+  .dropdown input::placeholder {
+    color: #fff;
+  }
+  
+  .dropdown::before {
+    content: '';
     position: absolute;
-    top: 50%;
+    top: 25px;
+    right: 20px;
+    z-index: 1000;
+    width: 8px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-top: 2px solid #986f38;
+    border-right: 2px solid #986f38;
+    transform: rotate(-225deg);
+    transition: 0.5s;
+    pointer-events: none;
+  }
+  
+  .dropdown.active::before {
+    top: 20px;
+    transform: rotate(-45deg);
+  }
+  
+  .dropdown input {
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: #986f38;
+    font-size: 1.2em;
+    border: none;
+    outline: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+  }
+  
+  .dropdown .options {
+    position: absolute;
+    top: -190px;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+    display: none;
+  }
+  
+  .dropdown.active .options {
+    display: block;
+  }
+  
+  .dropdown .options div {
+    padding: 12px 20px;
+    cursor: pointer;
+  }
+  
+  .dropdown .options div:hover {
+    background: #986f38;
+    color: #fff;
+  }
+  
+  main {
+    position: absolute;
+    top: 45%;
     left: 50%;
-    color: #e3d8d8;
-    font-size: 60px;
     transform: translate(-50%, -50%);
-    margin: 0;
-}
-
-.link > i {
-    transition: transform 0.5s ease-in-out;
-}
-
-.link > i:hover {
-    transform: scale(1.5);
-}
-
-#heading b {
-    font-weight: bold;
-}
-
-#heading {
-    font-weight: bold;
-}
+    text-align: center;
+  }
+  
+  main h1 {
+    font-size: 50px;
+    color: #fff;
+    font-weight: 900;
+  }
+  
