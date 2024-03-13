@@ -14,8 +14,8 @@ function resetTable(newType, headingNames) {
         document.getElementById(currentType).style.color = "";
     }
     currentType = newType;
-    document.getElementById(currentType).style.backgroundColor = "#e3d8d8"; //Highlight the current user type selected
-    document.getElementById(currentType).style.color = "black";
+    document.getElementById(currentType).style.backgroundColor = "#386098"; //Highlight the current user type selected
+    document.getElementById(currentType).style.color = "#fff";
     data = [];
     arrayed = [];
     var table = document.getElementById("table");
@@ -59,7 +59,7 @@ function displayData() {
 }
 
 function prisoners() {
-    var names = ["Id", "First names", "Last name", "DOB", "Gender", "Medical conditions", "Convictions", "Start date", "End date"];
+    var names = ["Id", "First names", "Last name", "DOB", "Gender", "Medical conditions", "Additional info", "Start date", "End date"];
     resetTable("prisoners", names);
     $.get('http://localhost:5000/api/prisoners', (newData) => { //Get prisoner records
         data = newData.map((row) => ({

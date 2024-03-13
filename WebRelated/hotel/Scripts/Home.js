@@ -4,7 +4,7 @@ let light = document.getElementById('light');
 
 var h1 = document.getElementById('heading');
 let index = 0;
-var zones = ['Gym', 'Canteen', 'Living Room', 'Library'];
+var zones = ['Reception', 'Restaurant', 'Hotel Room'];
 let chosenZone = document.getElementById('chosen-zone');
 
 function change_left() {
@@ -20,7 +20,8 @@ function change_right() {
 }
 
 const show = (zone) => {
-  chosenZone.placeholder = zone;
+  chosenZone.placeholder = zones[zone];
+  index = zone;
 };
 
 // Dropdown Menu

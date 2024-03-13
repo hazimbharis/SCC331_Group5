@@ -1,0 +1,89 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-sizing: border-box;
+}
+
+.board {
+    margin: auto;
+    margin-top: 50px;
+    position: relative;
+    justify-content: space-evenly;
+    background-color: #fff;
+    width: 1200px;
+    border: 5px solid #44414f;
+    border-radius: 5px;
+}
+
+.menu {
+    background-color: #386098;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-bottom: 5px solid #44414f;
+    line-height: 150%
+}
+
+.label {
+    color: #fff;
+    margin: 5px;
+    margin-top: 10px;
+}
+
+hr {
+    width: 100%;
+    border: none;
+    margin: 0;
+}
+
+.submit {
+    margin: 5px;
+    background-color: #fff;
+    color: #386098;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.submit:hover {
+    background-color: #cccccc;
+}
+
+.rLabel {
+    color: black;
+    padding: 5px;
+}
+
+#download {
+    position: absolute;
+    right: 0%;
+    height: 36px;
+}
+
+#userTypes {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    right: 40%;
+    top: 100px;
+}
+
+#movementCount {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    right: 0%;
+    top: 100px;
+}
+
+.chart {
+    margin: 10px;
+}
+
+.date {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    margin: 5px;
+}

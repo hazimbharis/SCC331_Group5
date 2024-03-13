@@ -71,12 +71,12 @@ function processAdd() {
         document.getElementById("medCon").style.border = "none";
     }
 
-    //Prisoners
-    if (type == "P") {
+    //Guests
+    if (type == "G") {
         var convs = document.getElementById("convictions").value;
         if (convs.length == 0 || convs.length > 100) {
             valid = false;
-            errors.push("Convictions cannot be over 100 characters");
+            errors.push("Additional info cannot be over 100 characters");
             document.getElementById("convictions").style.border = "solid";
             document.getElementById("convictions").style.borderColor = "red";
         }
@@ -139,10 +139,10 @@ function processAdd() {
             }).then(res => { //Wait for response from server to check if user addition failed or succeeded and output appropriate message
                 res.json().then(value => {
                     if (value.result == "Success") {
-                        feedback.textContent = "New prisoner added with ID: " + value.id;
+                        feedback.textContent = "New guest added with ID: " + value.id;
                     }
                     else if (value.result == "Failed") {
-                        feedback.textContent = "Prisoner addition failed";
+                        feedback.textContent = "Guest addition failed";
                     }
                 });
             });
@@ -251,14 +251,14 @@ function processAdd() {
     }
 }
 
-function prisonerMode() {
-    type = "P"; //Switch user type
+function guestMode() {
+    type = "G"; //Switch user type
     box.replaceChildren(); //Remove all children of this element
     document.getElementById("feedback").textContent = "";
-    document.getElementById("secondHead").textContent = "Prisoner information";
+    document.getElementById("secondHead").textContent = "Guest information";
     var cLabel = document.createElement("label"); //Add the type specific input form needed
     cLabel.classList.add("formLabels");
-    cLabel.textContent = "Convictions: ";
+    cLabel.textContent = "Addition info: ";
     var conv = document.createElement("input");
     conv.classList.add("form");
     conv.id = "convictions";

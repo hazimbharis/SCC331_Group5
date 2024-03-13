@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Reports</title>
+    <script
+            src="https://kit.fontawesome.com/e0b1d3493e.js"
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="stylesheet" href="../Stylesheets/Reports.css"/>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body style="background-color: #986f38">
+
+<h1 style="position: relative; top: 10px; text-align: center; color: #fff" id="heading"><b>Reports</b></h1>
+<div class="board">
+    <div class="menu">
+        <label class="label">Enter start date:</label>
+        <input type="date" class="date" id="startDate"></input>
+        <label class="label">Enter end date:</label>
+        <input type="date" class="date" id="endDate"></input>
+        <button class="submit" onclick="generate()">Generate</button>
+        <button class="submit" onclick="download()" id="download" style="visibility: hidden;">Download</button>
+        <hr>
+        <label class="label" id="feedback"></label>
+    </div>
+    <div class="report" id="report">
+        <h2 style="position: relative; text-align: center; margin: 5px;" id="rHeading">Report</h2>
+        <label class="rLabel" id="sDate">Start date:</label><br>
+        <div class="chart" id="userTypes"></div>
+        <div class="chart" id="movementCount"></div>
+        <label class="rLabel" id="eDate">End date:</label><br><br>
+        <label class="rLabel" id="noOfUsers">Number of users:</label><br>
+        <label class="rLabel" id="meanUsers">Mean number of users:</label><br>
+        <label class="rLabel" id="minUsers">Mininum number of users:</label><br>
+        <label class="rLabel" id="maxUsers">Maximum number of users:</label><br><br><br>
+        <div class="chart" id="dayCount"></div><br>
+        <label class="rLabel" id="noOfZones">Number of zones:</label><br>
+        <label class="rLabel" id="mTemp">Mean temperature:</label><br>
+        <label class="rLabel" id="mLight">Mean light level:</label><br>
+        <label class="rLabel" id="mSound">Mean sound level:</label><br>
+        <div class="chart" id="temp"></div><br>
+        <div class="chart" id="light"></div><br>
+        <div class="chart" id="sound"></div><br>
+        <label class="rLabel" id="noOfDoors">Number of doors:</label><br>
+        <div class="chart" id="doorHistory"></div>
+    </div>
+</div>
+<a href="Home.html" style="position: absolute; left: 20px; top: 20px; color: #fff !important; cursor:pointer;">
+    <i class="fa-solid fa-house fa-3x"></i>
+</a>
+<script src="../Scripts/Reports.js"></script>
+<script
+        integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+></script>
+</body>
+</html>

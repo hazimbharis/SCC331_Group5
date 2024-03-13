@@ -20,32 +20,36 @@ function generate() {
     eDate = document.getElementById("endDate").value;
     if (sDate.length === 0) { //Make sure start and end date are not empty
         valid = false;
+        document.getElementById("startDate").style.border = "solid";
         document.getElementById("startDate").style.borderColor = "red";
         errors.push("Please enter start date");
     }
     else {
-        document.getElementById("startDate").style.borderColor = "";
+        document.getElementById("startDate").style.border = "none";
     }
     if (eDate.length === 0) {
         valid = false;
+        document.getElementById("endDate").style.border = "solid";
         document.getElementById("endDate").style.borderColor = "red";
         errors.push("Please enter end date");
     }
     else {
-        document.getElementById("endDate").style.borderColor = "";
+        document.getElementById("endDate").style.border = "none";
     }
     if (sDate.length > 0 && eDate.length > 0) { //Make sure start date is before end date
         var s = new Date(sDate); //Get date into format the database expects
         var e = new Date(eDate);
         if (s.getTime() > e.getTime()) {
             valid = false;
+            document.getElementById("startDate").style.border = "solid";
             document.getElementById("startDate").style.borderColor = "red";
+            document.getElementById("endDate").style.border = "solid";
             document.getElementById("endDate").style.borderColor = "red";
             errors.push("Start date must be before or on end date");
         }
         else {
-            document.getElementById("startDate").style.borderColor = "";
-            document.getElementById("endDate").style.borderColor = "";
+            document.getElementById("startDate").style.border = "none";
+            document.getElementById("endDate").style.border = "none";
         }
     }
     if (valid === false) {
