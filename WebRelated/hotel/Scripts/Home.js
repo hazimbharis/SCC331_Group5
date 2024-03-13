@@ -7,18 +7,6 @@ let index = 0;
 var zones = ['Reception', 'Restaurant', 'Hotel Room'];
 let chosenZone = document.getElementById('chosen-zone');
 
-function change_left() {
-  index -= 1;
-  if (index < 0) index = 3;
-  h1.innerHTML = zones[Math.abs(index % 4)];
-}
-
-function change_right() {
-  index += 1;
-
-  h1.innerHTML = zones[Math.abs(index % 4)];
-}
-
 const show = (zone) => {
   chosenZone.placeholder = zones[zone];
   index = zone;
@@ -34,7 +22,7 @@ function fetchPopulationData() {
   switch (Math.abs(index % 4)) {
     case 0:
       console.log('0');
-      $.get('http://localhost:5000/api/gym', (data) => {
+      $.get('http://localhost:5000/api/zoneEnv/11', (data) => {
         // Update the 'values' array with the new data received
         values = data;
         console.log(data);
@@ -45,7 +33,7 @@ function fetchPopulationData() {
       break;
     case 1:
       console.log('1');
-      $.get('http://localhost:5000/api/canteen', (data) => {
+      $.get('http://localhost:5000/api/zoneEnv/12', (data) => {
         // Update the 'values' array with the new data received
         values = data;
         console.log(data);
@@ -56,19 +44,7 @@ function fetchPopulationData() {
       break;
     case 2:
       console.log('2');
-      $.get('http://localhost:5000/api/library', (data) => {
-        // Update the 'values' array with the new data received
-        values = data;
-        console.log(data);
-        temperature.innerHTML = values[0].temp + '°C';
-        noise.innerHTML = values[0].noise + 'dB';
-        light.innerHTML = values[0].light + 'lx';
-        return;
-      });
-      break;
-    case 3:
-      console.log('3');
-      $.get('http://localhost:5000/api/livingroom', (data) => {
+      $.get('http://localhost:5000/api/zoneMeans/10', (data) => {
         // Update the 'values' array with the new data received
         values = data;
         console.log(data);

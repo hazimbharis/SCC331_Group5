@@ -20,8 +20,8 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'pass1234',
-  database: 'microbits'
+  password: 'MyNewPass',
+  database: 'hotel'
 });
 
 db.connect(err => {
@@ -774,6 +774,36 @@ app.get('/api/dHistory/:sDate/:eDate', (req, res) => {
   SELECT *
   FROM doorhistory
   WHERE date >= "` + req.params.sDate + `" AND date <= "` + req.params.eDate + `"`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/zoneEnv/:zone', (req, res) => {
+  const query = `
+  SELECT *
+  FROM environment
+  WHERE zoneID = ` + req.params.zone;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error: ' + err.message);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(results);
+    } 
+  });
+})
+
+app.get('/api/zoneMeans/:zone', (req, res) => {
+  const query = `
+  SELECT AVG(temp) as temp, AVG(noise) as noise, AVG(light) as light 
+  FROM environment 
+  WHERE zoneID <= ` + req.params.zone;
   db.query(query, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
