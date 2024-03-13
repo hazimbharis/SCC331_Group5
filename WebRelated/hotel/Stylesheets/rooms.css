@@ -157,5 +157,36 @@ h1 {
     transform: translateY(-50%);
 }
 
+#legend {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.legend-item {
+    position: relative;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+}
+
+.legend-item div {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 75px;
+}
+
+#legend i {
+    color: #124076;
+}
+
 
 /*# sourceMappingURL=rooms.css.map */
