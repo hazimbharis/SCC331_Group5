@@ -102,12 +102,12 @@
                         http.open("GET", url);
                         http.send();
                         setTimeout(function() {
-                        window.location.href = "../hotel/Home.html";}, 10000);
+                        window.location.href = "../../hotel/Pages/Home.html";}, 10000);
                     } else if (orgName.OrganisationName.valueOf() == 'PrisonSystem') {
                         const nextResponse = await $.get('http://localhost:5000/api/changeDatabase/microbits');
                         console.log(nextResponse);
                         const http = new XMLHttpRequest();
-                        const url = 'http://localhost:8080/api/changeURL?url=microbits';
+                        const url = 'http://localhost:8080/changeURL?url=microbits';
                         http.open("GET", url);
                         http.send();
                         setTimeout(function() {
