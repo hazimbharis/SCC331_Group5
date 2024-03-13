@@ -4,7 +4,7 @@ let light = document.getElementById('light');
 
 var h1 = document.getElementById('heading');
 let index = 0;
-var zones = ['Gym', 'Canteen', 'Living Room', 'Library']
+var zones = ['Gym', 'Canteen', 'Cells', 'Library']
 let chosenZone = document.getElementById('chosen-zone');
 function change_left(){
   index -= 1;

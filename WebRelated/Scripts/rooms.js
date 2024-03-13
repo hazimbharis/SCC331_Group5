@@ -1,3 +1,5 @@
+//const { getEnvironmentData } = require("worker_threads");
+
 let room1 = document.getElementById("room1");
 let room2 = document.getElementById("room2");
 let room3 = document.getElementById("room3");
@@ -22,7 +24,8 @@ staff.style.color = "blue";
 staff.classList.add("fa-solid", "fa-location-crosshairs", "fa-2x")
 
 //Display users
-const dummyUserData = [{
+/*
+var dummyUserData = [{
   type: "G", zoneID: 1, firstName: "John", lastName: "Wick"
 }, {type: "G", zoneID: 2, firstName: "John", lastName: "Wick"}, {
   type: "G", zoneID: 3, firstName: "John", lastName: "Wick"
@@ -37,6 +40,37 @@ const dummyUserData = [{
 }, {type: "V", zoneID: 12, firstName: "John", lastName: "Wick"}, {
   type: "S", zoneID: 1, firstName: "Wick", lastName: "Shelby"
 }];
+*/
+function clearEntity() {
+
+  const rooms = document.querySelectorAll('.room');
+  rooms.forEach(room => {
+
+    const usersContainer = room.querySelector('.users');
+    usersContainer.innerHTML = '';
+  });
+  
+  //document.querySelectorAll('.users').forEach((el) => el.remove());
+
+}
+
+async function getLocationData(){
+  clearEntity();
+  var dummyUserData = [];
+  var testData = [];
+  console.log("hi");
+  await $.get('http://localhost:5000/api/NewUIPositions', (newData) => {
+    testData = newData.map((item) => ({
+      type: item.type,
+      zoneID: item.zoneID, 
+      firstName: item.firstNames,
+      lastName: item.lastName,
+    }));
+    dummyUserData = testData;
+    console.log(dummyUserData);
+    //console.log(formattedData);
+ });
+
 
 dummyUserData.forEach(user => {
   let userDiv = document.createElement("div");
@@ -80,7 +114,7 @@ dummyUserData.forEach(user => {
     room10.childNodes[5].appendChild(userDiv);
   }
 })
-
+}
 
 //Show room info onClick
 let switchCharts = document.querySelectorAll(".chart");
@@ -96,5 +130,73 @@ switchCharts.forEach(switchChart => {
 })
 
 
+
+
 // Fetch room info from backend & display
-const dummyRoomData = []
+const dummyRoomData = [];
+
+async function updateRoomEnvData() {
+  const rooms = document.querySelectorAll('.room');
+  let zoneCounter = 4; // Start zone counter at 4
+
+  for (const room of rooms) {
+    const roomDataContainer = room.querySelector('.room-data');
+    const roomDataElements = roomDataContainer.children;
+
+    for (const element of roomDataElements) {
+      const [property, value] = element.textContent.split(':');
+      const propertyName = property.trim();
+
+      try {
+        const envData = await getEnvironmentData(zoneCounter);
+        console.log("temp: " + envData.temp); // Move console.log here
+        switch (propertyName) {
+          case 'Temperature':
+            element.textContent = `${propertyName}: ${envData.temp}°C`;
+            break;
+          case 'Light':
+            element.textContent = `${propertyName}: ${envData.light}lx`;
+            break;
+          case 'Noise':
+            element.textContent = `${propertyName}: ${envData.noise}dB`;
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        console.error('Error fetching environment data:', error);
+      }
+    }
+    switch (zoneCounter){
+     case 12:
+      zoneCounter = 5;
+      break;
+     default:
+      zoneCounter +=2;
+      break;
+    }
+ 
+  }
+}
+async function getEnvironmentData(zoneNum) {
+  try {
+    const newData = await $.get('http://localhost:5000/api/zoneEnv/' + zoneNum);
+    const testData = newData.map((item) => ({
+      zoneID: item.zoneID,
+      temp: item.temp, 
+      noise: item.noise,
+      light: item.light,
+    }));
+    console.log(testData);
+    return testData[0]; // Return the first object from the array
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+
+
+setInterval(updateRoomEnvData, 500);
+setInterval(getLocationData, 1000);
