@@ -19,9 +19,9 @@ public class SerialMonitor {
     private LocalTime hour = LocalTime.now();
     private LocalTime nextHour = LocalTime.now().plusSeconds(10);//LocalTime.of(hour.getHour()+1,hour.getMinute(),hour.getSecond());
     private SerialPort microbit;
-    private int zones = 4;
+    private int zones = 20;
     private double [][] prevZoneValues = new double[zones][3]; //Stores previous zone values as zone history only stores changes so needed for comparison
-    private int doors = 4;
+    private int doors = 20;
     private String[] prevDoorValues = new String[doors];
 
 

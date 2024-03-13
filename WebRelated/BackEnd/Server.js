@@ -623,7 +623,7 @@ app.get('/api/countUsers/:sDate/:eDate', (req, res) => {
           })
         }
         else {
-          data.max = 0; //In case period selected with no data
+          data.max = 0; //In case period SELECTed with no data
           data.min = 0;
           data.minDate = "0000-00-00";
           data.maxDate = "0000-00-00";
@@ -658,10 +658,23 @@ app.get('/api/userTypes/:sDate/:eDate', (req, res) => {
 //Get number of users on each day in timeframe
 app.get('/api/dayCount/:sDate/:eDate', (req, res) => {
   const query = `
-  SELECT DATE(timeStamp) as "Date", COUNT(DISTINCT prisonerID) as "noOfUsers"
-  FROM movement
-  WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"
-  GROUP BY Date`; //Count number of users per day by counting instances of each date and grouping them
+  SELECT Date, noOfUsers
+  FROM
+    (SELECT * 
+    FROM 
+      (SELECT ADDDATE("` + req.params.sDate + `",t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) Date
+      FROM
+        (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,
+        (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t1,
+        (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t2,
+        (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t3) v
+    WHERE Date <= "` + req.params.eDate + `") as dates 
+    LEFT JOIN 
+    (SELECT DATE(timeStamp) as "DateC", COUNT(DISTINCT prisonerID) as "noOfUsers"
+    FROM movement WHERE timeStamp >= "` + req.params.sDate + ` 00:00:00.000" AND timeStamp <= "` + req.params.eDate + ` 23:59:59.999"
+    GROUP BY DATE(timestamp)) as counts 
+    ON dates.Date = counts.DateC 
+    ORDER BY Date`; //Count number of users per day by counting instances of each date and grouping them, first table is all dates between selected dates, LEFT JOIN to keep dates without user count data
   db.query(query, (err, results) => {
     if (err) {
       console.error('Database query error: ' + err.message);
