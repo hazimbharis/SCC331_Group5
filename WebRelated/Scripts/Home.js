@@ -5,7 +5,7 @@ let light = document.getElementById('light');
 var h1 = document.getElementById('heading');
 let index = 0;
 var zones = ['Gym', 'Canteen', 'Living Room', 'Library']
-
+let chosenZone = document.getElementById('chosen-zone');
 function change_left(){
   index -= 1;
   if (index < 0) index = 3
@@ -17,7 +17,14 @@ function change_right(){
   
   h1.innerHTML = zones[Math.abs(index%4)]
 }
-
+const show = (zone) => {
+  chosenZone.placeholder = zones[zone];
+  index = zone;
+};
+let dropdown = document.querySelector('.dropdown');
+dropdown.onclick = function () {
+  dropdown.classList.toggle('active');
+};
 function fetchPopulationData() {
   switch (Math.abs(index%4)) {
     case 0:
