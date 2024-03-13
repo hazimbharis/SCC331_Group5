@@ -14,6 +14,7 @@ let middleRoute = document.getElementById("middle-route");
 
 let formattedData = [];
 let doors = [];
+let alertShown = false;
 
 //Data fetched from backend for doors
 // const dummyData = [{doorID: 1, locked: 0, closed: 0, alarm: 0}, {
@@ -165,11 +166,11 @@ async function updateMovementInfo() {
         }
         zone3.appendChild(userDiv);
       }
-      zone1CounterElement.innerHTML = `Hotel Rooms: ${zone1Counter}`;
-      zone2CounterElement.innerHTML = `Reception: ${zone2Counter}`;
-      zone3CounterElement.innerHTML = `Restaurant: ${zone3Counter}`;
     });
   })
+  zone1CounterElement.innerHTML = `Hotel Rooms: ${zone1Counter}`;
+  zone2CounterElement.innerHTML = `Reception: ${zone2Counter}`;
+  zone3CounterElement.innerHTML = `Restaurant: ${zone3Counter}`;
 }
 
 function checkAlerts() { 
@@ -220,6 +221,7 @@ async function showAlerts() {
 
     }) 
   }
+  alertShown = false
 }
 
 updateMovementInfo();
