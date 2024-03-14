@@ -114,7 +114,7 @@ async function updateMovementInfo() {
       type: item.type,
       zoneID: item.zoneID,
       id: item.prisonerID, 
-      name: item.firstNames + ' ' + item.lastName,
+      name: item.firstNames + ' ' + item.lastName,  
     }));
     formattedData.forEach((user) => {
       let userDiv = document.createElement("div");

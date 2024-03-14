@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 public class DatabaseApplication {
 	// Login variables
 
-	private static final String PASSWORD = "pass1234";
+	private static final String PASSWORD = "MyNewPass";
 	private static String URL = "jdbc:mysql://localhost:3306/?useSSL=FALSE&allowPublicKeyRetrieval=True";
 	private static String currentDatabase = "hotel";
 	private static final String USER = "root";

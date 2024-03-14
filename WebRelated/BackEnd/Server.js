@@ -17,10 +17,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const db = mysql.createConnection({
+var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'pass1234',
+  password: 'MyNewPass',
   database: 'microbits'
 });
 
@@ -32,9 +32,15 @@ db.connect(err => {
   }
 });
 
-app.get('/api/ChangeDatabase/:database', (req, res) => {
+app.get('/api/changeDatabase/:database', (req, res) => {
   const database = req.params.database;
-  db.database = database;
+  db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'MyNewPass',
+    database: database
+  });
+  console.log("anythinf")
   res.json("Changed URL!");
 });
 

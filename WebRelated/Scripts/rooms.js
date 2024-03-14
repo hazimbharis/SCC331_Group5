@@ -81,7 +81,7 @@ dummyUserData.forEach(user => {
   userDiv.appendChild(userInfo);
 
   switch (user.type) {
-    case "G":
+    case "P":
       userDiv.appendChild(guest.cloneNode(true));
       break;
     case "S":
