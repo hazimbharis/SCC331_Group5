@@ -76,7 +76,7 @@ function processAdd() {
         var convs = document.getElementById("convictions").value;
         if (convs.length == 0 || convs.length > 100) {
             valid = false;
-            errors.push("Additional info cannot be over 100 characters");
+            errors.push("Additional info cannot be empty or over 100 characters");
             document.getElementById("convictions").style.border = "solid";
             document.getElementById("convictions").style.borderColor = "red";
         }

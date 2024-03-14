@@ -7,20 +7,18 @@ prisoner.classList.add('prisoner');
 // Create an icon element with Font Awesome classes
 let iconElement = document.createElement('i');
 iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
-document.getElementById('population-GM').style.font = "bold 20px/30px fixed-width, sans-serif";
-document.getElementById('population-LB').style.font = "bold 20px/30px fixed-width, sans-serif";
-document.getElementById('population-LR').style.font = "bold 20px/30px fixed-width, sans-serif";
-document.getElementById('population-CT').style.font = "bold 20px/30px fixed-width, sans-serif";
+// document.getElementById('population-GM').style.font = "bold 20px/30px fixed-width, sans-serif";
+// document.getElementById('population-CT').style.font = "bold 20px/30px fixed-width, sans-serif";
 
-let gymPopulation = document.getElementById('population-GM').textContent;
-let canteenPopulation = document.getElementById('population-CT').textContent;
-let libraryPopulation = document.getElementById('population-LB').textContent;
-let livingRoomPopulation = document.getElementById('population-LR').textContent;
+let receptionPopulation = document.getElementById('population-GM').textContent;
+let restaurantPopulation = document.getElementById('population-CT').textContent;
 
-let gym = document.getElementById('prison1');
-let canteen = document.getElementById('prison2');
-let library = document.getElementById('prison3');
-let livingRoom = document.getElementById('prison4');
+let reception = document.getElementById('prison11');
+let restaurant = document.getElementById('prison12');
+let cells = [];
+for (var i = 1; i <= 10; i++) {
+    cells.push(document.getElementById('prison' + i));
+}
 
 let clockText = document.getElementById("clock-text");
 let play = true;
@@ -74,24 +72,25 @@ function pauseClock() {
 function renderUsers() {
     clearPrisoners();
     let renderedPrisoners = new Set(); // Keep track of rendered prisoners
-    let gymPop = 0;
-    let libraryPop = 0;
-    let canteenPop = 0;
-    let livingRoomPop = 0;
+    let receptionPop = 0;
+    let restaurantPop = 0;
+    let cellsPop = [];
+    for (var i = 1; i <= 10; i++) {
+        cellsPop.push(0);
+    }
     for (let x = movementDataIndex + 1; x < movementData.length; x++) {
         if (movementData[x]) {
             if (!renderedPrisoners.has(movementData[x].prisonerID)) { // Check if prisoner has already been rendered
                 let iconElement = document.createElement('i');
-                iconElement.classList.add('fa-solid', 'fa-user', 'fa-3x');
                 switch (movementData[x].type) {//Contains differnt user types
-                    case 'P':// Prisoner
-                        iconElement.style.color = '#fe7300';
+                    case 'G':// Guest
+                        iconElement.classList.add("fa-solid", "fa-user", "fa-2x");
                         break;
                     case 'V':// Visitor
-                        iconElement.style.color = "White";
+                        iconElement.classList.add("fa-solid", "fa-user-clock", "fa-2x");
                         break;
                     case 'S':// Staff
-                        iconElement.style.color = "Blue";
+                        iconElement.classList.add("fa-solid", "fa-user-tie", "fa-2x")
                         break;
                     default:
                         console.log("Type not recognised");
@@ -132,7 +131,7 @@ function renderUsers() {
                 hoverOver.style.position = 'absolute';
 
                 //Ternary operator to translate the role character to the full name 
-                let role = movementData[x].type === "P" ? "\n Role: Prisoner" : movementData[x].type === "V" ? "\n Role: Visitor" : "\n Role: Prison Officer";
+                let role = movementData[x].type === "G" ? "\n Role: Guest" : movementData[x].type === "V" ? "\n Role: Visitor" : "\n Role: Prison Officer";
                 let hoverCont = "Name: " + movementData[x].firstName + " " + movementData[x].lastName + role;
                 if (movementData[x].medicalConditions != null) {// If user has medical conditions display in hover box
                     hoverCont = hoverCont + "\r\nMedical conditions: " + movementData[x].medicalConditions
@@ -141,24 +140,22 @@ function renderUsers() {
 
                 prisoner.appendChild(hoverOver);
                 switch (movementData[x].zoneID) {// Determines which zone to put the user in
-                    case 1:
-                        gym.appendChild(prisoner);
-                        gymPop ++;
+                    case 11:
+                        reception.appendChild(prisoner);
+                        receptionPop ++;
                         break;
-                    case 2:
-                        canteen.appendChild(prisoner);
-                        canteenPop++;
-                        break;
-                    case 3:
-                        library.appendChild(prisoner);
-                        libraryPop++;
-                        break;
-                    case 4:
-                        livingRoom.appendChild(prisoner);
-                        livingRoomPop++;
+                    case 12:
+                        restaurant.appendChild(prisoner);
+                        restaurantPop++;
                         break;
                     default:
-                        console.log("Zone ID not recognised");
+                        if (movementData[x].zoneID <= 10) {
+                            cells[movementData[x].zoneID - 1].appendChild(prisoner);
+                            cellsPop[movementData[x].zoneID - 1]++;
+                        }
+                        else {
+                            console.log("Zone ID not recognised");
+                        }
                 }
                 prisoner.appendChild(iconElement);
                 
@@ -169,17 +166,16 @@ function renderUsers() {
             console.log(`Element at index ${x} is undefined`);
         }
     }
-    gymPopulation = gymPop;
-    canteenPopulation = canteenPop;
-    livingRoomPopulation = livingRoomPop;
-    libraryPopulation = libraryPop;
+    receptionPopulation = receptionPop;
+    restaurantPopulation = restaurantPop;
 
     
     // Display population in corresponding HTML elements
-    document.getElementById('population-GM').textContent = 'Gym: ' + gymPop;
-    document.getElementById('population-CT').textContent = 'Canteen: ' + canteenPop;
-    document.getElementById('population-LB').textContent = 'Library: ' + libraryPop;
-    document.getElementById('population-LR').textContent = 'Living Room: ' + livingRoomPop;
+    document.getElementById('population-GM').textContent = 'Reception: ' + receptionPop;
+    document.getElementById('population-CT').textContent = 'Restaurant: ' + restaurantPop;
+    for (var i = 1; i <= 10; i++) {
+        document.getElementById('population-C' + i).textContent = "Room " + String(i) + ": " + cellsPop[i - 1];
+    }
 }
 
 

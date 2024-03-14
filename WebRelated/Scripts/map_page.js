@@ -237,22 +237,22 @@ async function updateMovementInfo() {
     prisoner.appendChild(iconElement);
     prisoner.appendChild(prisonerInfo);
 
-    if (element.zone === 1) {
+    if (element.zone <= 10) {
+      livingRoomCount++;
+      livingRoom.appendChild(prisoner);
+      livingRoomTitle.innerHTML = `CELLS: ${livingRoomCount}`;
+    } else if (element.zone === 11) {
       gymCount++;
       gym.appendChild(prisoner);
       gymTitle.innerHTML = `GYM: ${gymCount}`;
-    } else if (element.zone === 2) {
+    } else if (element.zone === 12) {
       canteenCount++;
       canteen.appendChild(prisoner);
       canteenTitle.innerHTML = `CANTEEN: ${canteenCount}`;
-    } else if (element.zone === 3) {
+    } else if (element.zone === 13) {
       libraryCount++;
       library.appendChild(prisoner);
       libraryTitle.innerHTML = `LIBRARY: ${libraryCount}`;
-    } else if (element.zone === 4) {
-      livingRoomCount++;
-      livingRoom.appendChild(prisoner);
-      livingRoomTitle.innerHTML = `LIVING ROOM: ${livingRoomCount}`;
     }
   });
 

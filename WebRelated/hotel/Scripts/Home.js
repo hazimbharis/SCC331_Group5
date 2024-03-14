@@ -19,7 +19,7 @@ dropdown.onclick = function () {
 };
 
 function fetchPopulationData() {
-  switch (Math.abs(index % 4)) {
+  switch (index) {
     case 0:
       console.log('0');
       $.get('http://localhost:5000/api/zoneEnv/11', (data) => {
