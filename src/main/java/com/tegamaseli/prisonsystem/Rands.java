@@ -9,7 +9,7 @@ public class Rands {
         Random rand = new Random();
 
         // Generate a random double between 15.0 and 25.0
-        double randomNumber = 10.0 + rand.nextDouble() * 9.0;
+        double randomNumber = 13.0 + rand.nextDouble() * 5.0;
         DecimalFormat df = new DecimalFormat("#.##");
 
         return df.format(randomNumber);

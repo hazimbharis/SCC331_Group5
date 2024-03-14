@@ -28,6 +28,10 @@ SensorData sensorData;
         setContentView(R.layout.activity_prisoner_positioning_system);
        // addDatatoFirebasef();
         ImageView imageView=findViewById(R.id.arrowfront);
+        ImageView map=findViewById(R.id.map);
+        map.setOnClickListener(v -> {
+            startActivity(new Intent(this, PrisonMap.class));
+        });
         imageView.setOnClickListener(v -> {
             startActivity(new Intent(this,LocationChartActivity.class));
         });

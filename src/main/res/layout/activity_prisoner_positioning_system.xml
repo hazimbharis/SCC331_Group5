@@ -18,6 +18,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.022" />
 
+    <ImageView
+        android:id="@+id/map"
+        android:layout_width="135dp"
+        android:layout_height="135dp"
+        android:background="#686565"
+        app:layout_constraintBottom_toBottomOf="@+id/library"
+        app:layout_constraintEnd_toStartOf="@+id/canteen"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gym"
+        app:layout_constraintTop_toTopOf="@+id/gym"
+        app:layout_constraintVertical_bias="1.0" />
 
 
     <ImageView
@@ -56,7 +67,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/gym"
         app:layout_constraintTop_toTopOf="@+id/gym"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <ImageView
@@ -139,6 +150,22 @@
         app:layout_constraintStart_toStartOf="@+id/chart"
         app:layout_constraintTop_toTopOf="@+id/chart"
         app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Map"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="@+id/map"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/map"
+        app:layout_constraintTop_toTopOf="@+id/map"
+        app:layout_constraintVertical_bias="0.5" />
+
 
     <TextView
         android:id="@+id/textView6"
