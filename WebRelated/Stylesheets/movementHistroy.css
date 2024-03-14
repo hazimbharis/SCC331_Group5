@@ -53,7 +53,7 @@ h1 {
 .prison {
   padding: 10px;
   width: calc(500px + (500px * 0.2));
-  height: calc(300px - (300px * 0.1));
+  height: calc(600px - (600px * 0.1));
 
   background-color: #686576;
   position: relative;
@@ -70,18 +70,42 @@ h1 {
   opacity: 0.15;
 }
 
-#prison1 {
-  border: 10px solid #44414f;
+.prisonCells {
+  padding: 0px;
+  border: 5px solid #44414f;
+  width: calc(90px + (90px * 0.2));
+  height: calc(275px - (275px * 0.1));
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  z-index: 2;
 }
-#prison2 {
+
+.prisonCells > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.15;
+}
+
+#prisonc {
+  border: 10px solid #44414f;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+#prison11 {
   border: 10px solid #44414f;
   border-left: none;
 }
-#prison3 {
+#prison12 {
   border: 10px solid #44414f;
   border-top: none;
 }
-#prison4 {
+#prison13 {
   border: 10px solid #44414f;
   border-left: none;
   border-top: none;
@@ -178,7 +202,7 @@ h1 {
 
 .control-bar {
   position: fixed;
-  bottom: 2%;
+  bottom: 0%;
   background-color: #e3d8d8;
   display: flex;
   align-items: center;

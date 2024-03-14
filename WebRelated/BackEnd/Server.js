@@ -784,6 +784,7 @@ app.get('/api/dHistory/:sDate/:eDate', (req, res) => {
   });
 })
 
+//Get environment data of selected zone
 app.get('/api/zoneEnv/:zone', (req, res) => {
   const query = `
   SELECT *
@@ -799,6 +800,7 @@ app.get('/api/zoneEnv/:zone', (req, res) => {
   });
 })
 
+//Get average of environment data of zones up to integer chosen
 app.get('/api/zoneMeans/:zone', (req, res) => {
   const query = `
   SELECT AVG(temp) as temp, AVG(noise) as noise, AVG(light) as light 

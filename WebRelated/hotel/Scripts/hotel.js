@@ -175,8 +175,7 @@ async function updateMovementInfo() {
 
 function checkAlerts() { 
   //checks each interval if alerts exist
-  $.get('http://localhost:5000/api/warnings', function(data){
-  console.log(data.length)  
+  $.get('http://localhost:5000/api/warnings', function(data){ 
   if(!data.length)
     {
       return

@@ -4,7 +4,7 @@ let light = document.getElementById('light');
 
 var h1 = document.getElementById('heading');
 let index = 0;
-var zones = ['Gym', 'Canteen', 'Living Room', 'Library']
+var zones = ['Gym', 'Canteen', 'Library', 'Cells']
 let chosenZone = document.getElementById('chosen-zone');
 function change_left(){
   index -= 1;
@@ -26,10 +26,10 @@ dropdown.onclick = function () {
   dropdown.classList.toggle('active');
 };
 function fetchPopulationData() {
-  switch (Math.abs(index%4)) {
+  switch (index) {
     case 0:
       console.log('0')
-      $.get('http://localhost:5000/api/gym', data => {
+      $.get('http://localhost:5000/api/zoneEnv/11', data => {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
@@ -40,7 +40,7 @@ function fetchPopulationData() {
       break
     case 1:
       console.log('1')
-      $.get('http://localhost:5000/api/canteen', data => {
+      $.get('http://localhost:5000/api/zoneEnv/12', data => {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
@@ -51,7 +51,7 @@ function fetchPopulationData() {
       break
     case 2:
       console.log('2')
-      $.get('http://localhost:5000/api/library', data => {
+      $.get('http://localhost:5000/api/zoneEnv/13', data => {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
@@ -63,7 +63,7 @@ function fetchPopulationData() {
       break
     case 3:
       console.log('3')
-      $.get('http://localhost:5000/api/livingroom', data => {
+      $.get('http://localhost:5000/api/zoneMeans/10', data => {
           // Update the 'values' array with the new data received
           values = data;
           console.log(data);
